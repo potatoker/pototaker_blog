@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://github.com/potatoker/pototaker_blog/2024/04/04/hello-world-1/</loc>
+    <loc>https://potatoker.github.io/pototaker_blog/2024/04/04/hello-world-1/</loc>
     
     <lastmod>2024-06-02</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://github.com/potatoker/pototaker_blog/2024/06/02/hello-world/</loc>
+    <loc>https://potatoker.github.io/pototaker_blog/2024/06/02/hello-world/</loc>
     
     <lastmod>2024-06-02</lastmod>
     
@@ -21,7 +21,7 @@
   
 
   <url>
-    <loc>https://github.com/potatoker/pototaker_blog</loc>
+    <loc>https://potatoker.github.io/pototaker_blog</loc>
     <lastmod>2024-06-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
