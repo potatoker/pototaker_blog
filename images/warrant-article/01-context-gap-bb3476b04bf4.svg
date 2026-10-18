@@ -48,8 +48,8 @@
   <rect x="576" y="309" width="248" height="196" rx="18" fill="#111827" fill-opacity=".82"/>
   <text x="604" y="353" font-family="monospace" font-size="19" fill="#93C5FD">route(input)</text>
   <text x="604" y="392" font-family="monospace" font-size="19" fill="#C4B5FD">→ refine()</text>
-  <text x="604" y="431" font-family="monospace" font-size="19" fill="#6EE7B7">→ lyrics()</text>
-  <text x="604" y="470" font-family="monospace" font-size="19" fill="#FDE68A">→ music()</text>
+  <text x="604" y="431" font-family="monospace" font-size="19" fill="#6EE7B7">→ compose()</text>
+  <text x="604" y="470" font-family="monospace" font-size="19" fill="#FDE68A">→ render()</text>
   <rect x="574" y="518" width="252" height="46" rx="23" fill="#101828" fill-opacity=".58"/>
   <text class="cn" x="700" y="548" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">唯一留下来的“事实”</text>
 

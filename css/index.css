@@ -313,6 +313,33 @@ img {
   padding:24px 0;
 }
 
+.entry-link-has-cover {
+  grid-template-columns:66px minmax(0,1fr) 152px 18px;
+  align-items:center;
+}
+
+.entry-thumb {
+  display:block;
+  width:100%;
+  aspect-ratio:8 / 5;
+  overflow:hidden;
+  background:#fff;
+  border:1px solid var(--line);
+}
+
+.entry-thumb img {
+  display:block;
+  width:100%;
+  height:100%;
+  padding:7px;
+  object-fit:contain;
+}
+
+.entry-thumb-photo img {
+  padding:0;
+  object-fit:cover;
+}
+
 .entry-date {
   font:12px/1.6 var(--mono);
   color:var(--ink-2);
@@ -864,6 +891,19 @@ img {
     grid-template-columns:45px minmax(0,1fr) 14px;
     gap:13px;
     padding:21px 0;
+  }
+  .entry-link-has-cover {
+    grid-template-columns:45px minmax(0,1fr) 86px;
+    gap:12px;
+  }
+  .entry-link-has-cover .entry-arrow {
+    display:none;
+  }
+  .entry-thumb img {
+    padding:4px;
+  }
+  .entry-thumb-photo img {
+    padding:0;
   }
   .entry-date {
     font-size:10px;
