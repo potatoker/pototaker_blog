@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>warrant · 立据 · potatoker&#39;s blog</title>
+  <meta name="description" content="发布说明：本文为项目 README 原文的脱敏版。内部地址、平台标识及业务案例已局部隐去；安装示例中的占位符需替换为可访问的实际地址。 把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。 最短理解：把 Warrant skills 装给 AI Co…">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2026/10/18/prototype-delivery-contract/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="发布说明：本文为项目 README 原文的脱敏版。内部地址、平台标识及业务案例已局部隐去；安装示例中的占位符需替换为可访问的实际地址。  把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。  最短理解：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、生产对照还是增量同步」。日常操作以对 Agent 说话为主">
+<meta property="og:type" content="article">
+<meta property="og:title" content="warrant · 立据">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2026/10/18/prototype-delivery-contract/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="发布说明：本文为项目 README 原文的脱敏版。内部地址、平台标识及业务案例已局部隐去；安装示例中的占位符需替换为可访问的实际地址。  把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。  最短理解：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、生产对照还是增量同步」。日常操作以对 Agent 说话为主">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T10:00:00.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="工程实践">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="软件交付">
+<meta name="twitter:card" content="summary">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 42 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a><a href="/pototaker_blog/tags/AI-Agent/">AI Agent</a><a href="/pototaker_blog/tags/%E8%BD%AF%E4%BB%B6%E4%BA%A4%E4%BB%98/">软件交付</a></div></div>
+    <h1>warrant · 立据</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2026-10-18T08:00:00.000Z">2026.10.18</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#30-%E7%A7%92%E5%BC%80%E5%A7%8B"><span class="toc-text">30 秒开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85-warrant"><span class="toc-text">1. 安装 warrant</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E9%97%AD%E7%8E%AF%EF%BC%9A%E4%B8%80%E5%8F%A5%E8%AF%9D-onboard"><span class="toc-text">最小闭环：一句话 onboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%84%B6%E5%90%8E%E5%91%8A%E8%AF%89-Agent-%E4%BD%A0%E5%9C%A8%E5%81%9A%E5%93%AA%E4%B8%80%E6%AD%A5"><span class="toc-text">2. 然后告诉 Agent 你在做哪一步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">这到底是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Warrant-%E4%BB%93%E5%BA%93-vs-%E5%AE%BF%E4%B8%BB%E4%BB%93%E5%BA%93"><span class="toc-text">Warrant 仓库 vs 宿主仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="toc-text">流程长什么样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%A7%84%E5%88%99%EF%BC%9A%E5%A3%B0%E6%98%8E%E9%9A%8F%E5%AF%B9%E8%B1%A1%E6%8C%87%E7%BA%B9%E5%A4%B1%E6%95%88"><span class="toc-text">核心规则：声明随对象指纹失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%81%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-text">谁做什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A71-%E5%AE%89%E8%A3%85%E3%80%81%E5%8D%87%E7%BA%A7%E4%B8%8E%E5%A4%9A%E5%AE%BF%E4%B8%BB"><span class="toc-text">§1 安装、升级与多宿主</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A71-1-%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85"><span class="toc-text">§1.1 首次安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A71-2-%E4%B8%80%E4%BB%BD%E5%AE%89%E8%A3%85%EF%BC%8C%E5%A4%9A%E4%B8%AA%E5%AE%BF%E4%B8%BB"><span class="toc-text">§1.2 一份安装，多个宿主</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A71-3-%E5%8D%87%E7%BA%A7%E5%88%B0%E6%96%B0%E7%89%88%E6%9C%AC"><span class="toc-text">§1.3 升级到新版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A72-%E5%8E%9F%E5%9E%8B%E4%BE%A7%EF%BC%9A%E7%AC%AC%E4%B8%80%E6%AC%A1-onboard"><span class="toc-text">§2 原型侧：第一次 onboard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A73-%E5%8E%9F%E5%9E%8B%E4%BE%A7%EF%BC%9A%E5%8F%91%E7%89%88"><span class="toc-text">§3 原型侧：发版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A74-%E9%83%A8%E7%BD%B2%E4%BE%A7%EF%BC%9A%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%AF%B9%E7%85%A7"><span class="toc-text">§4 部署侧：第一次对照</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A75-%E5%90%8E%E7%BB%AD%E7%89%88%E6%9C%AC%EF%BC%9A%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5"><span class="toc-text">§5 后续版本：增量同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%BE%A7%E5%8F%91%E6%96%B0%E7%89%88"><span class="toc-text">原型侧发新版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%BE%A7%E8%B7%9F%E6%96%B0%E7%89%88"><span class="toc-text">部署侧跟新版</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A76-%E6%89%BF%E8%AE%A4%E5%B7%AE%E5%BC%82%EF%BC%9A%E5%8F%AA%E5%90%8C%E6%AD%A5%E4%B8%80%E4%B8%AA%E5%8D%95%E5%85%83"><span class="toc-text">§6 承认差异：只同步一个单元</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%BE%A7%EF%BC%88%E4%B8%80%E6%AC%A1%E6%80%A7%EF%BC%89%EF%BC%9A%E6%8A%8A%E8%BF%99%E4%B8%AA%E9%80%BB%E8%BE%91%E5%A3%B0%E6%98%8E%E4%B8%BA-sync-unit"><span class="toc-text">原型侧（一次性）：把这个逻辑声明为 sync unit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%BE%A7%EF%BC%88%E4%B8%80%E6%AC%A1%E6%80%A7%EF%BC%8C%E4%BB%85%E6%9C%AA%E8%A3%85%E8%BF%87-warrant-%E6%97%B6%EF%BC%89%EF%BC%9A%E5%AE%89%E8%A3%85"><span class="toc-text">部署侧（一次性，仅未装过 warrant 时）：安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%BE%A7%EF%BC%88%E6%AF%8F%E6%AC%A1%E8%B7%9F%E9%9A%8F%E6%97%B6%EF%BC%89%EF%BC%9A%E5%8F%AA%E5%8F%96%E8%BF%99%E4%B8%AA%E5%8D%95%E5%85%83"><span class="toc-text">部署侧（每次跟随时）：只取这个单元</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E9%80%9F%E6%9F%A5"><span class="toc-text">常用操作速查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83"><span class="toc-text">附录：终端指令参考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-1-%E5%AE%89%E8%A3%85"><span class="toc-text">§A.1 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-2-%E5%8D%87%E7%BA%A7"><span class="toc-text">§A.2 升级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-3-onboard"><span class="toc-text">§A.3 onboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-4-%E5%8F%91%E7%89%88"><span class="toc-text">§A.4 发版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-5-audit"><span class="toc-text">§A.5 audit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-6-sync"><span class="toc-text">§A.6 sync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%8F%E7%A7%8D%E4%BA%A7%E7%89%A9%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-text">每种产物是什么意思？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA-Python-%E5%BA%93%E6%8E%A5%E5%85%A5"><span class="toc-text">作为 Python 库接入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Warrant-%E4%B8%8D%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-text">Warrant 不做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8A%B6%E6%80%81"><span class="toc-text">状态</span></a></li></ol></nav></details>
+  
+  <div class="prose"><blockquote>
+<p>发布说明：本文为项目 README 原文的脱敏版。内部地址、平台标识及业务案例已局部隐去；安装示例中的占位符需替换为可访问的实际地址。</p>
+</blockquote>
+<p>把快速迭代的原型，交付成一份<strong>能检查、能同步、能验收、会随代码变化而失效</strong>的生产契约。</p>
+<blockquote>
+<p><strong>最短理解</strong>：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、<br>生产对照还是增量同步」。<br><br><strong>日常操作以对 Agent 说话为主</strong>——不必在 Terminal 和 Agent 之间来回切换。<br><br>Agent 负责读代码、追问和编排；Warrant CLI 由 Agent 代跑，只在你想自己核对参数时才需要看<br><a href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83">终端指令参考</a>。</p>
+</blockquote>
+<hr>
+<h2 id="30-秒开始"><a href="#30-秒开始" class="headerlink" title="30 秒开始"></a>30 秒开始</h2><h3 id="1-安装-warrant"><a href="#1-安装-warrant" class="headerlink" title="1. 安装 warrant"></a>1. 安装 warrant</h3><p><strong>人唯一要做的是把下面这段贴给 Agent，不需要自己开终端。</strong> 在<strong>即将作为宿主的业务项目<br>根目录</strong>打开 Agent，整段复制：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请帮我安装 warrant，命令全部由你执行：先执行</span><br><span class="line">&lt;技能安装命令：内部市场地址及条目编号已隐去&gt;</span><br><span class="line">装上 warrant-install skill，然后阅读 .agents/skills/warrant-install/SKILL.md，</span><br><span class="line">按里面的 Scenario A 完成安装。</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果本机没有 技能安装工具（或访问不到 技能市场）</strong>，改用这段——skill 改从克隆下来的仓库里<br>直接读，skills 用本地拷贝兜底：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">请帮我安装 warrant，命令全部由你执行（本机没有 技能安装工具，不要用 技能市场）：</span><br><span class="line">1. 先问我把工具装到哪个目录（必须在本仓库之外），记作 $WARRANT_HOME。</span><br><span class="line">2. 执行 git clone &lt;WARRANT_REPOSITORY_URL&gt; &quot;$WARRANT_HOME&quot;。</span><br><span class="line">3. 阅读 &quot;$WARRANT_HOME&quot;/skills/warrant-install/SKILL.md，按里面的 Scenario A 完成安装；</span><br><span class="line">   其中装 skills 一步走它的本地拷贝兜底（cp -R &quot;$WARRANT_HOME&quot;/skills/warrant-* .agents/skills/）。</span><br></pre></td></tr></table></figure>
+
+<h3 id="最小闭环：一句话-onboard"><a href="#最小闭环：一句话-onboard" class="headerlink" title="最小闭环：一句话 onboard"></a>最小闭环：一句话 onboard</h3><p>安装完成后，用户不需要复述 Warrant 的内部工作流，只要说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请用 warrant-onboard skill onboard 当前项目。</span><br></pre></td></tr></table></figure>
+
+<p>草稿模式、不隐式发版、<code>.warrant/</code> 与网页同步、自动调用 <code>warrant-tech-doc</code>、禁止<br>Markdown 投射、中文说明、代码取材、按决策切章和真实浏览器证据，都是 skill 的内部契约，<br>不应要求用户复制粘贴。</p>
+<p>Agent 会先追问链路入口和输入输出，读代码后动态追问关键决策；然后技术方案 skill 会基于<br><code>.warrant/</code> 产物和代码做推导、分层、引用指纹化，最后产出：</p>
+<ul>
+<li><code>.warrant/</code> —— 发版链、节点、条件分支、依赖、开关、关键配置资产；</li>
+<li>图解技术方案站点 —— Agent 先从代码完成取材笔记与章节设计卡，再按每节内容选择<br>HTML&#x2F;CSS&#x2F;JS&#x2F;SVG 表达；完整 prompt、配置和词表进入折叠附录。</li>
+</ul>
+<p>注意：网页生成后只是 <code>docs/architecture/tech/site/</code> 下的静态文件，Agent 应帮你部署到<br>项目已有的静态服务路径（如 <code>public/</code>、<code>static/</code>、静态代理服务、GitLab Pages 等），<br>用 <code>warrant check-site</code> 验证取材&#x2F;章节 brief 没有漂移、章节与小节落点、事实来源覆盖、<br>桌面&#x2F;窄屏截图证据、最终可见性、封闭链接、HTML Content-Type、<code>content_hash</code> 与绑定渲染检查的<br><code>site_hash</code> 后，再返回可访问的 URL。<br>如果项目还没有静态发布位置，Agent 会问你平时怎么发布页面。</p>
+<p>你不需要自己写文档，只需要回答 Agent 在读代码时提出的疑问。</p>
+<h3 id="2-然后告诉-Agent-你在做哪一步"><a href="#2-然后告诉-Agent-你在做哪一步" class="headerlink" title="2. 然后告诉 Agent 你在做哪一步"></a>2. 然后告诉 Agent 你在做哪一步</h3><p>把下面「对 Agent 说」整段复制进对话即可。Agent 会按对应 skill 编排，并自行调用 CLI。</p>
+<table>
+<thead>
+<tr>
+<th>你是谁</th>
+<th>什么时候用</th>
+<th>对 Agent 说</th>
+<th>主要产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>任一侧</td>
+<td>装 warrant，或工具该升级了</td>
+<td><code>请使用 warrant-install skill 升级 warrant。</code>（首次安装见上一步）</td>
+<td>可用的 <code>warrant</code> + 宿主里的最新 skill</td>
+</tr>
+<tr>
+<td>原型侧</td>
+<td>第一次梳理已有项目</td>
+<td><code>请用 warrant-onboard skill onboard 当前项目。</code></td>
+<td><code>.warrant/</code>、取材与章节设计 brief、图解 HTML 站点</td>
+</tr>
+<tr>
+<td>原型侧 &#x2F; 评审</td>
+<td>已 onboard 后单独刷新方案网页</td>
+<td><code>请使用 warrant-tech-doc skill，基于当前 .warrant/ 重新生成图解文档。</code></td>
+<td>更新后的取材&#x2F;设计 brief 与图解 HTML 站点</td>
+</tr>
+<tr>
+<td>原型侧</td>
+<td>当前版本准备发给部署侧</td>
+<td><code>请使用 warrant-release skill，检查并导出本次发版 bundle。</code></td>
+<td>bundle、<code>content_hash</code>、变更记录</td>
+</tr>
+<tr>
+<td>部署侧</td>
+<td>第一次接手，或不知道生产和原型差多少</td>
+<td><code>请使用 warrant-audit skill，对照这个 bundle 审计生产实现。</code></td>
+<td><code>parity-report.json</code>、未对齐项</td>
+</tr>
+<tr>
+<td>部署侧</td>
+<td>已签收上一版，现在跟进新版</td>
+<td><code>请使用 warrant-sync skill，只同步新版 bundle 的变化并重跑用例。</code></td>
+<td>依赖闭合的增量改动、运行证据</td>
+</tr>
+</tbody></table>
+<p><strong>如果你只记住一件事：首次接入用 onboard，原型发新版用 release，生产首次对照用 audit，后续跟版用 sync。</strong></p>
+<hr>
+<h2 id="这到底是什么？"><a href="#这到底是什么？" class="headerlink" title="这到底是什么？"></a>这到底是什么？</h2><h3 id="Warrant-仓库-vs-宿主仓库"><a href="#Warrant-仓库-vs-宿主仓库" class="headerlink" title="Warrant 仓库 vs 宿主仓库"></a>Warrant 仓库 vs 宿主仓库</h3><ul>
+<li><strong>Warrant 仓库</strong>是工具自身，也就是你正在看的这个仓库。它提供 CLI 和 <code>warrant-*</code> skills。</li>
+<li><strong>宿主仓库</strong>是 Warrant 正在处理的业务项目。原型项目和生产项目分别是原型宿主、生产宿主；<br><code>.warrant/</code> 永远放在原型宿主根目录。</li>
+</ul>
+<p>两者的关系由<strong>运行时的当前目录或 <code>--root</code></strong> 决定，与工具装在哪无关：Warrant 不会因为被<br>克隆或作为 submodule 加进某个仓库，就把那个仓库当成宿主。因此<strong>一份 Warrant 安装可以同时<br>服务多个宿主项目</strong>——CLI 全局共享，每个宿主的 skills 各自从 技能市场安装（见 §1）。</p>
+<p>这份本机上下文无法跨仓库交接，所以每个导出的 bundle 都携带原型宿主的 Git 仓库地址、<br>分支和精确 commit，部署侧据此取得参考源码。其中只有 commit 是必需的——发版钉的是它。</p>
+<h3 id="流程长什么样"><a href="#流程长什么样" class="headerlink" title="流程长什么样"></a>流程长什么样</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">原型宿主仓库 + 原型侧 Agent</span><br><span class="line">        │  onboard / release</span><br><span class="line">        ▼</span><br><span class="line"> .warrant/ + bundle + 原型 Git 定位</span><br><span class="line">        │</span><br><span class="line">        │  audit / sync</span><br><span class="line">        ▼</span><br><span class="line">生产宿主仓库 + 部署侧 Agent</span><br><span class="line">        │</span><br><span class="line">        ▼</span><br><span class="line">运行证据 + parity-report + 可复核结论</span><br></pre></td></tr></table></figure>
+
+<h3 id="核心规则：声明随对象指纹失效"><a href="#核心规则：声明随对象指纹失效" class="headerlink" title="核心规则：声明随对象指纹失效"></a>核心规则：声明随对象指纹失效</h3><p>Warrant 的核心规则只有一条：</p>
+<blockquote>
+<p>每一条重要声明，都由其所声明对象的指纹作为键。<br><br>对象一旦变化，旧声明就不再覆盖它；系统要求重新判断，而不是继续展示一句过期的话。</p>
+</blockquote>
+<p>这条规则有三个主要落点：</p>
+<table>
+<thead>
+<tr>
+<th>声明</th>
+<th>存放位置</th>
+<th>失效依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“我们因为这个原因选择了这个值”</td>
+<td><code>decisions[].rationale</code></td>
+<td><code>rationale_covers</code> 不再等于当前值对</td>
+</tr>
+<tr>
+<td>“这段方案已经由某人确认”</td>
+<td><code>confirmations.yaml</code></td>
+<td>方案文字的设计指纹发生变化</td>
+</tr>
+<tr>
+<td>“这条必需边已经得到证明”</td>
+<td>corpus 覆盖索引</td>
+<td>用例自身声明的 <code>proves</code> 与登记义务不一致</td>
+</tr>
+<tr>
+<td>“生产持有的这份内容和我们一致”</td>
+<td><code>materials[]</code> + bundle 里的逐字副本</td>
+<td>内容 hash 变化（并因此推动 <code>content_hash</code>）</td>
+</tr>
+</tbody></table>
+<p>代码指针、连线、分支和 prompt 等结构变化本身就会触发门禁，因此不要求额外写一段容易过期的解释。只有那些接手方能够改变、而其他门禁又无法发现的选择，才必须留下理由。</p>
+<h3 id="谁做什么"><a href="#谁做什么" class="headerlink" title="谁做什么"></a>谁做什么</h3><p>Warrant 刻意把判断与计算分开：</p>
+<table>
+<thead>
+<tr>
+<th>工作</th>
+<th>由谁完成</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>找到真正发版 slice、理解变化、追问设计理由</td>
+<td>AI skills + 人</td>
+<td>这是语义判断，不能由路径 glob 或 AST 代替</td>
+</tr>
+<tr>
+<td>字符串相等、集合覆盖、代码符号解析、Git 状态、证据求交</td>
+<td>Python gates</td>
+<td>门禁必须稳定、可复现，不能被“说服”放行</td>
+</tr>
+</tbody></table>
+<p>最关键的门禁包括：</p>
+<ul>
+<li><strong>理由自失效</strong>：配置值变化后，旧理由不再算数。</li>
+<li><strong>证据签收</strong>：只接受真实 case 运行证据，不接受手填通过。</li>
+<li><strong>内容相等</strong>：<code>verbatim</code> 内容资产必须逐字进 bundle，生产侧的副本由 <code>verify-material</code> 做内容比对，不靠肉眼判断「看着差不多」。</li>
+<li><strong>双向证明覆盖</strong>：覆盖索引和用例的 <code>proves</code> 必须彼此一致。</li>
+<li><strong>代码指针解析</strong>：<code>file.py::symbol</code> 被重命名或删除时立即失败。</li>
+<li><strong>语义流完整性</strong>：路由必须有真实分叉，生成器必须声明输入输出，安全门必须画出放行和短路路径。</li>
+<li><strong>覆盖率棘轮</strong>：只阻断本次新增的孤儿文件，不让历史欠账导致门禁第一天就被关闭。</li>
+</ul>
+<p>Warning 永远不阻断。一个会因为既有欠账而天天红的门禁，最终只会被团队禁用。</p>
+<hr>
+<h2 id="§1-安装、升级与多宿主"><a href="#§1-安装、升级与多宿主" class="headerlink" title="§1 安装、升级与多宿主"></a>§1 安装、升级与多宿主</h2><h3 id="§1-1-首次安装"><a href="#§1-1-首次安装" class="headerlink" title="§1.1 首次安装"></a>§1.1 首次安装</h3><p>见 <a href="#1-%E5%AE%89%E8%A3%85-warrant">30 秒开始 &#x2F; 1. 安装 warrant</a>。</p>
+<p>安装完成后：</p>
+<ul>
+<li>工具源码（<code>$WARRANT_HOME</code>）必须放在<strong>宿主仓库之外</strong>；不要 <code>git clone</code> 到宿主根目录或子目录。</li>
+<li>CLI 从 <code>$WARRANT_HOME</code> 安装；skills 默认从 技能市场安装（搜索 <code>warrant</code> 安装全部 <code>warrant-*</code>），<br>访问不到 技能市场 的环境才从克隆里手动拷贝兜底。</li>
+<li>宿主仓库里只该出现 agent skills 目录下的 <code>warrant-*</code>，以及之后产出的 <code>.warrant/</code>、release<br>bundle 和业务改动。</li>
+<li>之后 Agent 始终在宿主根目录运行 <code>warrant</code>（或显式 <code>warrant --root &quot;$HOST&quot; ...</code>），不要在<br>Warrant 仓库里对另一个项目做 onboard。</li>
+<li>只有需要把工具版本钉在宿主里时才改用 submodule（<code>git submodule add &lt;上述地址&gt; tools/warrant</code>）<br>——那是显式例外，<code>tools/warrant</code> 同样不得进入发版 slice。</li>
+</ul>
+<h3 id="§1-2-一份安装，多个宿主"><a href="#§1-2-一份安装，多个宿主" class="headerlink" title="§1.2 一份安装，多个宿主"></a>§1.2 一份安装，多个宿主</h3><p><strong>Warrant 只需安装一次，即可服务任意多个宿主项目。</strong> 宿主身份由运行时的当前目录（或 <code>--root</code>）<br>决定，与工具装在哪无关，所以多个宿主共用同一份 CLI，不需要也不应该各自再克隆一份工具。</p>
+<p>每接入一个新宿主，在<strong>新宿主根目录</strong>打开 Agent，整段复制：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请把 warrant 接入当前项目（warrant 已装在本机，不要重新克隆）：</span><br><span class="line">先执行 &lt;技能安装命令：内部市场地址及条目编号已隐去&gt;</span><br><span class="line">装上 warrant-install skill，然后阅读 .agents/skills/warrant-install/SKILL.md 的</span><br><span class="line">Scenario C，照它完成剩下的接入步骤。</span><br></pre></td></tr></table></figure>
+
+<p>没有 技能安装工具（或访问不到 技能市场）时改用这段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请把 warrant 接入当前项目（warrant 已装在本机，不要重新克隆；本机没有 技能安装工具，</span><br><span class="line">不要用 技能市场）：先跑 warrant --version 找到安装位置 $WARRANT_HOME，</span><br><span class="line">阅读 &quot;$WARRANT_HOME&quot;/skills/warrant-install/SKILL.md 的 Scenario C，照它完成接入。</span><br></pre></td></tr></table></figure>
+
+<p>由此而来的分工是：<strong>CLI 全局共享一份，skills 每个宿主各装一份，<code>.warrant/</code> 每个宿主各自独立</strong><br>（onboard 后在各自宿主根目录生成，互不影响）。注意 skills 装完不会自己更新：以后升级 warrant<br>（§1.3）时，<strong>每个</strong>宿主的 skills 都要更新一遍，漏掉的宿主会出现「Agent 拿旧说明书开新工具」。<br>建议记下绑定过哪些宿主，升级时逐个更新。</p>
+<h3 id="§1-3-升级到新版本"><a href="#§1-3-升级到新版本" class="headerlink" title="§1.3 升级到新版本"></a>§1.3 升级到新版本</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-install skill 升级 warrant：CLI 和本项目的 skills 都要升到最新，</span><br><span class="line">升级完告诉我行为有什么变化。</span><br></pre></td></tr></table></figure>
+
+<p><strong>升级是三样东西要对齐，不是一件事。</strong> CLI 源码（<code>git pull</code>）、已安装的包（<code>pip install -e</code>）、<br>以及宿主里的 <code>warrant-*</code> skills——最后这个装在宿主的 agent 环境里，不会跟着 <code>git pull</code> 动。<br>漏掉它的后果不是「没升级」而是「Agent 拿旧说明书开新工具」：旧版 <code>warrant-release</code> skill<br>会让 Agent 在 export 前先跑 <code>check --require-mainline</code>，于是你在 feature 分支上被拦下来，<br>而新版 CLI 早就不要求主干。</p>
+<p><code>warrant --version</code> 打印的是<strong>运行中的那份代码</strong>：版本号 + checkout 的 commit + 目录。<br><code>-e</code> 装法下 <code>git pull</code> 之后代码立刻生效但 pip 记的版本号不会动，两者对不上时它会直接<br>提示你要不要重装——所以 pull 完再跑一次，commit 变了就是升级到位了。</p>
+<p>已有的 <code>.warrant/</code> 与已导出的 bundle 不受升级影响：bundle 是自包含快照，<code>content_hash</code><br>按内容算而不按工具版本算，所以升级不会让旧版本对不上。但新版可能<strong>新增门禁</strong>，于是<br><code>warrant check</code> 在你没改任何东西的情况下开始报新的 ERROR——那是新检查在说话，不是升级<br>坏了，按提示补齐即可。</p>
+<hr>
+<h2 id="§2-原型侧：第一次-onboard"><a href="#§2-原型侧：第一次-onboard" class="headerlink" title="§2 原型侧：第一次 onboard"></a>§2 原型侧：第一次 onboard</h2><p>在原型项目根目录：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请用 warrant-onboard skill onboard 当前项目。</span><br></pre></td></tr></table></figure>
+
+<p>Agent 只冷问两件事：<strong>这次想看懂的核心链路是什么</strong>（明确说准备发版时才改问<br>“这次准备交付的核心链路是什么”）、<strong>它的输入和输出是什么</strong>。之后它必须先去读代码，<br>再拿分析结果回来动态追问：入口、编排方、不进版范围、<br>生产开关、动态参数、外部依赖身份、关键配置资产都由它自己算出候选，你只需要挑选或纠正。</p>
+<p>它会自动盘点固定资产：用户可见文案、prompt、配置&#x2F;静态表、资源图、模板和固定<br>API&#x2F;URL 默认作为 <code>replication: verbatim</code>，一次列出请你校正遗漏、误收或例外，<br>不会每份都问一遍「改一行会不会变」。只有 fixture、缓存、派生产物等真无法判断<br>是否需要完全等量迁移的项，才单独请你裁定。</p>
+<p>固定内容如果散落在 Kotlin&#x2F;Java&#x2F;Swift&#x2F;TypeScript 等大逻辑文件里，Agent 直接在<br><code>.warrant/materials/</code> 生成带来源指纹的资产快照。宿主工程保持原样；Python 符号抽取只是<br>一个便利适配器，不是 Warrant 能否记录资产的边界。</p>
+<p>所以它<strong>不该</strong>给你一份问卷，不该让你列举不进版目录，不该冷问「历史上有哪些坑」——<br>开放性问题只允许出现一次，在收口时问你还有什么要补充。它也不应该让你手写 schema，<br>更不应该凭代码猜「为什么这样设计」。</p>
+<p>onboard 会在 <code>.warrant/</code> 通过检查后自动进入图解技术方案生成和浏览器证据捕获，不需要你再补一句<br>“生成网页”。如果只想单独查看尚未闭合的问题，可以继续说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请跑 warrant questions，用通俗话说明还有哪些未回答问题、哪些方案层未签核。</span><br></pre></td></tr></table></figure>
+
+<p>人裁的是<strong>分析过程中卡住的疑问</strong>（证据打架、逻辑说不通），不是把方案层摊开盖章。<br>一次只问一个疑问；答完由 Agent 写回 artifact &#x2F; <code>open_questions[]</code>。<code>confirm</code> 是可选的<br>事后签核，不是 onboard 访谈目标。</p>
+<p>文档里这两件事<strong>分开渲染，不要混读</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>标记</th>
+<th>含义</th>
+<th>出现位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>待定夺</strong></td>
+<td>真的还没有人拍板（未回答的 <code>open_questions[]</code>）</td>
+<td>模块页 <code>[!WARNING]</code> + 总览「待定夺」</td>
+</tr>
+<tr>
+<td><strong>方案层未签核</strong></td>
+<td>已经定了、由代码起草，只是还没人署名</td>
+<td>模块页 <code>[!NOTE]</code> + 总览「方案层签核状态」</td>
+</tr>
+<tr>
+<td><strong>草稿，未发版</strong></td>
+<td>这一页渲染自工作区，其 content_hash 不对应任何 bundle</td>
+<td>每页 <code>[!CAUTION]</code> + 页首「渲染自」</td>
+</tr>
+</tbody></table>
+<p>前两个说的是<strong>内容</strong>里还有什么没定，第三个说的是<strong>这一页本身</strong>能不能交出去。</p>
+<p>细则：<code>skills/warrant-onboard/references/interview-design.md</code>、<br><code>skills/warrant-onboard/references/interview-decisions.md</code>。</p>
+<p>onboard 的主要结果位于：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.warrant/</span><br><span class="line">├── config.yaml            # 原型宿主的 Git remote / mainline；不含凭据</span><br><span class="line">├── artifact.yaml          # 发版链、节点、条件分支、依赖、开关、关键配置资产和已知限制</span><br><span class="line">├── corpus/</span><br><span class="line">│   ├── index.yaml         # 必需边 / 分支由哪些用例覆盖</span><br><span class="line">│   └── cases/*.json       # 可移交的行为用例</span><br><span class="line">├── glossary.yaml          # 项目术语的中文含义</span><br><span class="line">├── decisions.yaml         # 行为变化的追加式决策记录</span><br><span class="line">└── confirmations.yaml     # 人工签核；首次 onboard 时可以还不存在</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ERROR</code> 会阻断：例如代码指针失效、图的端点不存在、必需分支没有用例。</li>
+<li><code>WARNING</code> 不阻断：例如方案尚未由人确认、历史欠账仍在、问题已有记录但未回答。</li>
+<li>不要为了清零 warning 让 AI 编造理由。</li>
+</ul>
+<p>其中 <code>RELEASE_TREE_DIRTY</code> 值得当场处理：它列出 <code>.warrant/</code> 之外还没提交的文件，提前<br>告诉你「照现在这样 <code>export</code> 会被拦下来」。发版钉的是一个 commit，没提交的代码就不在<br>这一版里——与其等到最后 <code>export</code> 报错，不如现在决定它该不该进这次发版。<code>.warrant/</code><br>自己不算在内，那是本轮产出，随流程一起提交。</p>
+<hr>
+<h2 id="§3-原型侧：发版"><a href="#§3-原型侧：发版" class="headerlink" title="§3 原型侧：发版"></a>§3 原型侧：发版</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-release skill，导出这次给部署侧的 bundle。</span><br></pre></td></tr></table></figure>
+
+<p><code>export</code> 会：</p>
+<ol>
+<li>再次执行门禁（含 import 闭包审计：已注册源码的 import 链路上的活文件必须<br>注册进 <code>nodes[].sources</code> 或带理由地豁免，否则 <code>SOURCE_CLOSURE_UNDECLARED</code> 阻断）；</li>
+<li>计算并写入 <code>content_hash</code>；</li>
+<li>生成 <code>release-manifest.yaml</code>，写入原型仓库地址、当前分支和精确 commit；</li>
+<li>导出部署侧可以独立读取的 bundle，并标配生成 <code>SYNC_CHEATSHEET.md</code>——<br>与上一版 bundle 的 diff 渲染成的部署行动清单（必须重拷 &#x2F; 必须读实现 &#x2F;<br>必须确认取值 &#x2F; 必须回答的开放问题，标注本版新增 vs 历史携带 &#x2F; 验收命令）；</li>
+<li>拒绝非 Git 宿主、无 commit 的仓库、脏工作树，以及接手方无法定位源码的版本。</li>
+</ol>
+<p><strong>发版对分支没有要求。</strong> 一次发版钉的是 commit，不是分支：feature 分支、自定义主干、<br>detached HEAD 都可以发，也不需要先合入 master。唯一的 Git 要求是<strong>宿主代码已提交</strong>——<br>工作树是脏的，manifest 里那个 hash 就描述不了真正发出去的代码。这条不该留到 <code>export</code><br>才发现：<code>warrant check</code> 一路上都会用 <code>RELEASE_TREE_DIRTY</code> 报出来，skill 也会在开工前先问一句。</p>
+<p>commit 尚未推到任何远端分支时 <code>export</code> 照常成功，但会警告 <code>RELEASE_COMMIT_UNPUBLISHED</code>：<br>bundle 本身完整，只是在推之前部署侧 fetch 不到 manifest 指的那个 commit。<code>export</code> 自己写进<br><code>.warrant/releases/</code> 的产物不算脏，所以连发两次不会被自己挡住。</p>
+<p>团队若确实要求「每个 bundle 都出自主干」，那道检查仍在，改为显式开启：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-release skill，导出 bundle，并确保先用 warrant check --require-mainline 检查主干。</span><br></pre></td></tr></table></figure>
+
+<p>不传 <code>--out</code> 时，bundle 默认写入宿主项目的：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.warrant/releases/&lt;content_hash&gt;/</span><br></pre></td></tr></table></figure>
+
+<p>这是宿主项目的一部分，应随本次宿主 Git 发版 commit 一起提交。部署侧 checkout 该宿主<br>commit 后即可直接读取 bundle，不需要再从 Warrant 工具仓库寻找产物。如果使用显式 <code>--out</code>，<br>请仍然选择宿主仓库内、未被 <code>.gitignore</code> 忽略的目录；Warrant 不会替你执行 <code>git add</code> 或 <code>git commit</code>。</p>
+<p>发版不是「把当前目录压缩一下」。它交付的是一版明确的行为声明，以及证明这些声明所需的用例。</p>
+<p>技术方案文档是这版声明的<strong>视图</strong>，不是另一份平行文档，所以它读 bundle：页首写明发版<br><code>content_hash</code> 和原型 commit，内容资产展开的是 bundle 里 <code>materials/</code> 的逐字副本，而不是<br>「渲染那一刻工作区里恰好是什么」。不加 <code>--bundle</code> 渲染出来的页面会自己标成草稿——那是自查<br>用的，别发出去。</p>
+<hr>
+<h2 id="§4-部署侧：第一次对照"><a href="#§4-部署侧：第一次对照" class="headerlink" title="§4 部署侧：第一次对照"></a>§4 部署侧：第一次对照</h2><p>在<strong>生产项目根目录</strong>打开 Agent，并给出原型侧 bundle 路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-audit skill，对照 /path/to/warrant-bundle 审计当前生产实现。</span><br></pre></td></tr></table></figure>
+
+<p>Warrant 不要求生产项目使用相同语言、函数名或目录结构。部署侧要复现的是行为契约，而不是复制原型源码。</p>
+<p>生产侧适配并跑完 corpus 后，把结果文件路径交给 Agent 收口即可：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用例结果在 results.json。请据此 verify，并 finalize parity-report.json。</span><br></pre></td></tr></table></figure>
+
+<p><code>results.json</code> 形如 <code>&#123; &quot;case_a&quot;: true, &quot;case_b&quot;: false &#125;</code>。<code>finalize</code> 会丢弃报告里自称通过的布尔值，重新根据证据计算签收结果。</p>
+<hr>
+<h2 id="§5-后续版本：增量同步"><a href="#§5-后续版本：增量同步" class="headerlink" title="§5 后续版本：增量同步"></a>§5 后续版本：增量同步</h2><h3 id="原型侧发新版"><a href="#原型侧发新版" class="headerlink" title="原型侧发新版"></a>原型侧发新版</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-release skill，对比上一版 bundle，导出新版和 change records。</span><br><span class="line">上一版在 .warrant/releases/&lt;old_content_hash&gt;。</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署侧跟新版"><a href="#部署侧跟新版" class="headerlink" title="部署侧跟新版"></a>部署侧跟新版</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-sync skill，读取 changes.json 和新版 bundle，只跟进我选的那部分。</span><br></pre></td></tr></table></figure>
+
+<p><code>changes.json</code> 说明哪些行为契约和源码指纹发生了变化，原型 Git 历史则解释这些变化在<br>代码中如何发生。两者都要读：不能只按 commit message 猜行为，也不能只看一个<br>「hash changed」就实施同步。</p>
+<p><code>attribute</code> 不会用路径规则猜变化属于谁；归属由能理解改动的人或 Agent 判断，CLI 只保证没有遗漏。<code>select</code> 负责检查所选单元是否依赖闭合。</p>
+<hr>
+<h2 id="§6-承认差异：只同步一个单元"><a href="#§6-承认差异：只同步一个单元" class="headerlink" title="§6 承认差异：只同步一个单元"></a>§6 承认差异：只同步一个单元</h2><p>现实里两侧往往已经存在历史差异，而你暂时不打算统一整条链路——只想把某一个具体逻辑（示例：<code>example_unit</code>）迁过去。这正是 sync unit 的用途：差异保持原样，迁移按单元发生。</p>
+<h3 id="原型侧（一次性）：把这个逻辑声明为-sync-unit"><a href="#原型侧（一次性）：把这个逻辑声明为-sync-unit" class="headerlink" title="原型侧（一次性）：把这个逻辑声明为 sync unit"></a>原型侧（一次性）：把这个逻辑声明为 sync unit</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请把 example_unit（示例业务逻辑）相关的节点归到一个名为 example_unit 的 sync unit，标记 deferrable，然后用 warrant-release skill 发版，把 bundle 提交并推送到主干。</span><br></pre></td></tr></table></figure>
+
+<p>这是一次性动作。之后每次发版照常（§5），不需要再提 slice；bundle 照常随仓库提交在 <code>.warrant/releases/</code> 下。</p>
+<h3 id="部署侧（一次性，仅未装过-warrant-时）：安装"><a href="#部署侧（一次性，仅未装过-warrant-时）：安装" class="headerlink" title="部署侧（一次性，仅未装过 warrant 时）：安装"></a>部署侧（一次性，仅未装过 warrant 时）：安装</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请安装 warrant：把 &lt;WARRANT_REPOSITORY_URL&gt; 克隆到本仓库之外的目录，pip install -e 装上；然后把克隆目录里的 skills/warrant-sync 安装到你自己使用的 skills 目录下。装完确认 warrant --version 能跑，并告诉我 skill 装到了哪个目录。</span><br></pre></td></tr></table></figure>
+
+<p>「安装到你自己使用的 skills 目录」是有意这么写的：skill 目录因 Agent 而异（Kimi Code 是 <code>.agents/skills/</code>，别的 Agent 另有自己的约定），Agent 自己最清楚它从哪里加载 skill。能从 技能市场装的话，也可以改用 warrant-install skill 走市场渠道。</p>
+<h3 id="部署侧（每次跟随时）：只取这个单元"><a href="#部署侧（每次跟随时）：只取这个单元" class="headerlink" title="部署侧（每次跟随时）：只取这个单元"></a>部署侧（每次跟随时）：只取这个单元</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">demo 仓库发新版了。请拉取 demo 仓库最新主干，用 warrant-sync skill 只同步 example_unit 这个单元，其余差异保持现状，不要动。</span><br></pre></td></tr></table></figure>
+
+<p>部署侧不需要任何人递路径或 hash：Agent 会自己从原型仓库的 <code>.warrant/releases/</code> 定位最新 bundle，选择 <code>example_unit</code>（依赖自动闭包），用 <code>warrant slice</code> 切出只含该单元的迁移包，照着包实施，并对切片后的 corpus 跑 verify。它不会签完整 <code>content_hash</code>——那是整版的指纹，部分同步签了就是以偏概全。</p>
+<p>如果 Agent 报告 <code>example_unit</code> 依赖了另一个单元而要求一并带上，那不是它在加戏：依赖闭包保证你拿到的组合是原型侧真正测过、描述过的组合。如果你确认只要 <code>example_unit</code> 本身，那就回到原型侧，把耦合拆开再发版。</p>
+<hr>
+<h2 id="常用操作速查"><a href="#常用操作速查" class="headerlink" title="常用操作速查"></a>常用操作速查</h2><p><strong>优先复制左列给 Agent。</strong> 右列是 Agent 会代跑、或你要自行核对时的程序指令，详细用法见<br><a href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83">附录</a>。</p>
+<table>
+<thead>
+<tr>
+<th>我想做什么</th>
+<th>对 Agent 说</th>
+<th>对应程序指令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>检查 <code>.warrant/</code> 是否自洽</td>
+<td><code>请跑 warrant check，用通俗话解释 ERROR / WARNING。</code></td>
+<td><code>warrant check</code></td>
+</tr>
+<tr>
+<td>看现在装的是哪个版本</td>
+<td><code>跑 warrant --version，告诉我工具装在哪、是哪个 commit。</code></td>
+<td><code>warrant --version</code></td>
+</tr>
+<tr>
+<td>升级 warrant 工具</td>
+<td><code>请使用 warrant-install skill 升级 warrant，升级完告诉我行为有什么变化。</code></td>
+<td>见 §1.3</td>
+</tr>
+<tr>
+<td>配置原型宿主 Git</td>
+<td><code>请帮我 configure-host，登记原型 remote 与主干。</code></td>
+<td><code>warrant configure-host [--remote origin --mainline master]</code></td>
+</tr>
+<tr>
+<td>查看还没问到我的、未回答的、未签核的</td>
+<td><code>请跑 warrant questions，列出待办与影响。</code></td>
+<td><code>warrant questions</code></td>
+</tr>
+<tr>
+<td>由负责人签核方案层</td>
+<td><code>请在我确认后，用 warrant confirm 为这些模块署名：…，--by &lt;我的名字&gt;。</code>（须本人确认后才能签）</td>
+<td><code>warrant confirm node &lt;id&gt; [&lt;id&gt; …] --by &lt;人名&gt;</code></td>
+</tr>
+<tr>
+<td>首次梳理候选交付链并生成方案网页</td>
+<td><code>请用 warrant-onboard skill onboard 当前项目。</code></td>
+<td><code>.warrant/</code> 检查后自动进入 <code>warrant-tech-doc</code> 与 <code>check-site</code></td>
+</tr>
+<tr>
+<td>生成技术方案（交付用）</td>
+<td><code>请使用 warrant-tech-doc skill，基于 bundle 生成图解技术文档。</code></td>
+<td>Agent 取材、按决策切章、逐节设计并截图；<code>check-site</code> 验证一致性</td>
+</tr>
+<tr>
+<td>生成技术方案（自查用）</td>
+<td><code>请使用 warrant-tech-doc skill，按当前工作区生成图解技术文档。</code></td>
+<td>同上；页面会标草稿</td>
+</tr>
+<tr>
+<td>确认已发布页面</td>
+<td><code>我要把这个链接发出去，请检查章节链接、事实版本和页面哈希。</code></td>
+<td><code>warrant check-site --site &lt;目录&gt; --url &lt;入口 URL&gt; [--bundle &lt;bundle&gt;]</code></td>
+</tr>
+<tr>
+<td>导出发版 bundle</td>
+<td><code>请使用 warrant-release skill，导出本次 bundle。</code></td>
+<td><code>warrant export</code></td>
+</tr>
+<tr>
+<td>对比上一版</td>
+<td><code>请对比上一版与本版 bundle，写出 change records。</code></td>
+<td><code>warrant diff --previous &lt;旧&gt; --out changes.json</code></td>
+</tr>
+<tr>
+<td>校验原型参考源码</td>
+<td><code>请按 release-manifest 检出并 verify-source。</code></td>
+<td><code>warrant verify-source --bundle &lt;b&gt; --checkout &lt;dir&gt;</code></td>
+</tr>
+<tr>
+<td>核对内容资产是否逐字一致</td>
+<td><code>请对 bundle 里的内容资产做 verify-material，列出不一致的条目。</code></td>
+<td><code>warrant verify-material --bundle &lt;b&gt; --map materials-map.yaml</code></td>
+</tr>
+<tr>
+<td>查两份疑似拷贝的内容资产差在哪</td>
+<td><code>check 报了 MATERIAL_DUPLICATED，请把这两份内容的差异逐条列出来。</code></td>
+<td><code>warrant diff-material [&lt;id&gt; &lt;id&gt;]</code></td>
+</tr>
+<tr>
+<td>检查变化归属是否齐全</td>
+<td><code>请 attribute 这份 changes.json，指出还缺归属的项。</code></td>
+<td><code>warrant attribute --packet … --assignments …</code></td>
+</tr>
+<tr>
+<td>选择依赖闭合的同步单元</td>
+<td><code>请 select 这些 sync unit，并补齐依赖。</code></td>
+<td><code>warrant select --units &lt;id,id&gt;</code></td>
+</tr>
+<tr>
+<td>按用例结果验收</td>
+<td><code>请用 results.json verify，再 finalize 报告。</code></td>
+<td><code>warrant verify</code> &#x2F; <code>warrant finalize</code></td>
+</tr>
+<tr>
+<td>生产首次对照</td>
+<td><code>请使用 warrant-audit skill，…</code></td>
+<td>（由 skill 编排）</td>
+</tr>
+<tr>
+<td>生产跟新版</td>
+<td><code>请使用 warrant-sync skill，…</code></td>
+<td>（由 skill 编排）</td>
+</tr>
+</tbody></table>
+<p>完整参数可随时让 Agent 查，或自行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">warrant &lt;<span class="built_in">command</span>&gt; --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="附录：终端指令参考"><a href="#附录：终端指令参考" class="headerlink" title="附录：终端指令参考"></a>附录：终端指令参考</h2><p>以下命令<strong>默认由 Agent 代跑</strong>。只有在你想手动核对、或 Agent 不在场时才需要看这里。</p>
+<h3 id="§A-1-安装"><a href="#§A-1-安装" class="headerlink" title="§A.1 安装"></a>§A.1 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">WARRANT_HOME=...   <span class="comment"># 工具目录，须在宿主仓库之外</span></span><br><span class="line">HOST=...           <span class="comment"># 业务宿主项目根</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> &lt;WARRANT_REPOSITORY_URL&gt; <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span></span><br><span class="line">python -m pip install -e <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># skills：技能市场安装命令、内部认证方式及条目编号已隐去</span></span><br><span class="line"><span class="comment"># 对应技能：warrant-install / warrant-onboard / warrant-release / warrant-sync</span></span><br><span class="line"><span class="comment"># warrant-audit / warrant-tech-doc / warrant-diagram</span></span><br><span class="line"><span class="comment"># 机器访问不到 技能市场 时才兜底手动拷贝：</span></span><br><span class="line"><span class="comment">#   mkdir -p &quot;$HOST/.agents/skills&quot;</span></span><br><span class="line"><span class="comment">#   cp -R &quot;$WARRANT_HOME&quot;/skills/warrant-* &quot;$HOST/.agents/skills/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> &amp;&amp; warrant --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 不想装包：PYTHONPATH=&quot;$WARRANT_HOME/src&quot; python -m warrant.cli --help</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="§A-2-升级"><a href="#§A-2-升级" class="headerlink" title="§A.2 升级"></a>§A.2 升级</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">warrant --version                    <span class="comment"># 先确认工具装在哪个 checkout</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span> &amp;&amp; git pull</span><br><span class="line">python -m pip install -e <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span>     <span class="comment"># 仅依赖 / entry point 有变动时必须</span></span><br><span class="line"><span class="comment"># skills：通过技能市场重装到最新版（内部命令及条目编号已隐去；每个绑定的宿主都要，别漏）</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> &amp;&amp; warrant --version &amp;&amp; warrant check</span><br></pre></td></tr></table></figure>
+
+<h3 id="§A-3-onboard"><a href="#§A-3-onboard" class="headerlink" title="§A.3 onboard"></a>§A.3 onboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">warrant configure-host</span><br><span class="line"><span class="comment"># 主干只在 check --require-mainline 时才用得上，发版不需要；要登记时：</span></span><br><span class="line">warrant configure-host --remote origin --mainline master</span><br><span class="line"></span><br><span class="line">warrant check</span><br><span class="line">warrant questions</span><br><span class="line"></span><br><span class="line"><span class="comment"># Agent 先从代码写 presentation-brief v6 的取材笔记、决策章节与逐节设计卡，</span></span><br><span class="line"><span class="comment"># 再为每节选择内容契合的图示/演示并生成多页 HTML；没有 Markdown renderer 步骤。</span></span><br><span class="line">warrant check-site --site docs/architecture/tech/site</span><br></pre></td></tr></table></figure>
+
+<p>onboard 阶段还没有 bundle，所以这里渲染的是工作区，页面会自带「草稿，未发版」提示。<br>要交给别人看的那一版，等 <code>warrant export</code> 之后加 <code>--bundle</code> 重新渲染一遍（见 §A.4）。<br>完成提示应首先给出可访问的技术方案 URL，其次是 <code>.warrant/</code> 产物目录、候选版本<br><code>content_hash</code>、当前是否正式发版和下一步提交&#x2F;合入动作；Chromium、截图、临时服务等<br>执行日志不属于用户交付摘要。</p>
+<h3 id="§A-4-发版"><a href="#§A-4-发版" class="headerlink" title="§A.4 发版"></a>§A.4 发版</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git status --short     <span class="comment"># 先看还有什么没提交；warrant check 也会以 RELEASE_TREE_DIRTY 提醒</span></span><br><span class="line">git commit -am <span class="string">&quot;...&quot;</span>   <span class="comment"># 发版前唯一的 Git 要求：宿主代码已提交</span></span><br><span class="line">warrant <span class="built_in">export</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 技术方案文档随本次发版一起出：Agent 从 bundle 和对应 producer commit 重新取材，</span></span><br><span class="line"><span class="comment"># 刷新章节设计和页面，然后只复制 site/ 到真实静态目录：</span></span><br><span class="line">warrant check-site --bundle .warrant/releases/&lt;content_hash&gt; \</span><br><span class="line">  --site public/tech-docs --url &lt;published index.html URL&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="§A-5-audit"><a href="#§A-5-audit" class="headerlink" title="§A.5 audit"></a>§A.5 audit</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> &lt;release-manifest.yaml 中的 producer.repository&gt; /path/to/producer-reference</span><br><span class="line">git -C /path/to/producer-reference checkout --detach &lt;producer.commit&gt;</span><br><span class="line">warrant verify-source \</span><br><span class="line">  --bundle /path/to/warrant-bundle \</span><br><span class="line">  --checkout /path/to/producer-reference</span><br><span class="line"></span><br><span class="line">warrant verify \</span><br><span class="line">  --corpus /path/to/warrant-bundle/corpus \</span><br><span class="line">  --results results.json</span><br><span class="line"></span><br><span class="line">warrant finalize \</span><br><span class="line">  --report parity-report.json \</span><br><span class="line">  --evidence results.json \</span><br><span class="line">  --corpus /path/to/warrant-bundle/corpus</span><br></pre></td></tr></table></figure>
+
+<h3 id="§A-6-sync"><a href="#§A-6-sync" class="headerlink" title="§A.6 sync"></a>§A.6 sync</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原型侧</span></span><br><span class="line">warrant <span class="built_in">export</span></span><br><span class="line">warrant diff \</span><br><span class="line">  --previous .warrant/releases/&lt;old_content_hash&gt; \</span><br><span class="line">  --current .warrant/releases/&lt;new_content_hash&gt; \</span><br><span class="line">  --out changes.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署侧</span></span><br><span class="line">warrant attribute \</span><br><span class="line">  --packet changes.json \</span><br><span class="line">  --assignments assignments.yaml</span><br><span class="line">warrant <span class="keyword">select</span> --units routing,prompt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 阅读原型区间时的参考命令（通常由 Agent 代跑）</span></span><br><span class="line">git -C /path/to/producer-reference <span class="built_in">log</span> --oneline &lt;from_commit&gt;..&lt;to_commit&gt;</span><br><span class="line">git -C /path/to/producer-reference diff &lt;from_commit&gt;..&lt;to_commit&gt; -- &lt;本次涉及的 sources&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="每种产物是什么意思？"><a href="#每种产物是什么意思？" class="headerlink" title="每种产物是什么意思？"></a>每种产物是什么意思？</h2><table>
+<thead>
+<tr>
+<th>产物</th>
+<th>给谁</th>
+<th>它回答什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.warrant/artifact.yaml</code></td>
+<td>两侧 Agent、门禁、文档渲染器</td>
+<td>这次到底发什么，内部怎样分支和交接</td>
+</tr>
+<tr>
+<td><code>.warrant/config.yaml</code></td>
+<td>原型侧 CLI</td>
+<td>哪个 Git remote&#x2F;mainline 是原型宿主的发布来源</td>
+</tr>
+<tr>
+<td><code>release-manifest.yaml</code></td>
+<td>部署侧 Agent</td>
+<td>原型仓库在哪里、必须参考哪个不可变 commit</td>
+</tr>
+<tr>
+<td><code>materials.yaml</code> + <code>materials/</code></td>
+<td>部署侧、评审、新同学</td>
+<td>哪些内容（prompt &#x2F; 风格池 &#x2F; 模版 &#x2F; 词表）必须逐字持有，以及那份内容本身</td>
+</tr>
+<tr>
+<td><code>.warrant/corpus/</code></td>
+<td>部署侧与验收 CI</td>
+<td>哪些行为必须在生产实现中重新成立</td>
+</tr>
+<tr>
+<td><code>content_hash</code></td>
+<td>双方</td>
+<td>当前讨论和签收的是哪一版行为</td>
+</tr>
+<tr>
+<td><code>.warrant/releases/&lt;content_hash&gt;/</code></td>
+<td>宿主 Git、部署侧 Agent</td>
+<td>随宿主发版 commit 交付的完整原型交接包</td>
+</tr>
+<tr>
+<td>bundle</td>
+<td>部署侧</td>
+<td>不依赖原型聊天记录即可定位原型源码、理解契约并完成验收的交接包</td>
+</tr>
+<tr>
+<td><code>changes.json</code></td>
+<td>增量同步 Agent</td>
+<td>新旧两版发生了哪些契约变化，以及应查看哪个原型 commit 区间</td>
+</tr>
+<tr>
+<td><code>parity-report.json</code></td>
+<td>评审和签收人</td>
+<td>生产实现还差什么、证据是否足够</td>
+</tr>
+<tr>
+<td>技术方案站点</td>
+<td>新同学、评审、维护者</td>
+<td>Agent 从代码取材、按项目决策切章，并为每节选择内容契合的图示；<code>warrant-site.yaml</code> 只绑定 brief、事实来源、版本与截图检查，不指定配色或组件模板</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="作为-Python-库接入"><a href="#作为-Python-库接入" class="headerlink" title="作为 Python 库接入"></a>作为 Python 库接入</h2><p>CLI 是 Agent 代跑的底层入口；已有平台也可以直接给门禁传标准记录：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">from</span> warrant <span class="keyword">import</span> Claim, Coverage, Obligation, ObligationSet, Proof, check_records</span><br><span class="line"></span><br><span class="line">issues = check_records(</span><br><span class="line">    Path(<span class="string">&quot;.&quot;</span>),</span><br><span class="line">    claims=[</span><br><span class="line">        Claim(</span><br><span class="line">            <span class="string">&quot;env_contract&quot;</span>,</span><br><span class="line">            <span class="string">&quot;FAST_MODE&quot;</span>,</span><br><span class="line">            <span class="string">&quot;false→true&quot;</span>,</span><br><span class="line">            <span class="string">&quot;因为生产延迟预算要求跳过第二遍处理&quot;</span>,</span><br><span class="line">            <span class="string">&quot;false→true&quot;</span>,</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">    obligation_sets=[</span><br><span class="line">        ObligationSet(</span><br><span class="line">            [Obligation(<span class="string">&quot;checkout_to_payment&quot;</span>, kind=<span class="string">&quot;handoff&quot;</span>)],</span><br><span class="line">            [Proof(<span class="string">&quot;case_a&quot;</span>, declares=<span class="built_in">frozenset</span>(&#123;<span class="string">&quot;checkout_to_payment&quot;</span>&#125;))],</span><br><span class="line">            Coverage(</span><br><span class="line">                registrations=((<span class="string">&quot;checkout_to_payment&quot;</span>, (<span class="string">&quot;case_a&quot;</span>,)),)</span><br><span class="line">            ),</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>门禁接收 records，不遍历宿主项目的业务目录，也不要求宿主采用 Warrant 的字段名。已有自定义 manifest 的老项目可以使用 <code>warrant.adapters.legacy.WarrantProfile</code> 做适配；新项目应直接使用 <code>.warrant/</code> schema。</p>
+<p>完整结构见 <a href="/pototaker_blog/downloads/warrant/SCHEMA.txt"><code>SCHEMA.md</code></a>。</p>
+<hr>
+<h2 id="Warrant-不做什么"><a href="#Warrant-不做什么" class="headerlink" title="Warrant 不做什么"></a>Warrant 不做什么</h2><ul>
+<li><strong>不替人决定发什么。</strong> slice 必须由项目负责人确认。</li>
+<li><strong>不从代码推断设计动机。</strong> 找不到理由就提问或留空，不生成合理化解释。</li>
+<li><strong>不要求生产复制原型源码。</strong> 交付的是行为契约和证据，不是目录结构。唯一例外是<br><code>materials[]</code> 里声明 <code>replication: verbatim</code> 的内容资产——prompt、风格池、模版<br>这类东西没有「等价重写」，只能整份搬过去。</li>
+<li><strong>不把原型源码当成隐含上下文。</strong> audit&#x2F;sync 必须按 bundle 定位并验证原型 Git commit。</li>
+<li><strong>不自动编写领域结果提取器。</strong> 如何把运行输出映射成 case 结果属于宿主领域。</li>
+<li><strong>不把实现细节塞满技术文档。</strong> 代码和 schema 只有被 <code>evidence[]</code> 声明为关键证据时才折叠展示。<br>被 <code>materials[]</code> 声明的内容资产是另一回事：它是产品表现的来源，紧跟「方案」单列一节，<br>给摘要行 + 可扫索引表 + 折叠全文。</li>
+<li><strong>不替人签核。</strong> <code>confirm</code> 必须由真正读过方案的人确认后执行；Agent 不得自行署名。</li>
+<li><strong>没有接手方时价值有限。</strong> 它保护的是一次跨责任域交接。</li>
+</ul>
+<hr>
+<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><p>当前版本：<code>0.2.0</code>。</p>
+<p>Warrant 提取自一条实际运行的原型到生产交接流程（具体项目名称已隐去），现已拆成通用 schema、AI skills、确定性门禁、技术文档渲染和证据验收工具。规范入口是 <code>.warrant/</code>；<code>adapters/legacy/</code> 只用于不能迁移旧数据结构的项目。</p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  
+  <a href="/pototaker_blog/2025/11/20/realtime-voice-2025/"><span class="kicker">更早的记录 →</span><span>Her走到哪里了</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

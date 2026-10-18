@@ -1,0 +1,1138 @@
+# The warrant artifact and release envelope
+
+The artifact describes behaviour. A small host config says which business Git
+repository owns it, and export adds an immutable release envelope for consumers.
+
+```
+.warrant/
+  config.yaml         # producer host remote/mainline; operational, not behavioural
+  artifact.yaml       # what the thing does, and every claim about it
+  decisions.yaml      # append-only: why behaviour moved, keyed by the hash it explains
+  corpus/index.yaml   # obligation -> the cases that prove it
+  corpus/cases/*.json # the cases
+  releases/<hash>/     # generated export bundle, committed with the host release
+```
+
+The Warrant tool checkout is not the host. The **host repository** is the business
+project containing `.warrant/`; all code pointers are relative to its root. Run
+`warrant configure-host` there before the first release.
+
+## config.yaml
+
+```yaml
+host:
+  remote: origin
+  mainline: master   # optional; only `check --require-mainline` reads it
+  # repository: https://example.test/team/project.git  # optional URL override
+```
+
+`remote` and `mainline` are committed producer-side choices. The repository URL is
+normally derived from Git at export time so it cannot drift from the actual remote.
+Credentials are forbidden. This file is excluded from the behavioural
+`content_hash`: moving a repository mirror does not change what the released slice
+does.
+
+`mainline` is optional because a release is pinned to a commit, not to a branch:
+`export` requires only that the host repository has a committed, clean tree, and
+records whichever branch HEAD happens to be on. Set `mainline` if the team wants
+the stricter `check --require-mainline` policy, which is opt-in and is not part
+of `export`.
+
+## Exported release envelope
+
+Every bundle adds two generated files, plus a verbatim copy of every declared
+material:
+
+```text
+release-manifest.yaml   # producer repository + exact commit/tree + content_hash
+fingerprints.yaml       # sha256 of every declared source file at that commit
+materials.yaml          # per material: pointer, replication, content sha256, shape
+materials/<id>/<path>   # the content itself, copied byte-for-byte
+SYNC_CHEATSHEET.md      # the deploy action list: re-copy / read / confirm / answer / run / accept
+SYNC_CHEATSHEET.html    # the same sheet as a self-contained review page: the
+                        # sync-logic list and the acceptance cases a person reads
+                        # and argues with before the release is called done
+RELEASE_LOG.md          # the numbered release log: every sync item (L01…) and
+                        # gate case (G-id) carries a stable id the sync report
+                        # answers by
+RELEASE_LOG.html        # the same log as a dashboard page: counts, badges, a
+                        # 回执 column on every row, pass/fail visible at a glance
+SYNC_REPORT.template.yaml # the deploy side's report skeleton, every id pre-filled:
+                        # per-item sync status + unit-test result, per-gate verdict
+                        # + evidence, answers to the open questions, overall verdict
+window-changes.yaml     # the full release-window sweep (uncapped): every changed
+                        # path outside the boundary, kind-tagged, for agents to work
+window-commits.yaml     # the window's git history: each commit's hash, subject and
+                        # touched paths — the evidence trail under every change item
+change-notes.yaml       # the releasing side's own one-line wording per logical
+                        # change, archived from .warrant/changes/ (see below)
+```
+
+The change notes are the one content the tool refuses to invent: a hash diff
+proves *that* something moved, never *what it means*. Before export the
+releasing side writes one small YAML per logical change into
+`.warrant/changes/`:
+
+```yaml
+# .warrant/changes/<slug>.yaml
+summary: 曲风匹配的候选池从固定全量改为按当前情绪过滤
+nodes: [s2_style_match]        # 或 paths / materials，可混用
+```
+
+`export` archives them into `change-notes.yaml`, deletes the pending files
+(draft exports with `--out` do not consume them), matches each note onto its
+change group, and warns `CHANGE_NOTES_MISSING` for any group left without one
+— those groups render with a red 「未填写变更说明」marker over the bare commit
+trail.
+
+The sheets and the log are renderings, never inputs, so a bundle cut before
+they existed can grow them after the fact:
+
+```bash
+warrant cheatsheet  --bundle .warrant/releases/<hash> --checkout <producer checkout>
+warrant release-log --bundle .warrant/releases/<hash> --checkout <producer checkout>
+```
+
+recomputes the diff, the window sweep and the case split from the bundle's own
+records (plus the producer's git when `--checkout` is given; without it the
+closure section says so, and the window falls back to the bundle's own
+`window-changes.yaml` so item numbers do not shift) and rewrites the products
+in place. The release's `content_hash` does not move.
+
+The deploy side's answer to a release log is `SYNC_REPORT.yaml`: one row per
+numbered sync item (`status: success|failed|skipped`, plus `tests:
+pass|fail|not_run|none` when the item has unit tests), one row per gate case
+(`verdict: pass|fail` with `evidence` — a report URL, run id or log path —
+required for `pass`), answers to the open questions the release asked, and an
+`overall` verdict that may not claim `success` while any row failed. The
+template is pre-filled in the bundle; the consumer closes the loop with
+
+```bash
+warrant verify-sync --bundle <bundle> --report SYNC_REPORT.yaml
+```
+
+which fails on missing or unknown ids, illegal enum values, a `pass` without
+evidence, or an `overall` that contradicts the rows. A sync is complete when
+verify-source, verify-material, verify-acceptance and verify-sync all pass.
+
+The HTML page exists for the review loop: the releasing agent exports, hands
+the page over, and revises the sync logic and the acceptance cases until the
+reviewer is satisfied — the cases are user-observable on purpose (an input to
+type, an output to look at), because a golden gate a user cannot feel cannot
+be argued with. On the consumer side the cases are the sync's pass line: run
+every declared case, record each verdict, and close with
+
+```bash
+warrant verify-acceptance --bundle <bundle> --results acceptance-results.yaml
+```
+
+which fails while any declared case is missing from the results or carries a
+verdict other than `pass`.
+
+`SYNC_CHEATSHEET.md` is rendered at export time from the diff against the
+previous bundle (newest other directory under `.warrant/releases/`, or
+`export --previous <dir>`): which verbatim materials moved and must be re-copied
+(and to which declared destination), which registered sources moved and how to
+read their interval diff, which decision values need confirming
+(baseline / chosen / actual), which open questions remain — each marked 本版新增
+or 自 `<first carrying release>` 携带 — which declared do-not-ship twins the
+deploy side must not mistake for a deliverable, which files changed inside the
+release window but outside the boundary (the window sweep, run from the two
+pinned producer commits), and the acceptance commands that close the sync. It
+is a rendering of the release, so it lives in the bundle only and never feeds
+back into `content_hash`.
+
+Each `materials.yaml` record repeats the declaration and adds what actually
+shipped — `source`, `symbol`, `bundle_path`, `sha256`, `bytes`, `lines`. A whole
+file keeps its repository path under `materials/<id>/`; a symbol extract is stored
+as `<path>.<SYMBOL>.txt`, because it is a fragment and naming a fragment after the
+module invites somebody to copy it over one. The consumer proves its own copy with
+
+```bash
+warrant verify-material --bundle <bundle> --map materials-map.yaml
+```
+
+where the map says where that content lives on the deploy side — its layout is its
+own business, the content is not:
+
+```yaml
+materials:
+  rejection_copy: app/messages.py::REJECTION_REASONS
+  song_template: templates/song.jinja
+```
+
+Comparison is by content hash over normalised text: line endings and trailing
+whitespace are levelled, and everything else — order, wording, every visible
+character — must match. A `verbatim` entry that is unmapped or absent fails; an
+`equivalent` entry is reported and not judged, because there the corpus is the
+proof.
+
+Example release manifest:
+
+```yaml
+warrant_release: 1
+content_hash: 0123456789abcdef
+producer:
+  repository: https://example.test/team/project.git
+  remote: origin
+  mainline: master              # may be empty
+  branch: feature/pricing       # where this release was cut from; may be empty
+  commit: 0123456789abcdef0123456789abcdef01234567
+  tree: fedcba9876543210fedcba9876543210fedcba98
+  pointer_base: repo_root
+  artifact_path: .warrant
+```
+
+Both branch fields are only a discovery channel, which is why neither is required
+and a release cut from a feature branch is a normal release. Consumers audit and
+sync the immutable `commit`, verify the declared file hashes with
+`warrant verify-source`, and resolve artifact pointers from that checkout. A
+bundle without this envelope can still be read as a historical contract, but it
+cannot drive source-referenced audit or sync.
+
+If the commit had not reached any remote branch at export time, `export` said so
+with a `RELEASE_COMMIT_UNPUBLISHED` warning: the bundle is complete, but nothing
+can be fetched until somebody pushes.
+
+`warrant export` stores the bundle under `.warrant/releases/<content_hash>/` by
+default. This directory is operational output rather than new behavioural input,
+so it is excluded from the next `content_hash`; nevertheless it is intentionally
+visible to and committed by the host Git repository.
+
+## What `content_hash` covers, and why materials are inside it
+
+The hash covers every file under `.warrant/` that carries a claim, plus the
+content of every `materials[]` entry declared `replication: verbatim`. Ordinary
+source content stays outside it: two implementations of one behaviour are allowed
+to differ, so hashing their bytes would move the release identity on every
+refactor and say nothing about the contract.
+
+A verbatim material is the exception because its bytes *are* the contract.
+Leaving it out produces the one failure a content hash exists to prevent: both
+sides quote the same `content_hash` while holding two different prompts, and
+nothing in the handoff can tell them apart. For a project whose releases are
+frequently nothing but a prompt edit, a hash that does not move for a prompt edit
+is a hash that does not identify the release.
+
+The cost is accepted deliberately: prompt tuning moves the hash, and
+`decisions.yaml` will ask for a line about why — advisory, never blocking.
+
+## Why it is shaped like this
+
+Every field exists so a claim can **expire on its own**. That is the only design
+rule, and it explains the parts that look redundant.
+
+The clearest example is `decisions[]`. A naive schema records the chosen value:
+
+```yaml
+- id: FAST_MODE
+  value: "true"
+  why: "cold start was too slow"
+```
+
+That rots silently. Change the value to `false` and the `why` sits there, now
+describing a decision nobody made. So the schema records **both sides of the
+choice** and makes the rationale name which choice it argues for:
+
+```yaml
+- id: FAST_MODE
+  baseline: "false"          # what the code does on its own
+  chosen: "true"             # what this handoff pins
+  rationale: "cold start was too slow"
+  rationale_covers: "false→true"
+```
+
+Now moving the value changes the fingerprint `baseline→chosen`, the rationale stops
+covering it, and the release fails until someone re-argues it. Nobody had to
+remember anything.
+
+This is also why the schema carries `baseline` at all. Warrant never inspects your
+code to find the default — that would be a guess. The AI that wrote the artifact
+found it and recorded it, and if it later moves, the fingerprint moves with it.
+
+## artifact.yaml
+
+```yaml
+warrant_version: 1
+subject: "checkout flow v3"        # what is being handed off, in the team's words
+content_hash: "<computed>"          # stamped in the exported bundle, never by hand
+
+actors:                             # who drives the slice (optional, one line each)
+  - id: shopper
+    title: "买家"
+    role: "提交购物车"
+
+external_dependencies:              # what the design chose to rely on
+  - id: tax_api
+    title: "税务服务"
+    kind: service                   # service | model | dataset — free-form, glossary-translated
+    identity: "Avalara AvaTax v2"   # *which* one; the part that can go out of date
+    purpose: "按地区计算税额"
+    used_by: ["price_cart"]         # which nodes call it — drawn as real edges
+
+nodes:                              # the units of behaviour a consumer must build
+  - id: validate_cart
+    title: "购物车校验"              # short name in the team's language
+    role: "reject carts that cannot be priced"
+    archetype: gate_chain           # router | generator | gate_chain | processor
+    approach: |                     # how it was solved, and why that way
+      两段式：先做纯结构校验，只有通过的行才去查库存，
+      因为库存查询是远程调用，对明显无效的购物车不值得付这个代价。
+    unit: validation                # which sync unit it belongs to (declared, not guessed)
+    sources: ["src/cart/validate.py"]     # files whose content is fingerprinted
+    pointers:                             # navigation: must resolve to real symbols
+      entry: "src/cart/validate.py::validate_cart"
+    limits:                               # declared boundaries, not harvested ones
+      - "只校验单个购物车，跨购物车的库存竞争不在这里处理"
+    inputs:                               # the design contract, not a full API schema
+      - id: cart
+        title: "购物车"
+        required: true
+        from: "结算入口"
+        shape: "Cart object"
+        description: "包含待校验的商品行与客户上下文"
+    outputs:
+      - id: validated_cart
+        title: "已校验购物车"
+        description: "可进入定价的商品行"
+    steps:                                # the node's inside, in execution order
+      - id: shape_check
+        title: "结构校验"
+        kind: gate                        # process | decision | gate | merge | terminal
+        responsibility: "尽早拒绝结构不完整的请求"
+        pointer: "src/cart/validate.py::check_shape"
+        when: "每次调用"                   # what makes this stage run
+        outcome: "字段补全"                # what it produces
+        technique: "JSON Schema 校验"      # by what means
+      - id: stock_gate
+        title: "库存闸门"
+        kind: gate
+        responsibility: "在远程库存上做最终可售判断"
+        pointer: "src/cart/validate.py::check_stock"
+        when: "结构校验通过后"              # when this stage runs
+        outcome: "cart_blocked=true"
+        on_hit: "短路：返回缺货响应"        # non-empty means control leaves the chain
+        on_hit_when: "任一行缺货"           # *why* it short-circuits — a different fact
+        decision: FAST_MODE                # the switch that turns this stage off
+        technique: "远程库存查询"
+        parallel_group: checks             # consecutive steps sharing one run together
+        uses: ["stock_api"]                # into external_dependencies
+        levels:                            # declared grades, when the stage grades
+          in_stock: "放行"
+          low: "放行并标记"
+          out: "拦截"
+        properties:                        # comparable dimensions owned by this project
+          tuning_surface: "库存策略配置"
+          flexibility: "中"
+      - id: reject_cart
+        title: "拒绝结算"
+        kind: terminal
+        responsibility: "返回明确的不可结算原因"
+        technique: "标准错误响应"
+    transitions:                          # conditional DAG; omit for a true linear chain
+      - from: "$input"                    # only implicit endpoints: $input / $output
+        to: shape_check
+        label: "读取购物车"
+      - from: shape_check
+        to: reject_cart
+        when: "结构不合法"
+        priority: 1
+      - from: shape_check
+        to: stock_gate
+        when: "结构合法"
+        priority: 2
+      - from: stock_gate
+        to: reject_cart
+        variant: cart_out_of_stock        # binds a declared proof obligation
+      - from: stock_gate
+        to: "$output"
+        when: "全部商品可售"
+        carries: ["validated_cart"]
+      - from: reject_cart
+        to: "$output"
+        label: "返回拒绝结果"
+    evidence:                              # code excerpts that are part of the design
+      - kind: branches                     # branches | schema | prompt | env | symbols
+        pointer: "src/cart/validate.py::check_stock"
+        why: "开关关闭与库存为空是两条不同的放行路径"
+        collapsed: true                    # default
+
+wiring:                             # data actually crossing between nodes
+  - id: cart_to_pricing
+    from: validate_cart
+    to: price_cart
+    required: true                  # required -> the corpus must prove it
+    resolver: "src/cart/handoff.py::to_pricing_input"
+    carries: ["line_items", "customer_tier"]
+
+decisions:                          # choices the consumer can change, and nothing else watches
+  - id: FAST_MODE
+    name: "快速模式"
+    kind: env                       # env | config | integration — free-form, used in messages
+    node: validate_cart             # which node it governs
+    baseline: "false"
+    chosen: "true"
+    actual: ""                    # what the deployment really runs; the deploy side
+                                  # fills this in — until then it reads as pending,
+                                  # and the sync cheat-sheet says 待部署侧确认
+    effect: "skips the second pricing pass"
+    rationale: ""                   # may start empty; a gate advises, it does not block
+    rationale_covers: ""
+
+  - id: tax_service
+    name: "税务集成"
+    kind: integration
+    node: price_cart
+    baseline: "required"
+    chosen: "deferred"              # allowed to ship without it
+    effect: "carts in tax regions get an estimate"
+    rationale: "tax vendor contract not signed; estimate is legally allowed pre-launch"
+    rationale_covers: "required→deferred"
+
+materials:                          # content whose *bytes* are the contract, not its behaviour
+  - id: rejection_copy
+    title: "拒付文案表"
+    kind: catalog                   # prompt | catalog | template | lexicon | table — free-form, glossary-translated
+    node: validate_cart             # which node consumes it, same placement rule as decisions[]
+    pointer: ".warrant/materials/rejection-copy.yaml" # Agent snapshot; host source stays untouched
+    replication: verbatim           # verbatim | equivalent — the field that makes this a contract
+    shape: "23 条拒付原因，每条含面向买家的文案与内部原因码"
+    why: "买家看到的每一句拒付理由都出自这张表，改一行就是改产品"
+    owner: "内容运营"               # who may change it; who the consumer asks
+    delivers_to: "rainbow server_config/rejection_copy.yaml（test→prod）"  # optional:
+                                    # where this content is delivered, in the team's
+                                    # own words; a string or a list. A destination
+                                    # label, never a credential. The cheat-sheet's
+                                    # re-copy table prints it, and its absence shows.
+    do_not_ship:                    # optional: lookalikes the deploy side must NOT
+      - path: src/cart/rejection_copy_eval.yaml   # ship as this asset. reason is
+        reason: "测评变体，字段消费端不解析"        # load-bearing: an exclusion
+                                    # without one reads as silence. A gate warns on
+                                    # a missing path or an empty reason, and blocks
+                                    # one that names another material's own pointer.
+    capture:                         # only for Agent snapshots under .warrant/materials/
+      sources:                       # provenance back to untouched host source
+        - path: "src/cart/CheckoutView.kt"
+          selection: "REJECTION_COPY and RETRY_COPY"
+          sha256: "<64-char sha256 of the current host source file>"
+    index_columns: [buyer_copy, reason_code]   # optional: which columns the index table shows
+    index_from: ""                  # optional: the table to index by, when `pointer` is wider than it
+                                    #   e.g. pointer: src/layout/tpl_3img.py
+                                    #        index_from: src/layout/tpl_3img.py::TEMPLATES_3
+    layout:                         # optional: draw each entry's composition from its own slot data
+      slots: slot_info              #   the per-entry list of rectangles
+      width: w
+      height: h
+      place: pos                    #   a named region (left / right-top / full) — or x + y for coordinates
+      label: role                   #   optional, drawn inside the box
+      canvas: 540x720               #   optional; inferred from the extents without it
+    spine: ""                       # optional: one line naming the asset's internal pipeline
+    segments:                       # optional: a reading order over content nobody reads in one gulp
+      - id: levels
+        phase: 判读                  #   groups the spine diagram; must not recur out of byte order
+        title: "风险级别定义"
+        anchor: "## 风险级别定义"     #   must match the content verbatim, exactly once
+        produces: "P0/P1/P2 判据"
+        why: "拒答与放行的分界线全在这一段"
+        parameters:                 #   optional: interpolated values this stretch carries
+          - name: threshold
+            from: "settings.REJECT_AT"
+            why: "随环境变，不是常量"
+
+variants:                           # declared branches; each is an obligation to prove
+  - id: cart_out_of_stock
+    title: "缺货分支"
+    node: validate_cart
+    when: "任一商品不可售"
+    outcome: "拒绝结算并返回缺货原因"
+    required: true
+
+units:                              # what a consumer may sync separately, and what it drags in
+  - id: pricing
+    title: "定价"
+    requires: ["validation"]        # picking pricing pulls validation in
+    deferrable: false
+
+acceptance:                         # user-observable cases the deploy side must run and pass
+  - id: cart_shows_total            #   after a sync — not code-level goldens: an input
+    title: "结账页展示总价"          #   a user can type, an output they can look at
+    covers: [price_cart]            # node or unit ids; this link is what lets a release
+                                    #   turn "these files changed" into "these cases must
+                                    #   run" (本版必跑 vs 回归套件 in the cheat-sheet).
+                                    #   A gate warns when it is empty or dangles.
+    input: |                        # the sample a person or agent feeds the product
+      购物车：2 件商品，各 ¥10
+    expect: |                       # the observable output that counts as passing
+      页面展示总价 ¥20
+    how: "打开结账页，输入样例购物车"  # optional: which surface / entry point
+
+open_questions:                     # contradictions nobody resolved; see below
+  - id: tax_estimate_in_prod
+    about: "decision:TAX_SERVICE"   # node: | decision: | dependency: | material:
+    asks: "生产到底走不走税务估算？"
+    why_it_matters: "决定含税地区的分支在文档里标为生效还是未生效"
+    evidence: "代码默认 required；部署契约写 deferred"
+    owner: "部署侧（下周运维周会拍）"  # who it waits on; unnamed reads as unasked
+    answer: ""                      # only the host fills this in
+```
+
+Rules a gate enforces:
+
+- `wiring[].from` / `.to` must name a declared node.
+- `nodes[].transitions[].from` / `.to` must name a step in the same node or
+  `$input` / `$output`; a transition's `variant` must name a variant bound to
+  that node. Broken links block.
+- A `decision` / `gate` step in a semantic flow should have at least two
+  outgoing, labeled branches. `router`, `generator`, and `gate_chain` add
+  advisory archetype checks for branch semantics, input/output contracts, and
+  pass/stop paths respectively.
+- Contract fields need a human `title` and `description`; semantic steps need a
+  `responsibility`. Missing meaning warns even when ids and edges are valid.
+- `pointers`, `steps[].pointer` and `resolver` must resolve to a real file and
+  symbol. A step's pointer must name a symbol, not just a file: a step claims one
+  identifiable operation runs at that position, and a bare file cannot say which.
+- `decisions[].node`, `variants[].node`, `steps[].decision`, `steps[].uses` and
+  `external_dependencies[].used_by` must name something declared (blocking);
+  leaving `node` **empty** is a warning, because nothing can then place the
+  record in a per-node view.
+- Every `required` wiring and every `variant` must appear in `corpus/index.yaml`,
+  or carry a waiver **with a reason**.
+- Every `decisions[]` entry where `baseline != chosen` needs a `rationale`
+  (advisory) and, if it has one, a `rationale_covers` matching `baseline→chosen`
+  (blocking — a why that cannot expire is the artefact that rots).
+- Every `materials[]` entry needs a `pointer` that resolves (blocking — a bare
+  file is allowed, since a template has no symbol to name) and an explicit
+  `replication`. User-visible copy, prompts, fixed config/tables, resource files,
+  templates and fixed API/URL values are deterministically `verbatim`; only an
+  ambiguous fixture/cache/derived implementation asset requires a person to
+  choose between "copy this" and "reproduce this". A
+  `verbatim` entry whose content cannot be read blocks
+  (`MATERIAL_CONTENT_UNREADABLE`) and so refuses the export, because a bundle
+  carrying a hash where the content should be has already lost what it was
+  handing over; for an `equivalent` entry the same condition warns. A missing
+  `shape`, `why` or `owner` is advisory (`MATERIAL_UNEXPLAINED`), and a declared
+  source that is mostly data or prose with no material claiming it is proposed,
+  never concluded (`MATERIAL_UNDECLARED`).
+- Mixed-language source never has to be refactored for Warrant. The Agent may
+  write exact logical assets under `.warrant/materials/` and point at those bare
+  files. Such a snapshot must carry `capture.sources[]` with the untouched host
+  path, selected symbols/strings and current full-file sha256. Missing provenance
+  blocks as `MATERIAL_CAPTURE_UNTRACED`; a later host-source change blocks as
+  `MATERIAL_CAPTURE_STALE` until the Agent re-reads and refreshes the snapshot.
+- A pointer that resolves to *code* carrying far less than the content of the file
+  it points into is reported (`MATERIAL_POINTER_THIN`). A prompt assembled by a
+  builder can be declared at the four-line function that forwards to it: the
+  pointer resolves, every gate passes, and the bundle carries the dispatcher while
+  the writing stays home. Advisory, because a thin wrapper is sometimes the only
+  stable name that content has.
+- Two materials whose content reads as one asset copied — a catalogue with the
+  same keys, or writing a diff cannot separate — are reported when at least one of
+  them is `verbatim` (`MATERIAL_DUPLICATED`). This is the only rule here that is
+  about the *source's* shape rather than the record's, and the `verbatim`
+  condition is the reason it is allowed to be: duplicated content inside a
+  repository is the host's business, while duplicated `verbatim` content is an
+  obligation this artefact creates — hold both copies exactly, for as long as the
+  product lives. The message names the fields the two copies already disagree on,
+  because that is what separates a copy made to flip one flag from a fork nobody
+  is diffing; `warrant diff-material` prints the whole list. Advisory: two similar
+  catalogues are sometimes two products, and that answer belongs in `why`.
+- Every file matching the declared source scope must be listed in some
+  `nodes[].sources`, or exempted. Only files **this release touched** block.
+- Every Python file reachable by import from a declared source must likewise be
+  registered or exempted (`SOURCE_CLOSURE_UNDECLARED`, blocking). The scope
+  ratchet watches files *in scope*; this audit watches files *in the chain* —
+  a module imported by registered code is live on the shipped path whether or
+  not it matches a scope glob, and nothing else ever mentions its edits.
+  Exempt via `source_scope.exempt` entries of the form `{path, reason}`; an
+  exemption without a reason is warned about (`CLOSURE_EXEMPT_NO_REASON`).
+  `source_scope` looks like:
+
+  ```yaml
+  source_scope:
+  #  include: ["packages/**/*.py"]    # optional; the ratchet's scope
+    exempt:                           # path, or {path, reason}
+      - path: "packages/legacy/old_prompt.py"
+        # the reason is what keeps "exempt" from reading as "forgotten"
+        reason: "下线中,下版移除"
+  ```
+- At export, the two pinned producer commits are diffed and every changed path
+  outside the boundary — not a declared source, material or exemption — is
+  listed in the cheat-sheet's 区间变更盘点 with one standing action: confirm
+  whether the deploy side needs it, then register, exempt, or declare it
+  `do_not_ship`. Code and config changes also raise a
+  `WINDOW_CHANGE_OUTSIDE_BOUNDARY` warning; docs do not, because a release
+  that touches a design doc is not a boundary breach. The sweep watches the
+  *interval* where the closure audit watches the *chain*: a YAML no code
+  imports is invisible to the latter, and is exactly the kind of file a sync
+  agent picks up by mistake. An exempted file that changed in the window is
+  flagged for a fresh look at its exemption reason.
+- A material's `do_not_ship[]` entries are checked for the three ways such a
+  declaration rots: no reason (`DO_NOT_SHIP_NO_REASON`), a path that no
+  longer exists (`DO_NOT_SHIP_PATH_MISSING`), or a path that is itself
+  another material's own pointer (`DO_NOT_SHIP_IS_DELIVERABLE`, blocking).
+- An acceptance case missing its `title`, `input` or `expect` is warned about
+  (`ACCEPTANCE_CASE_INCOMPLETE`) — a case the deploy side cannot run or
+  cannot judge verifies nothing — as is one with no `covers`
+  (`ACCEPTANCE_CASE_NO_COVERS`, unselectable by a release's changes) or a
+  `covers` naming nothing declared (`ACCEPTANCE_CASE_COVERS_UNKNOWN`). At
+  export, a changed node or unit no declared case exercises raises
+  `ACCEPTANCE_GAP`: a change no user-observable case covers is a sync nobody
+  will verify.
+- A node with several sources and no `steps[]`, or with sources no pointer lands
+  in, is warned about (advisory). See below.
+- A node with no `approach`, a step with no `technique`, and a dependency with
+  no `identity` are each warned about (advisory). See below.
+- A node or dependency whose design layer no one has confirmed, and one whose
+  design layer moved after it was confirmed, are warned about (advisory).
+- `open_questions[].about` must name something declared (blocking); an
+  unanswered question is warned about (advisory), and the warning says who it
+  waits on or that nobody is named. See below.
+- A node no `wiring` edge reaches or leaves is reported (`NODE_UNWIRED`). It still
+  draws in the end-to-end chain, as a box joined to nothing, and a reader takes
+  that picture as the whole story: a stray box reads as a broken drawing rather
+  than as a claim that the stage runs on its own. Advisory, because running
+  independently is a legitimate answer — one that belongs in the node's
+  `approach`, where it reads as intent instead of omission.
+- Pages already rendered under `docs/architecture/tech` are compared against the
+  artefact's current `content_hash` and reported when they quote an older one
+  (`DOC_STALE`). Every page carries the hash it came from, which makes a
+  published copy self-dating; `warrant doc-status` asks the same question on
+  demand and exits non-zero, for use just before pointing somebody at a URL —
+  with `--bundle` it asks it against a release instead of against the working
+  tree, which is the form worth running before a handoff, since the working-tree
+  baseline reports every published page as stale after any local edit.
+  Advisory in `check`, because whether a stale copy matters depends on who is
+  reading it — but the failure it catches is the tool's own worst one: a page
+  that answers a question about a system that no longer exists, and reads exactly
+  like a page that does not.
+- Each keyed section is compared against the same section in the artefact at
+  `HEAD`, and ids that have stopped being declared are reported
+  (`SLICE_NARROWED`). Every other check reads what is declared, which leaves one
+  failure with nothing watching it: a re-onboard that covers *less* passes them
+  all, because everything it still says is true, and a reader has no way to see
+  that three stages, six edges and six branches were described last time and are
+  not described now. The warning names the ids that left and the ids that
+  arrived, since a rename is indistinguishable from a loss from the inside.
+  Advisory, because narrowing is often correct — a release covers what it covers
+  — but it has to be said out loud in the release's own terms rather than
+  happening silently. Comparing against git, not against a stored copy, is
+  deliberate: the edit that narrows the slice cannot also rewrite what HEAD says
+  was in the previous one.
+
+## Why the design layer exists
+
+`approach`, `technique`, `uses`, `identity` and `levels` are the only fields
+here that a parser could never have produced, which is exactly why they are the
+ones worth writing down.
+
+Everything else in this file is recoverable from code by someone patient enough:
+the call graph gives you wiring, the control flow gives you branches, the
+annotations give you contracts. So a document generated from those alone tells a
+reader what a machine already knew. It says the module has four stages and never
+that risk is *graded* rather than tested, says a call goes out and never that it
+goes to Qwen3Guard-8B, says a value is `"P1"` and never that `P1` means the song
+still gets written after a safety rewrite.
+
+Those are the facts people open a design doc to find, and every one of them was
+a decision somebody made rather than a fact the code contains. Recording the
+model's `identity` separately from its `purpose` follows the same rule as
+`baseline`/`chosen`: "we call a safety model" cannot go stale, "we call
+Qwen3Guard-8B" can, and only the second is worth a fingerprint.
+
+`on_hit_when` exists for a smaller reason with the same shape. When a stage runs
+and why it short-circuits are two facts, and an earlier renderer had only `when`
+to draw both edges from, so a gate whose `when` was "通过前两道闸门后" produced
+an arrow reading *after passing the first two gates → refuse the request*. One
+missing field turned into a confident diagram of something untrue.
+
+## Why the design layer needs a signature, and `confirmations.yaml`
+
+The design layer is the only part of this file that no gate can adjudicate.
+Every other claim here is checked against something: a pointer against the
+symbol table, a rationale against a fingerprint, an obligation against the
+corpus. `approach` is checked against nothing, because prose about intent is
+exactly as true as its author was careful.
+
+That was tolerable while the author was the person who made the decision. It
+stopped being tolerable once the design layer started being *drafted from the
+code* — often by a tool, which produces fluent sentences at the same rate
+whether or not it read the right file. A draft that names the wrong model
+passes every gate in this repository and produces a document that is confidently
+wrong in the place readers most rely on. That is not a hypothetical: it is how
+this section came to exist.
+
+So confirmation is tracked, using the mechanism `rationale_covers` already
+established. `warrant confirm node <id> --by <person>` records a fingerprint of
+the design layer *as currently worded*; when the wording moves, the fingerprint
+moves and the signature lapses. Nobody's name stays attached to a sentence they
+never read.
+
+Three details are load-bearing:
+
+- **It lives in `.warrant/confirmations.yaml`, not in `artifact.yaml`.**
+  Artifacts are increasingly generated from a host's own manifest, and a
+  sign-off written into generated output is erased by the next regeneration —
+  silently turning every confirmed claim back into an unconfirmed one.
+- **Only intent is fingerprinted** — `approach`, `technique`, `uses`, `levels`,
+  `limits`, `on_hit`, `identity`, `purpose`. Renaming a step or repointing it at
+  a moved symbol does not lapse anything, because expiring confirmations on
+  every refactor would train people to re-confirm without reading, which is the
+  failure this is meant to prevent.
+- **It warns, never blocks.** A gate you must switch off to get work done
+  protects nothing. The real output is the rendered document: unconfirmed prose
+  is *marked as unconfirmed on the page*, so a reader can tell a draft from
+  something a person stands behind.
+
+## Why `open_questions[]` exists
+
+The other half of the same problem. Confirmation handles prose nobody has
+vetted; this handles the case where the repository itself gives two answers — a
+code default of `true` against a deploy contract of `false`, a docstring that
+contradicts the behaviour, two modules disagreeing about which model is called.
+
+Faced with that, a drafter can guess or ask. Guessing is attractive because the
+output looks identical either way, and once the guess is prose in a document it
+is indistinguishable from knowledge. `open_questions[]` makes asking cheap
+enough to be the default: the question is a record that travels with the
+handoff, rather than a sentence in a chat log that evaporates when the session
+ends.
+
+`about` names what the answer would change, so the question renders on the page
+whose claims it undermines — a question about a switch appears in the module
+owning the switch, not only in a global list nobody opens. An unanswered
+question is a warning, not an error, because shipping with known unknowns is
+normal and honest. Shipping with unknowns that read as knowledge is not.
+
+`owner` says who the question is waiting on, and it is the field that keeps the
+record honest about its own history. The person who commissioned the document
+answered every question they were put; if the result then shows them a 待定夺
+with nobody's name on it, the only available reading is that the drafter never
+asked — and "still being decided, by them" is the opposite report from "nobody
+has looked at this". The renderer prints 未指明 rather than leaving the column
+blank, because a gap in a table reads as a rendering fault instead of a claim.
+
+## Why `evidence[]` exists, and is empty by default
+
+Code excerpts appear in a document only when a node asks for them.
+
+The inversion matters. Filling every slot a template offers is the easy default
+and it produced documents that ended in pages of field listings — correct,
+cheap to generate, and not what anyone came for. The judgement it skips is
+whether a given excerpt is *load-bearing*: a prompt is the actual specification
+in a system whose behaviour is defined by one, and noise in a system where it is
+a string, and no tool can tell those apart from the outside. So the project
+says which, per node, with a `why`, and everything renders collapsed.
+
+This is the same rule as `glossary.yaml`, applied to structure instead of
+vocabulary: a decision that varies per project does not belong in a generic
+tool, even when the tool could technically make it.
+
+An excerpt whose *content the consumer must carry* is a `materials[]` entry
+instead, and the next section says why the two cannot be the same record.
+
+## Why `materials[]` exists, and is not `evidence[]`
+
+Every other record in this schema describes behaviour: what runs, in what order,
+under which condition, calling which service, with which switch pinned. A
+consumer satisfies all of it by writing their own implementation and proving
+equivalence with the corpus, which is why `warrant-audit` says structural
+differences are not findings.
+
+There is a class of thing that breaks that rule, and it is usually the class
+that decides what the product is actually like. A prompt is not a call to be
+reimplemented, it is the specification, and paraphrasing it changes the output.
+A style catalogue is not logic, it is the reason a song sounds the way it does.
+A layout template is not a function, it is the product's pixels, and a template
+"reproduced equivalently" is a template that renders wrong. None of these can be
+handed over as behaviour. They can only be **copied**, and the handoff either
+carries the content or loses it.
+
+Nothing in the schema said so, and the consequence was not a rendering gap but
+three of them at once, since the artifact is the only channel: onboard never
+asked which files were content, `export` shipped a sha256 of a prompt instead of
+the prompt, and the module page for a template registry explained how templates
+are looked up while never showing that templates exist. Every gate passed.
+There was no stale claim to catch, because there was barely a claim.
+
+So a material is a first-class record, and the load-bearing field is
+`replication`:
+
+| `replication` | What the consumer owes | How it is checked |
+|---|---|---|
+| `verbatim` | the same content, byte-for-byte after normalisation | content equality against the bundle's copy |
+| `equivalent` | the same effect, however implemented | the corpus, like everything else |
+
+That single field is what makes the record a contract rather than a note, and
+it is why this cannot be folded into either neighbouring section:
+
+- **`evidence[]` is curation, not obligation.** It answers "is this excerpt part
+  of the design a reader should see", it is deliberately empty by default and
+  capped at two or three per node, and `export`, `audit` and `sync` never read
+  it. Overloading it with "must be replicated" would either destroy the
+  curation discipline it exists to enforce, or bury a delivery obligation inside
+  a `<details>` nobody opens.
+- **`decisions[]` is a two-sided axis with an expiring why.** A 989-line
+  catalogue has no `baseline`, and no honest `rationale` covers it. Forcing it in
+  produces a fingerprint nobody can read and a why nobody can write.
+
+The two records are also orthogonal in practice rather than alternatives. A
+catalogue is often *both* dynamic (`decisions[]`: production can add a row
+without a release) and verbatim (`materials[]`: whatever rows exist must exist
+identically on both sides). Those are different claims about the same file, and
+each expires on its own terms.
+
+## Why a material can declare `segments[]`, and why it cannot declare their text
+
+`replication: verbatim` obliges the release to carry every byte. It says nothing
+about whether anybody can read them. A 9000-character prompt satisfies the
+obligation completely while rendering as one fold that no reader finishes — so the
+content is technically present and practically absent, which is the same outcome
+`materials[]` was invented to prevent, one level down.
+
+`index_columns` and `layout` already accept that a material's internal structure
+is worth declaring; both only serve *tabular* assets. `segments[]` is that
+affordance for a prose asset: a declared reading order, where each entry names one
+stretch, what it is for, what it produces, and which phase of the asset's internal
+pipeline it belongs to.
+
+The load-bearing constraint is that a segment declares **where to cut, never what
+the text says**. `anchor` is a literal that must appear in the content exactly
+once; the rendered body is sliced out of the bytes at that anchor. A segment that
+could also carry its own text would give a verbatim asset an unchecked duplicate
+in YAML — the precise failure this schema exists to make impossible. So the
+labels are human judgement, the body is always the asset, and the two cannot
+drift apart: when an anchor stops matching, `MATERIAL_SEGMENT_UNANCHORED` blocks,
+exactly as a dangling pointer does.
+
+Layout is byte order, not declaration order, for the same reason. The spine's one
+job is to show the pipeline the asset really runs, so an order rearranged in YAML
+would be a claim nothing checks. A `phase` that recurs in more than one run once
+laid out that way warns (`MATERIAL_SEGMENT_PHASE_SPLIT`) rather than being merged:
+merging draws an order the file does not have, and drawing one phase title twice
+reads as a rendering fault, so warrant names the mismatch and leaves the choice
+with whoever wrote the phases.
+
+Coverage is deliberately **not** a byte ratio. Slicing runs anchor-to-anchor, so
+every byte after the first anchor belongs to some segment however lazy the
+decomposition is — one anchor over a thirteen-section prompt "covers" all of it.
+What catches a decomposition that explains its readable third and hides the rest
+is `MATERIAL_SEGMENT_COARSE`: the asset's own headings sitting inside a segment
+that nothing anchors on. Without that check, `segments[]` would be a way to make
+a page look explained, which is worse than the fold it replaced.
+
+The converse is `MATERIAL_OPAQUE`, and it is a proposal rather than a finding. An
+asset that is verbatim, long, and cut into sections by its own headings, with no
+`segments[]`, gets its headings listed as candidates. Which of them deserve a name
+is a judgement about the product — the same boundary as `MATERIAL_UNDECLARED`
+naming files it will not declare. What warrant can say is that one fold is the
+wrong rendering for a document this size, and it says that.
+
+`parameters[]` exists because a prompt assembled by an f-string reaches the page
+with `{guide['char_count']}` where the number should be. The template is what the
+repository holds, so the template is what gets shown; but the reader's question is
+what the value actually is, and only the host can say what decides it. A declared
+parameter renders as a row saying which quantity varies, what computes it, and
+why it is not a constant.
+
+A prompt template is content in the same sense as a catalogue, placeholders and
+all. `{safety_block}` inside a template is not a hole where the content should be
+— it is the template's own notation for where another declared block goes, and
+the surrounding wording is exactly what somebody tuned. So warrant never imports
+host code to render a prompt: the maintained text is the contract, the assembly
+around it is behaviour, and the corpus is what proves the assembly. What this
+does require is that a pointer land on the symbol *holding* that text rather than
+on a function that forwards to it — see `MATERIAL_POINTER_THIN`.
+
+`shape`, `why` and `owner` each earn their place. `shape` is the summary line a
+collapsed block needs — a `<details>` whose summary is "展开" carries no more
+information than the omission it replaced, whereas "31 条风格，每条含 tags /
+BPM / gender" tells a reader what they would find without opening it. `why`
+enters the design fingerprint like `approach`, so a signature lapses when the
+argument is reworded. `owner` answers the question a consumer asks next, and it
+is the one fact a reader cannot derive: this content is adjudicated by a person,
+and that is who. `index_columns` is optional and exists because declaration order
+is not importance order: a real style pool's first four fields were a label, a
+display name and an emoji, while the tags that decide what the song sounds like
+fell off the right edge of the table. Which columns carry the meaning is a fact
+about the content, so it is declared rather than guessed.
+
+`index_from` is for the case where those two — the content and the index of it —
+are not the same span of source. A layout module's contract is the whole file,
+because the functions emitting the markup are what the consumer has to reproduce;
+what a reader can *scan* is the registry declared at the bottom of it. With one
+pointer you have to choose, and both choices are bad: narrowed to the registry
+the bundle ships a table of function names and no layouts, while widened to the
+module the page becomes four hundred lines of inline CSS with nothing above it.
+So `pointer` stays the content and `index_from` names the table inside it. It has
+to be inside it: an index built from another file's table renders directly above
+this asset, where it reads as a description of it. `MATERIAL_INDEX_UNREADABLE`
+warns when the pointer misses, resolves to something with no table in it, or
+leaves the file.
+
+Registries that hold a callable index like any other table. `{"fn":
+template_left_tall, "n_images": 3, "desc": "左大出血竖图"}` is the ordinary shape
+of a dispatch table, and the field no parser can evaluate is shown as it was
+written (`template_left_tall`) rather than costing the other fields their column.
+Still no host code runs.
+
+`layout` is the one view that is not text at all, and it exists because a layout
+template is the one asset whose own text is its least readable form. A style pool
+reads well as a table and a prompt reads well as prose; 400 lines of
+`position:absolute;left:0;top:50px;width:280px` is a *description of a picture*,
+and every reader of that section reconstructs the same picture by hand. The
+registry that names the templates usually already carries their slot rectangles,
+because the code needs them to fit images into frames — so when the material
+points warrant at those fields, each entry renders as a wireframe: one box per
+slot, numbered in slot order, sized and anchored as declared.
+
+Two limits are deliberate. Warrant never parses the markup for CSS to recover
+geometry the data does not hold: inline styles are computed, conditional and
+interleaved with f-strings, so a wireframe reverse-engineered from them would be
+confidently wrong precisely where nobody checks. And a region name it does not
+recognise leaves that one box undrawn rather than guessing a position — the names
+it knows are `full` and the combinations of `left/center/right` with
+`top/middle/bottom`. `MATERIAL_LAYOUT_UNDRAWABLE` reports a `layout` that drew
+nothing, which is the honest outcome for a registry describing its layouts only in
+prose.
+
+Two prohibitions follow from the bundle carrying content verbatim: a material is
+never a credential, a key, or user data, and a material is not a way to ship a
+directory you did not want to describe.
+
+## Why `steps[]` exists
+
+Every other field here makes a claim expire. This one makes a claim exist.
+
+Without it a node is a black box with one door: an id, a sentence of `role`, a
+list of files and a single `entry` pointer. That shape is honest for a node that
+is genuinely one operation, and quietly lossy for one that is not. A module that
+runs four gates in sequence — redact, then check input, then check output, then
+an opt-in guard — collapses into one sentence, and *nothing notices*, because
+every gate warrant has is a freshness check and there is no stale claim to catch.
+The order of the gates, which of them can short-circuit, and which flag disables
+which are simply not expressible, so they are not written down, so no view can
+show them.
+
+`steps[]` is where that goes, and it earns its keep three ways: the per-node view
+can draw the chain, `steps[].pointer` is checked by the same pointer gate as
+everything else, and a node that has none is now visibly a black box rather than
+an invisible one.
+
+`parallel_group` is there because a chain is not always a line. Consecutive steps
+that share a group are drawn fanning out from the previous stage and marked in
+the table, since drawing them one after another would assert an order that does
+not exist — and would contradict their own `when`, which says they run alongside
+each other. Only consecutive steps group: the same id reappearing later is a
+second concurrent batch, not a reordering of the first. A group naming one step
+is not concurrency and is left unmarked.
+
+## Why contracts and semantic transitions exist
+
+`steps[]` declaration order answers one question: what runs first in a chain. It
+cannot answer which condition selects a path, which method owns which inputs,
+where branches terminate or merge, or how a declared `variant` reaches its
+outcome. Rendering a router from step order produces a polished lie: a linear
+sequence where the implementation makes a choice.
+
+`inputs[]` and `outputs[]` record the design contract rather than copying a full
+API schema. Each item names only what a reader needs to understand the method:
+`id`, human `title`, whether it is `required`, where it comes `from`, its coarse
+`shape`, and its `description` in the solution. `generator` nodes are warned when
+either side is absent.
+
+`transitions[]` is the conditional DAG. Its endpoints are step ids plus `$input`
+and `$output`; an edge may carry a `label`, `when`, `priority`, `carries`, and a
+bound `variant`. A bound variant supplies the branch title and condition to the
+renderer and connects the visual route to its corpus obligation. The gate checks
+endpoints, variant ownership, decision fan-out, labels, reachability, and dead
+ends.
+
+`steps[].properties` is deliberately free-form. A policy chain might compare
+flexibility and tuning surface; a storage chain might compare consistency and
+cost. Those dimensions belong to the project and may be translated through
+`glossary.yaml.property_labels`; Warrant renders them but never defines them.
+
+The fields are optional and backwards-compatible. A node without them keeps the
+legacy chain renderer. Once a node declares `archetype` or semantic fields, the
+archetype checks make missing meaning visible instead of silently falling back to
+a plausible generic picture.
+
+## Why records name their node
+
+`decisions[]`, `variants[]` and coverage entries all belong *somewhere*. Naming
+where is one field; not naming it costs a renderer either a dropped record or a
+guess. Guessing was tried — matching a node id against a record's text — and it
+fails in exactly the cases that matter, since the records worth placing are the
+ones whose names do not happen to contain each other's. Coverage needs no field
+because a wiring edge already names both its endpoints; a variant does, because
+nothing else says which node branches.
+
+## decisions.yaml
+
+Append-only. Keyed by the snapshot hash of the behaviour it explains, so an entry
+can never be edited into describing something else.
+
+```yaml
+- snapshot: "a3f9c1e8"
+  date: "2026-07-29"
+  summary: "pricing now runs before tax lookup"
+  why: "tax lookup needs a subtotal; running it first meant two calls"
+```
+
+## corpus/index.yaml
+
+```yaml
+cases:
+  - id: cart_out_of_stock
+  - id: cart_single_item
+    file: "special/one_item.json"   # optional; default is cases/<id>.json
+
+coverage:
+  cart_to_pricing: ["cart_single_item"]
+  cart_out_of_stock: ["cart_out_of_stock"]
+
+waivers:
+  payment_to_ledger:
+    reason: "needs the live ledger; cannot run offline"
+    verified_by: "staging smoke test, see runbook §4"
+```
+
+## corpus/cases/*.json
+
+A case declares **what it proves**, not just what it expects. Without that,
+`coverage` is only name-to-name: register the wrong case and everything stays green
+while the obligation is unproven.
+
+```json
+{
+  "id": "cart_single_item",
+  "proves": ["cart_to_pricing"],
+  "input": { "...": "..." },
+  "expect": { "...": "..." }
+}
+```
+
+`proves` is what makes coverage checkable in both directions: registered-but-not-declared
+means the registration is a lie, declared-but-not-registered means coverage
+under-reports and a later cleanup can delete the only evidence.
+
+## migration packet (`warrant slice`)
+
+A consumer that takes a subset of the release cuts a packet instead of working
+from the whole bundle:
+
+```bash
+warrant slice --units pricing,validation --out .warrant/migrations/<commit>
+```
+
+Membership is read from declared fields, never guessed: a node enters the slice
+through its `nodes[].unit`, variants/decisions/materials through their `node`,
+corpus cases through the obligations their `proves` names. Because the cut
+depends on `nodes[].unit`, a node that declares none (or one `units[]` does not
+declare) raises `NODE_UNIT_UNDECLARED` in `check` — advisory, because an
+artifact nobody slices is still complete.
+
+```
+<packet>/
+  migration.yaml      # the selection (applied/deferred/partial) plus the shape
+                      # of the cut: boundary wirings, unplaced records, shared cases
+  artifact.yaml       # the artifact filtered to the include-set; carries
+                      # `sliced_from`, never the full release's `content_hash`
+  corpus/index.yaml   # registrations pruned to the slice's obligations, both ways
+  corpus/cases/       # the cases those obligations need
+  materials.yaml      # the slice's content assets
+  materials/          # their bytes
+```
+
+`boundary_wirings` in `migration.yaml` are the edges with exactly one endpoint
+inside the slice — the interface to the part the consumer declined, and the
+section of the migration document a hand-written one always forgets.
+
+## What warrant will not do with this file
+
+- It will not write your `rationale`. Every gate can say one is missing or expired;
+  none can write one. An auto-generated justification is a rationalisation, and
+  would defeat the mechanism. Filling happens via the onboard **decision
+  interview** (`skills/warrant-onboard/references/interview-decisions.md`), confirmed by a human.
+- It will not infer `baseline` by reading your code. A guess that silently becomes
+  a fingerprint is worse than an empty field.
+- It will not decide what belongs in `nodes[]`. That is the scope question, and it
+  is the one thing a human has to answer.
+- It will not decide that a file is a `materials[]` entry, or that a material is
+  `verbatim`. It can see that a module is mostly literals and propose it; whether
+  editing one line of that content changes the product is a judgement about the
+  product, and it also decides how the consumer will be held to account.
+- It will not write your `approach`, infer a `technique`, or guess which model an
+  `identity` names. It can see that a function calls an HTTP client; it cannot
+  see that the team picked that vendor over two others, and a plausible sentence
+  in that slot is worse than a warning, because a warning gets fixed.
+
+## glossary.yaml (optional)
+
+Every word warrant does not own. The renderers look words up here rather than
+carrying a table of their own, because a translation table compiled into a
+generic tool is one project's vocabulary that everyone else inherits.
+
+```yaml
+edge_verbs:                  # what a `carries` name means, for diagram edge labels
+  redacted_messages: "脱敏后传递"
+decision_kinds:              # display names for the free-form `kind`
+  env: "环境变量"
+dependency_kinds:            # display names for external_dependencies[].kind
+  model: "模型"
+material_kinds:              # display names for materials[].kind
+  catalog: "配置表"
+conditions:                  # code condition → business condition
+  "not (messages)": "当对话为空时"
+results: {}                  # code return value → business result
+literal_values: {}           # enum member → meaning, keyed by type name
+```
+
+Anything missing is kept verbatim and marked `（待翻译）` — a signal to add the
+mapping, not a licence for the tool to invent one.
+
+## Related presentation (not part of the artifact schema)
+
+`skills/warrant-tech-doc` reads this artifact together with code and materials,
+persists a v6 research/chapter/section-design brief, then authors an illustrated
+multi-page HTML site. There is no Markdown-to-HTML renderer in this workflow.
+
+The Agent chooses whatever HTML/CSS/JS/SVG logic best explains each section. Its
+`warrant-site.yaml` v9 binds the exact brief, candidate or bundle `content_hash`,
+chapter/section/appendix landings, every artifact fact's lookup target and generated
+desktop/narrow browser evidence. Minimal `data-warrant-*` markers make those
+bindings checkable without prescribing page count, palette, diagram family or
+components. A figure marker is optional and never counts as presentation quality.
+
+Before rendering, `.warrant/presentation-brief.yaml` freezes the draft/release mode,
+repository research notes, decision-based chapters, section leads, selected forms,
+selection reasons and sources. `check-site` verifies that the site did not silently
+rewrite this handoff. The brief is operational documentation metadata, not part of
+the behavioural `content_hash`.
+
+`warrant-onboard` always writes this brief and immediately invokes
+`warrant-tech-doc` against the same checked working-tree artifact. Therefore an
+onboard is incomplete if it updates `.warrant/` without regenerating and validating
+the illustrated site. This mandatory composition remains a draft and does not grant
+release authority.
+
+The author then runs the bundled Playwright evidence capture. It opens every page,
+scrolls every declared section in desktop and narrow viewports, checks final
+computed visibility, records browser/resource errors and stores inspectable PNGs.
+`render_review` points to that generated report and the current `site_hash`; changing
+any delivered byte expires the evidence. `warrant check-site` validates the report,
+screenshot bytes, section visibility, brief hash, bindings, source coverage, closed
+directory, links, content types, `content_hash`, quotes and pointers. It does not
+measure taste or choose presentation components.
+
+For a release document, the Agent reads the exact bundle and the checkout of the
+producer commit named by `release-manifest.yaml`. The page uses the bundle's
+artifact and material copies, never the moving working tree. For a draft it reads
+the current workspace and visibly says `草稿，未发版`.
+
+Coverage gives lookup landings for the release facts the document actually
+cites, but does not have to contain every fact — consistency means the
+document never contradicts the artifact, not that the two mirror each
+other. Several modules may form one narrative sequence; secondary facts and
+full prompt/configuration bytes may live in folded appendices beside the
+mechanism they affect.
