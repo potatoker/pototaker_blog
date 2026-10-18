@@ -102,7 +102,7 @@
 <li>生成式3D技术，如<a target="_blank" rel="noopener" href="https://nvlabs.github.io/eg3d/">EG 3D</a>，最新的还有如<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.15008">wonder3D</a>，生成式算法被运用到 3D 重建中，用以提升建模效率，也是目前的一个研究热点。</li>
 </ul>
 <p>3D 渲染的数字人目前看整体仍然很受元宇宙时期遗风影响，前两年动捕设备的下沉，让 3D 数字人又泛起了一些新的水花，但最近很多之前做做 3D 数字人的公司开始发现投入更小，概念更新的 2D 数字人变得更加容易引起关注。</p>
-<p><strong>基于审美风格的形象分类：</strong><br>[原图涉及公司项目，暂不公开]</p>
+<p><strong>基于审美风格的形象分类：</strong></p>
 <ul>
 <li>a: <a target="_blank" rel="noopener" href="https://miaoyaxiangji.com/">妙鸭</a>的Diffusion写实风格模型与 Lora 技术实现的数字形象，妙鸭的落地可以看作是一种新的“美颜”，基于Lora的实现使得以往的类似 GAN 的玩法变得更加粒度更加细化，譬如炼出一个帅哥美女 Lora，变成一种和以往参数美颜完全不同的思路，具体可以参考我在妙鸭推出之前就发布的文章<a href="/pototaker_blog/2024/04/07/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8AI%E7%94%BB%E7%94%BB%E4%B8%80%E9%94%AE%E5%8F%82%E5%8A%A0%E6%9C%8B%E5%8F%8B%E5%9C%88%E6%91%84%E5%BD%B1%E6%AF%94%E8%B5%9B-%E4%B8%8A/">如何使用AI画画一键参加朋友圈摄影比赛</a></li>
 <li>b: <a target="_blank" rel="noopener" href="https://zenvideo.qq.com/">腾讯智影</a>等最近又得到进一步推广的真人视频采集虚拟口播形象，这一技术得益于最近lipsync和tts技术的革新发展得到了效果和成本上的显著提升，这类视频采集式数字人成为了“最真”的数字人。</li>
@@ -130,7 +130,6 @@
 <p>这里现笼统的把数字人的发声概括为 TTS（本文这里也包括VC音色转换）。详细的TTS 技术概述可以参考我之前的这篇<a href="/pototaker_blog/2024/06/08/generative-voice/">如何使用AI语音和偶像对话</a>.但随着最近HeyGen在社交网络上的爆火，TTS 运用到虚拟人上的技术可以认为已经被分成了两类：</p>
 <p><strong>1. 需要微调的带有语言特征预训练模型的深度学习模型。</strong></p>
 <p>代表技术是<a target="_blank" rel="noopener" href="https://github.com/jaywalnut310/vits">vits</a>利用深度学习网络端到端训练音频数据，音色克隆再进行。使用 1 小时左右的微调训练音频数据，T4卡训练1-2小时左右效果如下：allen_caixukun(2).wav（原音频待补）。</p>
-<p>[涉及内部项目的示例已隐去。]</p>
 <p><strong>2. 几秒音频无finetune, 零样本命中的多语言推理模型</strong></p>
 <p>代表技术是<a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/project/vall-e-x/">VALL-E (X)</a>，他使用了一般vits预训练模型使用的千倍以上规模的预训练数据，使得预训练模型本身可以in-context learning，几秒的音频作为prompt就可以推理克隆，项目和模型未开源，但根据论文可以倒推代码，接近vall-ex效果的体验公司有<a target="_blank" rel="noopener" href="https://app.rask.ai/">rask.ai</a>和<a target="_blank" rel="noopener" href="https://elevenlabs.io/">elevenlabs</a>,最近大火的 <a target="_blank" rel="noopener" href="https://app.heygen.com/videos">heygen</a>使用的就是来自elevenlabs的 tts 技术。（最近的OPEN AI TTS pretrain 应该使用了类似的思路）</p>
 <p>这里再详细说一下vall-ex,作为目前in context learning 零样本命中的最受关注的 TTS 技术：</p>
