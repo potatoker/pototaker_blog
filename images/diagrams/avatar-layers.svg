@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="680" viewBox="0 0 720 680" role="img" aria-labelledby="title desc"><title id="title">拆开一个数字人演示</title><desc id="desc">把各层能力分别验证，再看它们怎样协作</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#7b8584"/></marker></defs><style>text{font-family:Inter,'PingFang SC','Microsoft YaHei',sans-serif;fill:#202725}.title{font-size:30px;font-weight:600;letter-spacing:-1px}.sub{font-size:18px;fill:#707977}.label{font-size:23px;font-weight:500}.body{font-size:18px;fill:#606966}.mono{font:16px ui-monospace,Menlo,monospace;fill:#7b8580}.accent{fill:#335c50}.edge{fill:none;stroke:#7b8584;stroke-width:2;marker-end:url(#arrow)}.dashed{stroke-dasharray:6 6}</style><rect width="720" height="680" rx="8" fill="#f4f5f3"/>
+<text x="40" y="59" class="title">拆开一个数字人演示</text>
+<text x="40" y="93" class="sub">把各层能力分别验证，再看它们怎样协作</text>
+<rect x="48" y="132" width="624" height="97" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="168" class="label">形象与渲染</text>
+<text x="70" y="198" class="body">照片 / 2D / 3D / 生成图像</text>
+<path d="M360 230 V251" class="edge"/>
+<rect x="48" y="258" width="624" height="97" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="294" class="label">驱动与口型</text>
+<text x="70" y="324" class="body">真人输入 / 程序驱动 / 音频驱动</text>
+<path d="M360 356 V377" class="edge"/>
+<rect x="48" y="384" width="624" height="97" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="420" class="label">声音与对话</text>
+<text x="70" y="450" class="body">语音识别 / 回复生成 / 语音合成</text>
+<path d="M360 482 V503" class="edge"/>
+<rect x="48" y="510" width="624" height="97" rx="8" fill="#e8eeea" stroke="#77978b" stroke-width="1.5"/>
+<text x="70" y="546" class="label">交互与同步</text>
+<text x="70" y="576" class="body">倾听 / 等待 / 打断 / 音画对齐</text>
+</svg>

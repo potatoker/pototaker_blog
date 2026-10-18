@@ -16,6 +16,8 @@
 <meta property="og:site_name" content="potatoker&#39;s blog">
 <meta property="og:description" content="从 ASR—LLM—TTS 到语音多模态模型，讨论等待、打断、长会话和测量方法。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/voice-chain.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/voice-interruption.svg">
 <meta property="article:published_time" content="2025-11-20T04:00:00.000Z">
 <meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
 <meta property="article:author" content="Raymond">
@@ -23,6 +25,7 @@
 <meta property="article:tag" content="语音">
 <meta property="article:tag" content="实时交互">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/voice-chain.svg">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -50,8 +53,8 @@
 <h2 id="先分清声音生成与语音对话"><a href="#先分清声音生成与语音对话" class="headerlink" title="先分清声音生成与语音对话"></a>先分清声音生成与语音对话</h2><p>一个 TTS 模型可以把文字变成好听的声音，但完整对话还需要理解用户输入、保存上下文、处理轮次，并决定怎样回复。</p>
 <p>音色很像某个人，只证明了声音的一部分表现；会话是否自然，还取决于回复内容、停顿和对用户动作的响应。</p>
 <h2 id="级联链路容易理解，也方便定位问题"><a href="#级联链路容易理解，也方便定位问题" class="headerlink" title="级联链路容易理解，也方便定位问题"></a>级联链路容易理解，也方便定位问题</h2><p>传统路线把链路拆成语音识别、语言模型与语音合成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">麦克风 → 端点检测 / 语音识别 → 对话模型 → 流式语音合成 → 播放</span><br></pre></td></tr></table></figure>
-
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/voice-chain.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/voice-chain.svg" alt="实时语音链路中的采集、识别、回复、合成与播放"></a></p>
+<p><em>本文的通用链路示意；分段测量才能知道用户实际等在哪一环。</em></p>
 <p>拆开之后，每一部分都可以替换和测量。代价是接口之间需要协调，而且语音中的某些非文字信息，未必能完整通过文字转写传递给下一层。</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/QwenAudio/CosyVoice">CosyVoice</a> 和 <a target="_blank" rel="noopener" href="https://github.com/index-tts/index-tts">IndexTTS</a> 等公开项目可以作为观察语音生成路线的入口。部署时仍要检查具体版本支持什么输入、输出与流式方式。</p>
 <h2 id="统一建模没有消除系统边界"><a href="#统一建模没有消除系统边界" class="headerlink" title="统一建模没有消除系统边界"></a>统一建模没有消除系统边界</h2><p>语音多模态模型试图在模型内部连接理解与生成。<a target="_blank" rel="noopener" href="https://github.com/QwenLM/Qwen3-Omni">Qwen3-Omni</a> 展示了理解多种输入并生成语音的路线。</p>
@@ -62,6 +65,8 @@
 <h2 id="打断是完整状态机的问题"><a href="#打断是完整状态机的问题" class="headerlink" title="打断是完整状态机的问题"></a>打断是完整状态机的问题</h2><p>用户开口时，不能只暂停扬声器。系统可能还在生成文字、合成声音，或者积压了尚未播放的音频片段。</p>
 <p>需要决定哪些请求取消、哪些队列丢弃，已经说出的内容如何记录，以及下一轮对话是否知道自己只说完了半句话。</p>
 <p>如果这些状态没有一起更新，常见结果是“声音停了，但下一轮仍按整段已说完来回复”，或者用户打断以后又播放出上一轮的尾巴。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/voice-interruption.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/voice-interruption.svg" alt="打断需要同时取消生成、清空播放队列并更新上下文"></a></p>
+<p><em>按本文的状态管理过程重绘。播放状态与对话上下文需要保持一致。</em></p>
 <h2 id="长会话比短演示更能暴露问题"><a href="#长会话比短演示更能暴露问题" class="headerlink" title="长会话比短演示更能暴露问题"></a>长会话比短演示更能暴露问题</h2><p>较长时间交谈时，可能出现上下文增长、音色漂移、回复越来越长以及工具调用失败后的恢复问题。测试应包含安静环境、背景声、短促打断和长时间停顿。</p>
 <p>对音色适配，也应该分开测量相似度与内容准确性。声音很熟悉，却把关键数字读错，仍然不适合需要精确表达的任务。</p>
 <h2 id="先搭最小链路，再升级组件"><a href="#先搭最小链路，再升级组件" class="headerlink" title="先搭最小链路，再升级组件"></a>先搭最小链路，再升级组件</h2><p>我会先保留一种输入、一种音色和明确的轮次规则，把识别、回复与播放串起来。能够重复测量后，再加入流式输出、打断与工具能力。</p>

@@ -16,12 +16,16 @@
 <meta property="og:site_name" content="potatoker&#39;s blog">
 <meta property="og:description" content="从驱动、渲染、语音和实时交互四个角度，拆开数字人演示背后的技术组合。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/avatar-layers.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/articles/digital-humans/0d77c7ed3e8548198615202b59ce4d96.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/articles/digital-humans/1a52e3a735224c3fbc681263ba62115d.webp">
 <meta property="article:published_time" content="2024-06-23T04:00:00.000Z">
 <meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="数字人">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/avatar-layers.svg">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -46,6 +50,8 @@
   
   <div class="prose"><p>数字人很容易被一个完整演示吸引注意：画面里的人会说话、有表情，似乎也能回答问题。但拆开以后，这往往是形象生成、声音合成、口型驱动与对话系统的组合。</p>
 <p>我想用工程视角整理这些组合。先不急着给“数字人”下定义，而是问：形象怎样产生，动作从哪里来，说话怎么生成，以及它是否真的可以实时互动。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/avatar-layers.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/avatar-layers.svg" alt="数字人的形象、驱动、声音与交互分层"></a></p>
+<p><em>按本文结构重绘。画面逼真、声音自然与实时互动需要分别验证。</em></p>
 <h2 id="第一层：谁在驱动它"><a href="#第一层：谁在驱动它" class="headerlink" title="第一层：谁在驱动它"></a>第一层：谁在驱动它</h2><p>真人驱动的虚拟形象可以来自动作捕捉、摄像头追踪或人工控制。数字形象承担的是呈现，人仍然提供主要动作与表达。</p>
 <p>计算驱动则把一部分输入换成程序、文本、语音或生成模型。两者也可以混用，例如真人采集基础动作，再由系统生成台词和口型。</p>
 <p>这不是谁取代谁的简单关系。对于直播表演、固定播报或实时助手，不同驱动方式各有适合的边界。</p>
@@ -55,6 +61,10 @@
 <h2 id="第三层：嘴动了，不等于人在说话"><a href="#第三层：嘴动了，不等于人在说话" class="headerlink" title="第三层：嘴动了，不等于人在说话"></a>第三层：嘴动了，不等于人在说话</h2><p>一类方案把语音对应到预设的口型或表情权重，再驱动模型；另一类方案根据音频重新生成视频中的嘴部区域。</p>
 <p>后者在固定机位、光照和人物素材条件下可能很有说服力，但如果输入角度变化、遮挡增多，或者需要实时表达新的情绪，就要重新观察稳定性。</p>
 <p>公开项目中，<a target="_blank" rel="noopener" href="https://github.com/Rudrabha/Wav2Lip">Wav2Lip</a>、<a target="_blank" rel="noopener" href="https://github.com/OpenTalker/video-retalking">VideoReTalking</a> 与 <a target="_blank" rel="noopener" href="https://github.com/OpenTalker/SadTalker">SadTalker</a> 展示了不同的输入与生成路线。比较时应同时看口型、身份保持、边界痕迹和整段视频的连续性。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/articles/digital-humans/0d77c7ed3e8548198615202b59ce4d96.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/articles/digital-humans/0d77c7ed3e8548198615202b59ce4d96.webp" alt="Wav2Lip 语音与视频帧之间的训练结构"></a></p>
+<p><em>原稿引用的 Wav2Lip 技术图。它说明模型组成，不等于端到端实时交互链路。</em></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/articles/digital-humans/1a52e3a735224c3fbc681263ba62115d.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/articles/digital-humans/1a52e3a735224c3fbc681263ba62115d.webp" alt="VideoReTalking 的对齐、口型生成与画面增强流程"></a></p>
+<p><em>原稿引用的 VideoReTalking 流程图，包含预处理、口型生成与画面增强。</em></p>
 <h2 id="第四层：声音本身也是一套系统"><a href="#第四层：声音本身也是一套系统" class="headerlink" title="第四层：声音本身也是一套系统"></a>第四层：声音本身也是一套系统</h2><p>声音合成还可以拆成固定音色、微调音色以及短参考音频适配等路线。生成一句自然的短句，不代表长对话里不会发生音色漂移或错误发音。</p>
 <p>相关实验在<a href="/pototaker_blog/2024/06/08/generative-voice/">语音合成笔记</a>里单独展开。数字人系统需要把声音生成与画面驱动的时间对齐，否则每一个局部都看起来不错，合起来仍然会有违和感。</p>
 <h2 id="视频翻译为什么是一个清晰的组合案例"><a href="#视频翻译为什么是一个清晰的组合案例" class="headerlink" title="视频翻译为什么是一个清晰的组合案例"></a>视频翻译为什么是一个清晰的组合案例</h2><p>视频翻译通常需要识别原始内容、翻译文字、生成目标语言声音，再调整口型或画面。演示效果好的原因，在于它把几项能力放进了一个边界清楚的任务。</p>

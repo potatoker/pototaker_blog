@@ -964,3 +964,20 @@ img {
   .intro h1 { font-size: 56px; gap: 12px; }
   .title-count { font-size: 36px; }
 }
+
+/* Original figures stay legible through a full-resolution link. */
+.prose .image-original {
+  display: block;
+  border: 0;
+  cursor: zoom-in;
+}
+.prose .image-original img {
+  margin-bottom: 12px;
+}
+.prose .article-figure + p > em:only-child {
+  display: block;
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.8;
+  font-style: normal;
+}

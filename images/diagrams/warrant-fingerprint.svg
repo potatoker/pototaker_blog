@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="620" viewBox="0 0 720 620" role="img" aria-labelledby="title desc"><title id="title">对象变了，旧确认就应失效</title><desc id="desc">数值仅为说明机制的虚构示例</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#7b8584"/></marker></defs><style>text{font-family:Inter,'PingFang SC','Microsoft YaHei',sans-serif;fill:#202725}.title{font-size:30px;font-weight:600;letter-spacing:-1px}.sub{font-size:18px;fill:#707977}.label{font-size:23px;font-weight:500}.body{font-size:18px;fill:#606966}.mono{font:16px ui-monospace,Menlo,monospace;fill:#7b8580}.accent{fill:#335c50}.edge{fill:none;stroke:#7b8584;stroke-width:2;marker-end:url(#arrow)}.dashed{stroke-dasharray:6 6}</style><rect width="720" height="620" rx="8" fill="#f4f5f3"/>
+<text x="40" y="59" class="title">对象变了，旧确认就应失效</text>
+<text x="40" y="93" class="sub">数值仅为说明机制的虚构示例</text>
+<rect x="48" y="133" width="624" height="133" rx="8" fill="#e8eeea" stroke="#77978b" stroke-width="1.5"/>
+<text x="70" y="169" class="label">原对象 · 内容指纹 A</text>
+<text x="70" y="199" class="body">阈值 = 0.70</text>
+<text x="70" y="224" class="body">确认记录 A：针对这个值的理由已确认</text>
+<path d="M360 267 V326" class="edge"/>
+<text x="380" y="302" class="body">修改对象内容</text>
+<rect x="48" y="341" width="624" height="133" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="377" class="label">新对象 · 内容指纹 B</text>
+<text x="70" y="407" class="body">阈值 = 0.80</text>
+<text x="70" y="432" class="body">指纹 B ≠ 指纹 A，旧确认不覆盖新对象</text>
+<text x="48" y="531" class="label">需要重新判断与确认，不能自动沿用“已确认”。</text>
+<text x="48" y="571" class="body">内容指纹识别变化；它本身不证明设计正确。</text>
+</svg>

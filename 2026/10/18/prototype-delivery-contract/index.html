@@ -16,6 +16,9 @@
 <meta property="og:site_name" content="potatoker&#39;s blog">
 <meta property="og:description" content="把原型交接拆成可定位的行为、可复现的证据和会失效的确认，减少文档与代码之间的漂移。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-handoff.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-fingerprint.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-scope.svg">
 <meta property="article:published_time" content="2026-10-18T08:00:00.000Z">
 <meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
 <meta property="article:author" content="Raymond">
@@ -23,6 +26,7 @@
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="软件交付">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-handoff.svg">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -49,11 +53,13 @@
 <p>我想把原型交付里的几个关键约定整理清楚。首先要回答的是：怎样让“已经确认”“已经验证”不再是会永久留在文档里的静态句子？</p>
 <h2 id="把交接对象说清楚"><a href="#把交接对象说清楚" class="headerlink" title="把交接对象说清楚"></a>把交接对象说清楚</h2><p>交接源码很重要，但源码不会自动解释哪些行为是约定、哪些只是临时实现。交接一份文档也不够，因为文档可能在下一次修改后继续展示旧结论。</p>
 <p>我希望交付物至少能够描述入口、输入输出、条件分支、依赖与关键内容资产。它不必复制全部实现细节，但必须让接手方知道哪些事实需要复现。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">原型代码与设计判断</span><br><span class="line">        ↓ 整理</span><br><span class="line">行为约定、关键内容、验证用例</span><br><span class="line">        ↓ 固定版本并导出</span><br><span class="line">可独立检查的交付快照</span><br><span class="line">        ↓ 对照与运行</span><br><span class="line">实现差异、测试证据、验收范围</span><br></pre></td></tr></table></figure>
-
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/warrant-handoff.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/warrant-handoff.svg" alt="原型、交付快照、运行证据与验收范围的关系"></a></p>
+<p><em>图 1 · 根据 Warrant 的交付设计重绘。每一次交付都把行为、版本与证据连在一起。</em></p>
 <h2 id="最关键的规则：确认需要有适用对象"><a href="#最关键的规则：确认需要有适用对象" class="headerlink" title="最关键的规则：确认需要有适用对象"></a>最关键的规则：确认需要有适用对象</h2><p>假设一条记录说：“使用这个阈值，是因为它在当前数据上更稳定。”后来阈值变了，解释却没有变。句子仍然通顺，但它已经不再证明当前选择合理。</p>
 <p>可以把记录与所讨论对象的指纹绑定。对象内容改变，旧记录就失去覆盖范围，需要重新判断。相同思路也适用于方案确认、代码引用和测试结果。</p>
 <p>这并不是用哈希证明设计正确。哈希能够帮助判断“讨论的还是不是同一个对象”，正确性本身仍需要人、运行结果与任务上下文来判断。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/warrant-fingerprint.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/warrant-fingerprint.svg" alt="对象指纹变化后，旧确认不再覆盖新对象"></a></p>
+<p><em>图 2 · 指纹帮助识别结论的适用对象；图中阈值仅为机制说明的虚构示例。</em></p>
 <h2 id="让语义判断与确定性检查各自做擅长的事"><a href="#让语义判断与确定性检查各自做擅长的事" class="headerlink" title="让语义判断与确定性检查各自做擅长的事"></a>让语义判断与确定性检查各自做擅长的事</h2><p>AI Agent 适合阅读代码、寻找入口、整理变化并追问理由。它可以帮助提出哪些分支需要覆盖，但不应该仅凭一段自然语言就宣布覆盖已经完成。</p>
 <p>文件是否存在、内容是否一致、引用符号是否还能解析、用例集合是否完整，则更适合交给可复现的程序检查。</p>
 <p>这两部分需要连接起来：Agent 解释为何需要某项约定，检查程序确认相应对象与证据是否真的存在。仅靠目录扫描无法理解行为，仅靠流畅叙述也不能保证数据相等。</p>
@@ -65,6 +71,8 @@
 <h2 id="增量同步要带上依赖"><a href="#增量同步要带上依赖" class="headerlink" title="增量同步要带上依赖"></a>增量同步要带上依赖</h2><p>后续版本通常不需要重新理解整个项目，但也不能只按改了哪些文件来决定同步范围。一个判断条件改变，可能同时影响上游输入、下游分支和测试。</p>
 <p>因此，可以先从契约变化出发，定位受到影响的单元，再补齐它依赖的内容与验证用例。接手方既知道要改什么，也知道为什么这些部分需要一起看。</p>
 <p>如果只同步一个单元，验收记录也应该明确只覆盖该单元。局部完成有价值，但不应被写成整版已经对齐。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/warrant-scope.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/warrant-scope.svg" alt="单元同步需要包含共享依赖与本单元的运行证据"></a></p>
+<p><em>图 3 · 依赖闭包决定同步需要携带的内容，验收记录仍应限定在本次完成的范围。</em></p>
 <h2 id="文档页面也需要与来源绑定"><a href="#文档页面也需要与来源绑定" class="headerlink" title="文档页面也需要与来源绑定"></a>文档页面也需要与来源绑定</h2><p>图解技术方案可以降低理解成本，但漂亮的页面同样会过期。页面里呈现的版本、章节与来源关系，需要和生成它的材料保持一致。</p>
 <p>图片和流程图负责解释决策，完整配置则可以收进附录。读者应该先理解任务与取舍，再按需要进入代码和参数，而不是在首页面对整份实现转储。</p>
 <h2 id="从最小约定开始"><a href="#从最小约定开始" class="headerlink" title="从最小约定开始"></a>从最小约定开始</h2><p>这套方法不适合一开始就要求补齐所有历史欠账。更实际的起点，是选一条真实链路：说明输入输出，固定关键内容，建立几项能够实际执行的用例，再记录一次明确范围的验收。</p>

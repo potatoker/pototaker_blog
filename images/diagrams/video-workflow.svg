@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="760" viewBox="0 0 720 760" role="img" aria-labelledby="title desc"><title id="title">视频转绘的工作流</title><desc id="desc">输入的时间线与结构约束，决定可以改变多少</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#7b8584"/></marker></defs><style>text{font-family:Inter,'PingFang SC','Microsoft YaHei',sans-serif;fill:#202725}.title{font-size:30px;font-weight:600;letter-spacing:-1px}.sub{font-size:18px;fill:#707977}.label{font-size:23px;font-weight:500}.body{font-size:18px;fill:#606966}.mono{font:16px ui-monospace,Menlo,monospace;fill:#7b8580}.accent{fill:#335c50}.edge{fill:none;stroke:#7b8584;stroke-width:2;marker-end:url(#arrow)}.dashed{stroke-dasharray:6 6}</style><rect width="720" height="760" rx="8" fill="#f4f5f3"/>
+<text x="40" y="59" class="title">视频转绘的工作流</text>
+<text x="40" y="93" class="sub">输入的时间线与结构约束，决定可以改变多少</text>
+<rect x="48" y="133" width="624" height="104" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="169" class="label">读取输入</text>
+<text x="70" y="199" class="body">视频帧、帧率与时间信息</text>
+<path d="M360 238 V265" class="edge"/>
+<rect x="48" y="272" width="624" height="104" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="308" class="label">提取结构</text>
+<text x="70" y="338" class="body">姿态 · 深度 · 边缘 · 局部分割</text>
+<path d="M360 377 V404" class="edge"/>
+<rect x="48" y="411" width="624" height="104" rx="8" fill="#e8eeea" stroke="#77978b" stroke-width="1.5"/>
+<text x="70" y="447" class="label">风格化生成</text>
+<text x="70" y="477" class="body">结合参考图与约束，观察跨帧连续性</text>
+<path d="M360 516 V543" class="edge"/>
+<rect x="48" y="550" width="624" height="104" rx="8" fill="#fff" stroke="#d6dbd6" stroke-width="1.5"/>
+<text x="70" y="586" class="label">修复与输出</text>
+<text x="70" y="616" class="body">面部、细节、放大，并检查连续播放</text>
+<text x="48" y="724" class="body">单帧质量、时间连续性与动作合理性要分开检查。</text>
+</svg>
