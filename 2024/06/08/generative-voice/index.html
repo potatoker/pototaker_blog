@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>从文字到声音：一次语音合成学习与实验 · potatoker&#39;s blog</title>
+  <meta name="description" content="梳理 TTS、声音转换和音色适配，并把数据准备、训练与听感评测连成一条实验路径。">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2024/06/08/generative-voice/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="梳理 TTS、声音转换和音色适配，并把数据准备、训练与听感评测连成一条实验路径。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从文字到声音：一次语音合成学习与实验">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2024/06/08/generative-voice/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="梳理 TTS、声音转换和音色适配，并把数据准备、训练与听感评测连成一条实验路径。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-08T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="语音">
+<meta property="article:tag" content="TTS">
+<meta name="twitter:card" content="summary">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.06.08 / 4 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/%E8%AF%AD%E9%9F%B3/">语音</a><a href="/pototaker_blog/tags/TTS/">TTS</a></div></div>
+    <h1>从文字到声音：一次语音合成学习与实验</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2024-06-08T04:00:00.000Z">2024.06.08</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TTS-%E4%B8%8E%E5%A3%B0%E9%9F%B3%E8%BD%AC%E6%8D%A2%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">TTS 与声音转换解决什么问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E5%BE%AE%E8%B0%83%E8%B5%B0%E5%90%91%E7%9F%AD%E5%8F%82%E8%80%83%E9%9F%B3%E9%A2%91"><span class="toc-text">从微调走向短参考音频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A%E2%80%9C%E5%83%8F%E4%B8%8D%E5%83%8F%E2%80%9D%E6%8B%86%E6%88%90%E5%87%A0%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="toc-text">把“像不像”拆成几个维度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E8%A6%81%E5%85%88%E5%90%AC%E8%BF%87%EF%BC%8C%E5%86%8D%E4%BA%A4%E7%BB%99%E8%84%9A%E6%9C%AC"><span class="toc-text">训练数据要先听过，再交给脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%BB%BA%E7%AB%8B%E8%83%BD%E5%A4%9F%E5%A4%8D%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%BA%BF"><span class="toc-text">先建立能够复现的基线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%98%E8%A6%81%E9%87%8D%E6%96%B0%E7%AE%97%E4%B8%80%E9%81%8D%E6%88%90%E6%9C%AC"><span class="toc-text">移动端还要重新算一遍成本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E5%AE%9E%E9%AA%8C%E8%83%BD%E8%AF%B4%E6%98%8E%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="toc-text">一次实验能说明的范围</span></a></li></ol></nav></details>
+  
+  <div class="prose"><p>第一次认真体验自然语音交互时，我的感受是：同样一段回答，读出来和显示在屏幕上，给人的体验很不一样。声音增加了节奏、停顿和情绪，也让技术上的小错误变得更容易被察觉。</p>
+<p>这篇整理自早期语音合成笔记。重点放在任务分类与实验方法，模型效果和工具选择保留当时的背景，不作为当前产品排名。</p>
+<h2 id="TTS-与声音转换解决什么问题"><a href="#TTS-与声音转换解决什么问题" class="headerlink" title="TTS 与声音转换解决什么问题"></a>TTS 与声音转换解决什么问题</h2><p>TTS 的输入主要是文本，输出是语音。模型除了说出正确内容，还要处理断句、重音、语速与韵律。</p>
+<p>声音转换通常以已有语音为输入，尝试改变其中的说话人音色，同时保留部分内容与表达。因为输入已经携带了时间和韵律信息，它面对的约束与“从文本开始生成”并不相同。</p>
+<p>所以，一个模型在歌声转换里表现好，不代表它必然擅长长文本朗读；一个 TTS 样例听起来像某位说话人，也不代表它能稳定处理任意内容。</p>
+<h2 id="从微调走向短参考音频"><a href="#从微调走向短参考音频" class="headerlink" title="从微调走向短参考音频"></a>从微调走向短参考音频</h2><p>早期实验常见的路线是准备目标说话人的训练数据，对预训练模型进行适配。另一类方法尝试在推理时利用较短参考音频，减少甚至省去针对该音色的单独训练。</p>
+<p>两者各有条件。参考音频短，并不意味着背景噪声、语种差异和录音环境都不重要；微调步骤多，也不意味着面对新内容就一定稳定。</p>
+<p>对我来说，首先要问的是目标：想要一套固定音色的朗读服务，还是一次性尝试不同声音？是否需要跨语言、情绪控制或流式输出？任务不同，实验路线也会不同。</p>
+<h2 id="把“像不像”拆成几个维度"><a href="#把“像不像”拆成几个维度" class="headerlink" title="把“像不像”拆成几个维度"></a>把“像不像”拆成几个维度</h2><p>听感可以从内容准确、音色相似、发音自然、韵律合理以及长句稳定性分别记录。同一个结果可能音色很像，却在某些音节突然失真；也可能发音正确，但停顿和情绪像是在拼接。</p>
+<p>单个精心挑选的短句不够。最好准备一组固定测试文本，包含数字、日期、专有名词、较长句子以及不同标点，让不同设置接受同样的考验。</p>
+<h2 id="训练数据要先听过，再交给脚本"><a href="#训练数据要先听过，再交给脚本" class="headerlink" title="训练数据要先听过，再交给脚本"></a>训练数据要先听过，再交给脚本</h2><p>实验用的数据应是自己的录音或已获得相应用途授权的音频。清理数据时要排除多人重叠、音乐干扰、截断音节和文字转写错位。</p>
+<p>自动切分、识别和去噪能降低准备成本，但不能替代抽样检查。去噪过重可能损伤音色；切分太碎可能丢失语气；文本与音频不一致，会让模型学到错误对应。</p>
+<p>一个通用的数据组织方式如下，路径和名称不绑定任何真实人员：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">voice-data/</span><br><span class="line">  clips/</span><br><span class="line">    sample-0001.wav</span><br><span class="line">    sample-0002.wav</span><br><span class="line">  transcripts.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="先建立能够复现的基线"><a href="#先建立能够复现的基线" class="headerlink" title="先建立能够复现的基线"></a>先建立能够复现的基线</h2><p>固定模型版本、采样率、预处理方式与测试文本，先确认预训练模型可以正常推理。再加入目标音频，记录训练设置与中间检查点。</p>
+<p>不能只按“训练了多久”比较结果。硬件、批量、数据量与训练脚本不同，时长本身没有可比性。更有用的是保留配置、数据清单和相同测试文本下的输出。</p>
+<h2 id="移动端还要重新算一遍成本"><a href="#移动端还要重新算一遍成本" class="headerlink" title="移动端还要重新算一遍成本"></a>移动端还要重新算一遍成本</h2><p>把模型导出成另一种格式，不代表移动端体验已经完成。还需要检查算子支持、首包等待、内存、持续播放与推理并发，以及不同设备上的速度差异。</p>
+<p>如果设备无法持续快于音频播放速度，开头几句听起来正常，长时间运行后仍可能出现断续。端侧实验要测完整会话，而不只测一个短样例。</p>
+<h2 id="一次实验能说明的范围"><a href="#一次实验能说明的范围" class="headerlink" title="一次实验能说明的范围"></a>一次实验能说明的范围</h2><p>原实验说明，借助开源项目，个人已经可以较低成本地探索定制语音。但其中仍存在发音异常、长句不稳定和音色偏移。是否“像真人”，最终要放进具体使用场景判断。</p>
+<p>可参考的公开项目：<a target="_blank" rel="noopener" href="https://github.com/jaywalnut310/vits">VITS</a>、<a target="_blank" rel="noopener" href="https://github.com/suno-ai/bark">Bark</a>、<a target="_blank" rel="noopener" href="https://github.com/svc-develop-team/so-vits-svc">so-vits-svc</a>。</p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2024/06/23/digital-humans/"><span class="kicker">← 较新的记录</span><span>数字人拆解：形象、声音与交互是三件事</span></a>
+  <a href="/pototaker_blog/2024/02/20/pre-sora-video/"><span class="kicker">更早的记录 →</span><span>前 Sora 时代的视频生成：一次工作流实验</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

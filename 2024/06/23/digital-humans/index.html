@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>数字人拆解：形象、声音与交互是三件事 · potatoker&#39;s blog</title>
+  <meta name="description" content="从驱动、渲染、语音和实时交互四个角度，拆开数字人演示背后的技术组合。">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2024/06/23/digital-humans/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="从驱动、渲染、语音和实时交互四个角度，拆开数字人演示背后的技术组合。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字人拆解：形象、声音与交互是三件事">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2024/06/23/digital-humans/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="从驱动、渲染、语音和实时交互四个角度，拆开数字人演示背后的技术组合。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-23T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="数字人">
+<meta name="twitter:card" content="summary">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.06.23 / 4 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/%E6%95%B0%E5%AD%97%E4%BA%BA/">数字人</a></div></div>
+    <h1>数字人拆解：形象、声音与交互是三件事</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2024-06-23T04:00:00.000Z">2024.06.23</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%B1%82%EF%BC%9A%E8%B0%81%E5%9C%A8%E9%A9%B1%E5%8A%A8%E5%AE%83"><span class="toc-text">第一层：谁在驱动它</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%B1%82%EF%BC%9A%E5%AE%83%E6%98%AF%E6%80%8E%E6%A0%B7%E8%A2%AB%E6%B8%B2%E6%9F%93%E5%87%BA%E6%9D%A5%E7%9A%84"><span class="toc-text">第二层：它是怎样被渲染出来的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%B1%82%EF%BC%9A%E5%98%B4%E5%8A%A8%E4%BA%86%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E4%BA%BA%E5%9C%A8%E8%AF%B4%E8%AF%9D"><span class="toc-text">第三层：嘴动了，不等于人在说话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E5%B1%82%EF%BC%9A%E5%A3%B0%E9%9F%B3%E6%9C%AC%E8%BA%AB%E4%B9%9F%E6%98%AF%E4%B8%80%E5%A5%97%E7%B3%BB%E7%BB%9F"><span class="toc-text">第四层：声音本身也是一套系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%BF%BB%E8%AF%91%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B8%85%E6%99%B0%E7%9A%84%E7%BB%84%E5%90%88%E6%A1%88%E4%BE%8B"><span class="toc-text">视频翻译为什么是一个清晰的组合案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E7%BA%BF%E6%BC%94%E7%A4%BA%E4%B8%8E%E5%AE%9E%E6%97%B6%E4%BA%A4%E4%BA%92%E4%B9%8B%E9%97%B4%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88"><span class="toc-text">离线演示与实时交互之间还有什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E6%97%B6%E4%B8%8D%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E8%84%B8"><span class="toc-text">有时不需要一张脸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%8A%80%E6%9C%AF%E7%BB%84%E5%90%88%E5%9B%9E%E5%88%B0%E5%BA%94%E7%94%A8"><span class="toc-text">从技术组合回到应用</span></a></li></ol></nav></details>
+  
+  <div class="prose"><p>数字人很容易被一个完整演示吸引注意：画面里的人会说话、有表情，似乎也能回答问题。但拆开以后，这往往是形象生成、声音合成、口型驱动与对话系统的组合。</p>
+<p>我想用工程视角整理这些组合。先不急着给“数字人”下定义，而是问：形象怎样产生，动作从哪里来，说话怎么生成，以及它是否真的可以实时互动。</p>
+<h2 id="第一层：谁在驱动它"><a href="#第一层：谁在驱动它" class="headerlink" title="第一层：谁在驱动它"></a>第一层：谁在驱动它</h2><p>真人驱动的虚拟形象可以来自动作捕捉、摄像头追踪或人工控制。数字形象承担的是呈现，人仍然提供主要动作与表达。</p>
+<p>计算驱动则把一部分输入换成程序、文本、语音或生成模型。两者也可以混用，例如真人采集基础动作，再由系统生成台词和口型。</p>
+<p>这不是谁取代谁的简单关系。对于直播表演、固定播报或实时助手，不同驱动方式各有适合的边界。</p>
+<h2 id="第二层：它是怎样被渲染出来的"><a href="#第二层：它是怎样被渲染出来的" class="headerlink" title="第二层：它是怎样被渲染出来的"></a>第二层：它是怎样被渲染出来的</h2><p>传统 2D、Live2D、实时 3D 与生成式图像，都能形成数字形象。选择哪一种，决定了后续动作自由度、细节控制、成本与稳定性。</p>
+<p>一个由照片生成的说话头像，可能准备成本很低，却不一定支持大幅转头和任意动作；一个有完整骨骼和表情系统的 3D 角色，可以更明确地控制姿态，但制作成本也不同。</p>
+<p>生成式方法擅长快速获得较高的视觉完成度，不过“生成一张好看的图”和“持续稳定地驱动它”仍然是两个问题。</p>
+<h2 id="第三层：嘴动了，不等于人在说话"><a href="#第三层：嘴动了，不等于人在说话" class="headerlink" title="第三层：嘴动了，不等于人在说话"></a>第三层：嘴动了，不等于人在说话</h2><p>一类方案把语音对应到预设的口型或表情权重，再驱动模型；另一类方案根据音频重新生成视频中的嘴部区域。</p>
+<p>后者在固定机位、光照和人物素材条件下可能很有说服力，但如果输入角度变化、遮挡增多，或者需要实时表达新的情绪，就要重新观察稳定性。</p>
+<p>公开项目中，<a target="_blank" rel="noopener" href="https://github.com/Rudrabha/Wav2Lip">Wav2Lip</a>、<a target="_blank" rel="noopener" href="https://github.com/OpenTalker/video-retalking">VideoReTalking</a> 与 <a target="_blank" rel="noopener" href="https://github.com/OpenTalker/SadTalker">SadTalker</a> 展示了不同的输入与生成路线。比较时应同时看口型、身份保持、边界痕迹和整段视频的连续性。</p>
+<h2 id="第四层：声音本身也是一套系统"><a href="#第四层：声音本身也是一套系统" class="headerlink" title="第四层：声音本身也是一套系统"></a>第四层：声音本身也是一套系统</h2><p>声音合成还可以拆成固定音色、微调音色以及短参考音频适配等路线。生成一句自然的短句，不代表长对话里不会发生音色漂移或错误发音。</p>
+<p>相关实验在<a href="/pototaker_blog/2024/06/08/generative-voice/">语音合成笔记</a>里单独展开。数字人系统需要把声音生成与画面驱动的时间对齐，否则每一个局部都看起来不错，合起来仍然会有违和感。</p>
+<h2 id="视频翻译为什么是一个清晰的组合案例"><a href="#视频翻译为什么是一个清晰的组合案例" class="headerlink" title="视频翻译为什么是一个清晰的组合案例"></a>视频翻译为什么是一个清晰的组合案例</h2><p>视频翻译通常需要识别原始内容、翻译文字、生成目标语言声音，再调整口型或画面。演示效果好的原因，在于它把几项能力放进了一个边界清楚的任务。</p>
+<p>但不应仅凭输出效果猜测一个闭源产品具体用了哪家模型。公开体验能证明结果怎样，不能替代内部实现证据。</p>
+<h2 id="离线演示与实时交互之间还有什么"><a href="#离线演示与实时交互之间还有什么" class="headerlink" title="离线演示与实时交互之间还有什么"></a>离线演示与实时交互之间还有什么</h2><p>离线处理可以等待，实时交互则要同时面对识别、回复、语音与画面生成的总延迟。首个结果出现得快，也不代表后续播放能一直跟上。</p>
+<p>动作方面同样如此。预先采集的视频能提供自然姿态，但动作范围受素材约束。真正的互动还需要让倾听、说话、打断和等待这些状态平滑切换。</p>
+<p>因此，评估一个数字人时，我会把画面质量、可控动作、声音、总延迟和异常恢复分别测量，而不是只给一个“很像真人”的分数。</p>
+<h2 id="有时不需要一张脸"><a href="#有时不需要一张脸" class="headerlink" title="有时不需要一张脸"></a>有时不需要一张脸</h2><p>对话系统的沉浸感不一定来自具象形象。自然的声音、合适的停顿与稳定的上下文，也可能比一张表情僵硬的脸更有效。</p>
+<p>形象应服务于任务，而不是因为某个组件可用就强行加入。对于需要关注内容的场景，减少视觉负担本身也是一种设计。</p>
+<h2 id="从技术组合回到应用"><a href="#从技术组合回到应用" class="headerlink" title="从技术组合回到应用"></a>从技术组合回到应用</h2><p>数字人项目的难点往往发生在组件之间：一句话说多长，怎么同步口型，用户打断时清空哪些内容，某项生成失败后如何继续。</p>
+<p>这也是这次梳理最有价值的部分。看清每个组件能证明什么、不能证明什么，才有可能把一个短演示变成可以长期使用的系统。</p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2025/11/20/realtime-voice-2025/"><span class="kicker">← 较新的记录</span><span>距离自然语音对话，还有哪些工程问题</span></a>
+  <a href="/pototaker_blog/2024/06/08/generative-voice/"><span class="kicker">更早的记录 →</span><span>从文字到声音：一次语音合成学习与实验</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>Java 单例：初始化时机与安全发布 · potatoker&#39;s blog</title>
+  <meta name="description" content="把单例的唯一性、延迟初始化和对象自身的线程安全分开讨论。">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2016/05/17/%E5%8D%95%E4%BE%8B/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="把单例的唯一性、延迟初始化和对象自身的线程安全分开讨论。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 单例：初始化时机与安全发布">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2016/05/17/%E5%8D%95%E4%BE%8B/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="把单例的唯一性、延迟初始化和对象自身的线程安全分开讨论。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-05-17T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="并发">
+<meta name="twitter:card" content="summary">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2016.05.17 / 4 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Java/">Java</a><a href="/pototaker_blog/tags/%E5%B9%B6%E5%8F%91/">并发</a></div></div>
+    <h1>Java 单例：初始化时机与安全发布</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2016-05-17T04:00:00.000Z">2016.05.17</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E5%BB%B6%E8%BF%9F%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%A4%9F"><span class="toc-text">最简单的延迟初始化为什么不够</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E9%87%8D%E6%A3%80%E6%9F%A5%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E9%9C%80%E8%A6%81-volatile"><span class="toc-text">双重检查为什么还需要 volatile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%AD%97%E6%AE%B5%E7%9A%84%E4%BF%9D%E8%AF%81%E6%9D%A5%E8%87%AA%E7%B1%BB%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">静态字段的保证来自类初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB%E6%8A%8A%E5%88%9D%E5%A7%8B%E5%8C%96%E5%85%A5%E5%8F%A3%E5%86%8D%E7%BC%A9%E5%B0%8F%E4%B8%80%E6%AD%A5"><span class="toc-text">静态内部类把初始化入口再缩小一步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E7%9A%84%E8%BE%B9%E7%95%8C%E8%A6%81%E8%AF%B4%E6%98%8E%E7%99%BD"><span class="toc-text">单例的边界要说明白</span></a></li></ol></nav></details>
+  
+  <div class="prose"><p>复习单例时，最容易把三个要求混在一起：只创建一个对象、需要时再创建，以及多个线程使用这个对象时不会出错。它们彼此相关，却不是同一个问题。</p>
+<h2 id="最简单的延迟初始化为什么不够"><a href="#最简单的延迟初始化为什么不够" class="headerlink" title="最简单的延迟初始化为什么不够"></a>最简单的延迟初始化为什么不够</h2><p>下面的实现直到第一次调用才创建对象，但两个线程可能同时通过空值检查，分别构造实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">        instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在方法上增加 <code>synchronized</code> 可以保护初始化过程。不过这里保护的是获取实例的过程，不代表实例返回后的所有业务操作都会自动变成线程安全。</p>
+<h2 id="双重检查为什么还需要-volatile"><a href="#双重检查为什么还需要-volatile" class="headerlink" title="双重检查为什么还需要 volatile"></a>双重检查为什么还需要 volatile</h2><p>双重检查锁希望只在初始化阶段竞争锁，后续直接返回已有实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>volatile</code> 的关键作用是参与建立安全发布所需的内存可见性与顺序约束。不能把它简单理解为“所有操作都直接访问主内存”，也不能把构造对象看作一个不可分割的瞬间。</p>
+<p>另一个线程看见非空引用时，应该能够看见初始化完成的状态，而不是观察到一个尚未按预期发布的对象。</p>
+<h2 id="静态字段的保证来自类初始化"><a href="#静态字段的保证来自类初始化" class="headerlink" title="静态字段的保证来自类初始化"></a>静态字段的保证来自类初始化</h2><p>直接用静态字段保存实例，能够利用类初始化机制的同步保证：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br></pre></td></tr></table></figure>
+
+<p>这里要区分类加载与类初始化。它们是不同阶段，不能笼统地说“文件一被加载，所有静态字段立刻构造”。实际讨论单例创建时机，应关注什么操作触发了类初始化。</p>
+<p>如果单例类上还有其他静态功能，调用这些功能可能先触发该类初始化。这样，单例也可能早于真正需要它的时候被创建。</p>
+<h2 id="静态内部类把初始化入口再缩小一步"><a href="#静态内部类把初始化入口再缩小一步" class="headerlink" title="静态内部类把初始化入口再缩小一步"></a>静态内部类把初始化入口再缩小一步</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Holder</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Holder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>外部类被使用，并不意味着 <code>Holder</code> 也立刻初始化。直到访问 <code>Holder.INSTANCE</code>，才触发持有者类初始化。这把延迟创建与初始化同步交给了运行时机制，而不需要手写双重检查。</p>
+<h2 id="单例的边界要说明白"><a href="#单例的边界要说明白" class="headerlink" title="单例的边界要说明白"></a>单例的边界要说明白</h2><p>上面的“一个实例”有类加载器等前提，并不是整个操作系统里永远只能有一个对象。反射、序列化和测试隔离也可能带来额外设计问题。</p>
+<p>更实际的一点是：如果这个单例内部有可变集合，或者多个操作需要一起保持一致，仍然需要为状态访问设计同步。保证只构造一次，不等于保证以后怎么用都正确。</p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2016/08/16/OOM/"><span class="kicker">← 较新的记录</span><span>Android 图片 OOM：先看像素，再看缓存</span></a>
+  <a href="/pototaker_blog/2016/01/09/hadoop%E6%B5%81%E6%B0%B4%E8%B4%A6/"><span class="kicker">更早的记录 →</span><span>Hadoop 1.x 实验笔记：把一次作业跑起来</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

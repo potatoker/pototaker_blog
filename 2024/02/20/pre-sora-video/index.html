@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>前 Sora 时代的视频生成：一次工作流实验 · potatoker&#39;s blog</title>
+  <meta name="description" content="回顾早期 AnimateDiff、SVD 与 ControlNet 工作流，讨论风格化、连续性和可控性之间的取舍。">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2024/02/20/pre-sora-video/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="回顾早期 AnimateDiff、SVD 与 ControlNet 工作流，讨论风格化、连续性和可控性之间的取舍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前 Sora 时代的视频生成：一次工作流实验">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2024/02/20/pre-sora-video/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="回顾早期 AnimateDiff、SVD 与 ControlNet 工作流，讨论风格化、连续性和可控性之间的取舍。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-20T08:15:23.000Z">
+<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="视频生成">
+<meta name="twitter:card" content="summary">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.02.20 / 4 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/">视频生成</a></div></div>
+    <h1>前 Sora 时代的视频生成：一次工作流实验</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2024-02-20T08:15:23.000Z">2024.02.20</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E8%BD%AC%E7%BB%98%EF%BC%9A%E5%85%88%E4%BF%9D%E7%95%99%E4%BB%80%E4%B9%88%EF%BC%8C%E5%86%8D%E6%94%B9%E5%8F%98%E4%BB%80%E4%B9%88"><span class="toc-text">视频转绘：先保留什么，再改变什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ControlNet-%E8%AE%A9%E6%94%B9%E5%8F%98%E6%9C%89%E8%BE%B9%E7%95%8C"><span class="toc-text">ControlNet 让改变有边界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%84%B8%E9%83%A8%E4%BF%AE%E5%A4%8D%E4%B8%8E%E6%94%BE%E5%A4%A7%E4%B9%9F%E4%BC%9A%E6%94%B9%E5%8F%98%E6%97%B6%E9%97%B4%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="toc-text">脸部修复与放大也会改变时间连续性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%9B%BE%E4%B8%8E%E5%B1%80%E9%83%A8%E5%88%86%E5%89%B2"><span class="toc-text">参考图与局部分割</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E9%80%9F%E4%B8%8E%E7%94%BB%E8%B4%A8%E9%9C%80%E8%A6%81%E9%87%8D%E6%96%B0%E6%B5%8B%E9%87%8F"><span class="toc-text">加速与画质需要重新测量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%94%9F%E8%A7%86%E9%A2%91%EF%BC%9A%E8%BE%93%E5%85%A5%E5%B7%B2%E7%BB%8F%E5%BD%B1%E5%93%8D%E4%BA%86%E8%BF%90%E5%8A%A8%E7%A9%BA%E9%97%B4"><span class="toc-text">图生视频：输入已经影响了运动空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%AF%B9%E7%85%A7%E8%A6%81%E5%8C%85%E5%90%AB%E5%A4%B1%E8%B4%A5%E7%BB%93%E6%9E%9C"><span class="toc-text">参数对照要包含失败结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E9%9D%99%E6%80%81%E5%A5%BD%E7%9C%8B%EF%BC%8C%E5%88%B0%E8%A7%86%E9%A2%91%E5%8F%AF%E4%BF%A1"><span class="toc-text">从静态好看，到视频可信</span></a></li></ol></nav></details>
+  
+  <div class="prose"><p>这份笔记写于 2024 年 2 月。那时，我主要借助开源图像生成工具尝试视频风格化与短片段生成。这里保留的是那个阶段的工程观察，而不是对今天视频模型能力的评判。</p>
+<p>实验分成两个方向：一个已有视频换一种视觉风格，另一个从静态图片生成一小段运动。它们看起来相近，实际面对的约束差别很大。</p>
+<h2 id="视频转绘：先保留什么，再改变什么"><a href="#视频转绘：先保留什么，再改变什么" class="headerlink" title="视频转绘：先保留什么，再改变什么"></a>视频转绘：先保留什么，再改变什么</h2><p>已有视频提供了动作、构图和时间线。风格化希望保留这些结构，同时改变材质、色彩或人物外观。</p>
+<p>可以把当时的工作流概括成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入视频 → 读取帧与时间信息 → 提取结构约束</span><br><span class="line">                              ↓</span><br><span class="line">                  风格化生成与时序处理</span><br><span class="line">                              ↓</span><br><span class="line">                    局部修复 → 输出视频</span><br></pre></td></tr></table></figure>
+
+<p>这只是帮助理解的拆分。真正使用时，还要看工作流是否跨帧处理，以及组件有没有共享或保持时间信息。不能把视频稳定性完全归结为“逐帧画得足够像”。</p>
+<h2 id="ControlNet-让改变有边界"><a href="#ControlNet-让改变有边界" class="headerlink" title="ControlNet 让改变有边界"></a>ControlNet 让改变有边界</h2><p>姿态约束用于保留人物动作，深度约束描述空间关系，边缘约束保留轮廓，细节相关的约束则可能帮助维持局部结构。</p>
+<p>约束增强后，画面通常更贴近原视频，但风格变化的空间也会被压缩。增加约束数量并不保证一直改善效果，几个约束也可能对同一个区域提出冲突要求。</p>
+<p>比较时，应固定输入视频、采样与随机条件，先单独观察每个约束，再尝试组合。</p>
+<h2 id="脸部修复与放大也会改变时间连续性"><a href="#脸部修复与放大也会改变时间连续性" class="headerlink" title="脸部修复与放大也会改变时间连续性"></a>脸部修复与放大也会改变时间连续性</h2><p>在全身镜头里，脸部有效像素很少，修复可以改善细节，但重新绘制也可能抹掉眨眼和细小表情。逐帧都更清晰，并不代表播放时更稳定。</p>
+<p>放大同样会增加新的细节。除了显存与耗时，还要检查这些细节是否在相邻帧保持一致。只看静态截图，很容易忽略播放时的闪烁。</p>
+<h2 id="参考图与局部分割"><a href="#参考图与局部分割" class="headerlink" title="参考图与局部分割"></a>参考图与局部分割</h2><p>IP-Adapter 一类方法能够把参考图引入生成条件，帮助约束风格或视觉特征。它与训练一个 LoRA 的准备成本和控制方式不同，适合先快速验证方向。</p>
+<p>分割则让工作流能够对不同区域使用不同处理。例如服装纹理不稳定时，可以把服装区域单独拿出来观察，而不是提高整个画面的重绘约束。</p>
+<p>但更细的流程也意味着更多误差来源：分割边界不稳、参考图与输入姿势不匹配，以及局部修复与整体光照不一致，都可能让效果变差。</p>
+<h2 id="加速与画质需要重新测量"><a href="#加速与画质需要重新测量" class="headerlink" title="加速与画质需要重新测量"></a>加速与画质需要重新测量</h2><p>实验尝试过 LCM 相关组件、VAE 选择与其他增强方法。它们能否改善结果，取决于底模、推理配置和整条工作流。</p>
+<p>因此不把“更快”直接推导成“更稳定”，也不把某次样例改善写成通用结论。记录耗时、显存、失败率与连续播放效果，比只保存最好的一段视频更有参考价值。</p>
+<h2 id="图生视频：输入已经影响了运动空间"><a href="#图生视频：输入已经影响了运动空间" class="headerlink" title="图生视频：输入已经影响了运动空间"></a>图生视频：输入已经影响了运动空间</h2><p>在当时的 AnimateDiff 与 Stable Video Diffusion 实验中，静态图片的构图会明显影响可生成的运动。场景越复杂，需要同时保持一致的对象越多，稳定性越难判断。</p>
+<p>一些输入更适合很小的镜头变化、轻微人物动作或环境运动。先预想模型有可能完成什么，再准备输入图，比事后用参数补救一个不合适的场景更有效。</p>
+<h2 id="参数对照要包含失败结果"><a href="#参数对照要包含失败结果" class="headerlink" title="参数对照要包含失败结果"></a>参数对照要包含失败结果</h2><p>运动幅度相关参数、采样步数与输入扰动，可以改变结果，但并不独立。原实验里，一个输入已经严重失稳时，继续增加采样步数并不能可靠地救回它。</p>
+<p>我会优先保留同一张输入图上的一组对照，并记录哪些组合完全失败。找到可用区域之后，再换更多输入，检查是不是只对这一张图有效。</p>
+<h2 id="从静态好看，到视频可信"><a href="#从静态好看，到视频可信" class="headerlink" title="从静态好看，到视频可信"></a>从静态好看，到视频可信</h2><p>这次实验让我更清楚地区分了三件事：单帧质量、跨帧连续性，以及动作是否合理。它们都可以独立失败。</p>
+<p>参考项目：<a target="_blank" rel="noopener" href="https://github.com/guoyww/AnimateDiff">AnimateDiff</a>、<a target="_blank" rel="noopener" href="https://github.com/Stability-AI/generative-models">Stable Video Diffusion</a>、<a target="_blank" rel="noopener" href="https://github.com/lllyasviel/ControlNet">ControlNet</a>、<a target="_blank" rel="noopener" href="https://ip-adapter.github.io/">IP-Adapter</a>。</p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2024/06/08/generative-voice/"><span class="kicker">← 较新的记录</span><span>从文字到声音：一次语音合成学习与实验</span></a>
+  <a href="/pototaker_blog/2023/07/03/lora-style-portrait/"><span class="kicker">更早的记录 →</span><span>角色与摄影风格如何兼得：LoRA 人像实验续篇</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

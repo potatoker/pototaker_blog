@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>距离自然语音对话，还有哪些工程问题 · potatoker&#39;s blog</title>
+  <meta name="description" content="从 ASR—LLM—TTS 到语音多模态模型，讨论等待、打断、长会话和测量方法。">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2025/11/20/realtime-voice-2025/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="从 ASR—LLM—TTS 到语音多模态模型，讨论等待、打断、长会话和测量方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="距离自然语音对话，还有哪些工程问题">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2025/11/20/realtime-voice-2025/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="从 ASR—LLM—TTS 到语音多模态模型，讨论等待、打断、长会话和测量方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-20T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="语音">
+<meta property="article:tag" content="实时交互">
+<meta name="twitter:card" content="summary">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2025.11.20 / 3 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/%E8%AF%AD%E9%9F%B3/">语音</a><a href="/pototaker_blog/tags/%E5%AE%9E%E6%97%B6%E4%BA%A4%E4%BA%92/">实时交互</a></div></div>
+    <h1>距离自然语音对话，还有哪些工程问题</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2025-11-20T04:00:00.000Z">2025.11.20</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%88%86%E6%B8%85%E5%A3%B0%E9%9F%B3%E7%94%9F%E6%88%90%E4%B8%8E%E8%AF%AD%E9%9F%B3%E5%AF%B9%E8%AF%9D"><span class="toc-text">先分清声音生成与语音对话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%A7%E8%81%94%E9%93%BE%E8%B7%AF%E5%AE%B9%E6%98%93%E7%90%86%E8%A7%A3%EF%BC%8C%E4%B9%9F%E6%96%B9%E4%BE%BF%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98"><span class="toc-text">级联链路容易理解，也方便定位问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%9F%E4%B8%80%E5%BB%BA%E6%A8%A1%E6%B2%A1%E6%9C%89%E6%B6%88%E9%99%A4%E7%B3%BB%E7%BB%9F%E8%BE%B9%E7%95%8C"><span class="toc-text">统一建模没有消除系统边界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E4%B8%8D%E8%83%BD%E5%8F%AA%E6%8A%A5%E4%B8%80%E4%B8%AA%E6%95%B0%E5%AD%97"><span class="toc-text">延迟不能只报一个数字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E6%96%AD%E6%98%AF%E5%AE%8C%E6%95%B4%E7%8A%B6%E6%80%81%E6%9C%BA%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">打断是完整状态机的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%BF%E4%BC%9A%E8%AF%9D%E6%AF%94%E7%9F%AD%E6%BC%94%E7%A4%BA%E6%9B%B4%E8%83%BD%E6%9A%B4%E9%9C%B2%E9%97%AE%E9%A2%98"><span class="toc-text">长会话比短演示更能暴露问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E6%90%AD%E6%9C%80%E5%B0%8F%E9%93%BE%E8%B7%AF%EF%BC%8C%E5%86%8D%E5%8D%87%E7%BA%A7%E7%BB%84%E4%BB%B6"><span class="toc-text">先搭最小链路，再升级组件</span></a></li></ol></nav></details>
+  
+  <div class="prose"><p>科幻作品里的语音助手，吸引人的往往不是某一句回答，而是交互本身：它知道什么时候听，什么时候说，被打断以后能够停下来，又能自然地继续。</p>
+<p>这份笔记起于 2025 年对实时语音模型的关注。整理时，我把未经充分核对的用户规模、单点延迟与产品排名去掉，把问题收回到更容易验证的地方：如果从零搭一个语音助手，究竟需要把哪些环节做好？</p>
+<h2 id="先分清声音生成与语音对话"><a href="#先分清声音生成与语音对话" class="headerlink" title="先分清声音生成与语音对话"></a>先分清声音生成与语音对话</h2><p>一个 TTS 模型可以把文字变成好听的声音，但完整对话还需要理解用户输入、保存上下文、处理轮次，并决定怎样回复。</p>
+<p>音色很像某个人，只证明了声音的一部分表现；会话是否自然，还取决于回复内容、停顿和对用户动作的响应。</p>
+<h2 id="级联链路容易理解，也方便定位问题"><a href="#级联链路容易理解，也方便定位问题" class="headerlink" title="级联链路容易理解，也方便定位问题"></a>级联链路容易理解，也方便定位问题</h2><p>传统路线把链路拆成语音识别、语言模型与语音合成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">麦克风 → 端点检测 / 语音识别 → 对话模型 → 流式语音合成 → 播放</span><br></pre></td></tr></table></figure>
+
+<p>拆开之后，每一部分都可以替换和测量。代价是接口之间需要协调，而且语音中的某些非文字信息，未必能完整通过文字转写传递给下一层。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/QwenAudio/CosyVoice">CosyVoice</a> 和 <a target="_blank" rel="noopener" href="https://github.com/index-tts/index-tts">IndexTTS</a> 等公开项目可以作为观察语音生成路线的入口。部署时仍要检查具体版本支持什么输入、输出与流式方式。</p>
+<h2 id="统一建模没有消除系统边界"><a href="#统一建模没有消除系统边界" class="headerlink" title="统一建模没有消除系统边界"></a>统一建模没有消除系统边界</h2><p>语音多模态模型试图在模型内部连接理解与生成。<a target="_blank" rel="noopener" href="https://github.com/QwenLM/Qwen3-Omni">Qwen3-Omni</a> 展示了理解多种输入并生成语音的路线。</p>
+<p>这让部分信息有机会不经过纯文字接口，但产品仍然需要处理麦克风、网络、输出队列、播放设备和工具调用。模型端到端，并不意味着客户端所有状态都自动端到端。</p>
+<h2 id="延迟不能只报一个数字"><a href="#延迟不能只报一个数字" class="headerlink" title="延迟不能只报一个数字"></a>延迟不能只报一个数字</h2><p>“延迟”至少可以有几种定义：用户停止说话到系统确认轮次结束，用户说完到首段回复产生，首段语音到达设备，以及设备真正开始播放。</p>
+<p>还要区分稳定网络下的中位数与拥塞时的尾部等待。只报告模型内部的一段耗时，会遗漏用户实际感受到的等待。</p>
+<p>我更希望一条请求能带着分阶段时间记录，从采集结束、识别、回复生成一直到播放。先定位慢在哪，再决定优化哪一段。</p>
+<h2 id="打断是完整状态机的问题"><a href="#打断是完整状态机的问题" class="headerlink" title="打断是完整状态机的问题"></a>打断是完整状态机的问题</h2><p>用户开口时，不能只暂停扬声器。系统可能还在生成文字、合成声音，或者积压了尚未播放的音频片段。</p>
+<p>需要决定哪些请求取消、哪些队列丢弃，已经说出的内容如何记录，以及下一轮对话是否知道自己只说完了半句话。</p>
+<p>如果这些状态没有一起更新，常见结果是“声音停了，但下一轮仍按整段已说完来回复”，或者用户打断以后又播放出上一轮的尾巴。</p>
+<h2 id="长会话比短演示更能暴露问题"><a href="#长会话比短演示更能暴露问题" class="headerlink" title="长会话比短演示更能暴露问题"></a>长会话比短演示更能暴露问题</h2><p>较长时间交谈时，可能出现上下文增长、音色漂移、回复越来越长以及工具调用失败后的恢复问题。测试应包含安静环境、背景声、短促打断和长时间停顿。</p>
+<p>对音色适配，也应该分开测量相似度与内容准确性。声音很熟悉，却把关键数字读错，仍然不适合需要精确表达的任务。</p>
+<h2 id="先搭最小链路，再升级组件"><a href="#先搭最小链路，再升级组件" class="headerlink" title="先搭最小链路，再升级组件"></a>先搭最小链路，再升级组件</h2><p>我会先保留一种输入、一种音色和明确的轮次规则，把识别、回复与播放串起来。能够重复测量后，再加入流式输出、打断与工具能力。</p>
+<p>每次只替换一项组件，并使用同一组会话脚本比较等待、错误与恢复。这样才能判断改善来自模型本身，还是来自更好的状态处理。</p>
+<p>自然交互最终体现在整段会话里。模型能力决定了上限，而那些采集、队列、取消与播放之间的细节，决定用户能不能真的感受到它。</p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2026/10/18/prototype-delivery-contract/"><span class="kicker">← 较新的记录</span><span>从原型到可验收交付：让结论随代码变化而失效</span></a>
+  <a href="/pototaker_blog/2024/06/23/digital-humans/"><span class="kicker">更早的记录 →</span><span>数字人拆解：形象、声音与交互是三件事</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>
