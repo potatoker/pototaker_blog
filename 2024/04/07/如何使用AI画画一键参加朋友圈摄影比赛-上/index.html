@@ -4,31 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>用 LoRA 做一组自己的 AI 人像：从角色到风格 · potatoker&#39;s blog</title>
-  <meta name="description" content="从数据集、训练到推理，记录角色 LoRA 与摄影风格 LoRA 的第一次组合。">
+  <title>如何使用AI画画一键参加朋友圈摄影比赛(上) · potatoker&#39;s blog</title>
+  <meta name="description" content="有段子说旅行的终极目的已经变成了出图，有没有办法在家动动手指参加朋友圈摄影大赛？ 靠近普通的人的场景是什么大家应该已经对AI画画已经并不陌生了，也许你已经试过MidJourney,，也许安装过StableDifussion，变成Prompt科学家可能需要点门槛，但多炼炼总能出图，…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2024/04/07/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8AI%E7%94%BB%E7%94%BB%E4%B8%80%E9%94%AE%E5%8F%82%E5%8A%A0%E6%9C%8B%E5%8F%8B%E5%9C%88%E6%91%84%E5%BD%B1%E6%AF%94%E8%B5%9B-%E4%B8%8A/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="从数据集、训练到推理，记录角色 LoRA 与摄影风格 LoRA 的第一次组合。">
+  <meta name="description" content="有段子说旅行的终极目的已经变成了出图，有没有办法在家动动手指参加朋友圈摄影大赛？ 靠近普通的人的场景是什么大家应该已经对AI画画已经并不陌生了，也许你已经试过MidJourney,，也许安装过StableDifussion，变成Prompt科学家可能需要点门槛，但多炼炼总能出图，手指轻轻一点，一张足够fancy的图就出现了。 然后就没有然后了。 作为一个已经感觉被时代抛弃的C端开发，总想着这些东西">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用 LoRA 做一组自己的 AI 人像：从角色到风格">
+<meta property="og:title" content="如何使用AI画画一键参加朋友圈摄影比赛(上)">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2024/04/07/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8AI%E7%94%BB%E7%94%BB%E4%B8%80%E9%94%AE%E5%8F%82%E5%8A%A0%E6%9C%8B%E5%8F%8B%E5%9C%88%E6%91%84%E5%BD%B1%E6%AF%94%E8%B5%9B-%E4%B8%8A/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="从数据集、训练到推理，记录角色 LoRA 与摄影风格 LoRA 的第一次组合。">
+<meta property="og:description" content="有段子说旅行的终极目的已经变成了出图，有没有办法在家动动手指参加朋友圈摄影大赛？ 靠近普通的人的场景是什么大家应该已经对AI画画已经并不陌生了，也许你已经试过MidJourney,，也许安装过StableDifussion，变成Prompt科学家可能需要点门槛，但多炼炼总能出图，手指轻轻一点，一张足够fancy的图就出现了。 然后就没有然后了。 作为一个已经感觉被时代抛弃的C端开发，总想着这些东西">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/7f2b9d6a080e493186fb2a605b5160c3.webp">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/82ad52231e384ead87952f67162c8dd7.webp">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/eab77ca54b5e41feaf3d2ad9be8c2839.webp">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/c9a059db8cb640f195d27b4e6d071f48.webp">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/530489c602884f65aec75d8a0a621cc3.webp">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/f967b0d9ebe940a9a44133195bbb9fc2.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/0318c5a3642b413bb02b66e306b8e51e.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/7f2b9d6a080e493186fb2a605b5160c3.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/d407f4474131495a8758f0e58a69e5ad.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/82ad52231e384ead87952f67162c8dd7.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/eab77ca54b5e41feaf3d2ad9be8c2839.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/c9a059db8cb640f195d27b4e6d071f48.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/f967b0d9ebe940a9a44133195bbb9fc2.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/530489c602884f65aec75d8a0a621cc3.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/09c2be5a9ea54c57a77c765356d75c39.webp">
 <meta property="article:published_time" content="2023-07-03T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Stable Diffusion">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/ai-photography/7f2b9d6a080e493186fb2a605b5160c3.webp">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/originals/0318c5a3642b413bb02b66e306b8e51e.webp">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -41,55 +44,97 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2023.07.03 / 4 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2023.07.03 / 14 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/Stable-Diffusion/">Stable Diffusion</a></div></div>
-    <h1>用 LoRA 做一组自己的 AI 人像：从角色到风格</h1>
+    <h1>如何使用AI画画一键参加朋友圈摄影比赛(上)</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2023-07-03T04:00:00.000Z">2023.07.03</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A%E4%BA%BA%E7%89%A9%E4%B8%8E%E9%A3%8E%E6%A0%BC%E5%88%86%E5%BC%80%E5%AD%A6%E4%B9%A0"><span class="toc-text">把人物与风格分开学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E9%80%89%E4%B8%80%E4%B8%AA%E8%BE%B9%E7%95%8C%E6%B8%85%E6%A5%9A%E7%9A%84%E7%9B%AE%E6%A0%87"><span class="toc-text">先选一个边界清楚的目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E4%BA%BA%E7%89%A9%E6%95%B0%E6%8D%AE"><span class="toc-text">准备人物数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%A3%8E%E6%A0%BC%E6%95%B0%E6%8D%AE"><span class="toc-text">准备风格数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%B0%91%E6%94%B9%E5%87%A0%E4%B8%AA%EF%BC%8C%E6%AF%94%E8%BE%83%E6%89%8D%E6%9C%89%E6%84%8F%E4%B9%89"><span class="toc-text">参数少改几个，比较才有意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%8D%95%E7%8B%AC%E6%89%BE%E5%BC%BA%E5%BA%A6%EF%BC%8C%E5%86%8D%E7%BB%84%E5%90%88"><span class="toc-text">先单独找强度，再组合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E7%90%86%E6%97%B6%E5%9B%BA%E5%AE%9A%E5%8F%98%E9%87%8F"><span class="toc-text">推理时固定变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E6%AC%A1%E5%AE%9E%E9%AA%8C%E7%95%99%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">这次实验留下的问题</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A0%E8%BF%91%E6%99%AE%E9%80%9A%E7%9A%84%E4%BA%BA%E7%9A%84%E5%9C%BA%E6%99%AF%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">靠近普通的人的场景是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lora"><span class="toc-text">Lora</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%AE%9E%E9%A3%8E%E6%A0%BC%E7%9A%84%E8%BF%BD%E6%8D%A7"><span class="toc-text">写实风格的追捧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">1. 训练数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E8%AE%AD%E7%BB%83%E8%A7%92%E8%89%B2%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">1.1 训练角色数据集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E8%AE%AD%E7%BB%83%E9%A3%8E%E6%A0%BC%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">1.2 训练风格数据集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AE%AD%E7%BB%83%E5%8F%82%E6%95%B0"><span class="toc-text">2. 训练参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8E%A8%E7%90%86%E6%97%B6%E6%89%BE%E5%88%B0%E6%9C%80%E5%90%88%E9%80%82%E7%9A%84%E5%BC%BA%E5%BA%A6"><span class="toc-text">3. 推理时找到最合适的强度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%8E%A8%E7%90%86%EF%BC%8C%E6%96%87%E7%94%9F%E5%9B%BE"><span class="toc-text">4. 推理，文生图</span></a></li></ol></nav></details>
   
-  <div class="prose"><p>有段子说，旅行的终点已经变成了“出图”。如果先把玩笑放到一边，生成式图像能否给普通人带来一种更容易使用的创作方式？</p>
-<p>我把问题缩小成一个实验：先训练一个保留人物特征的 LoRA，再训练一个风格明确的 LoRA，看看两者组合后，能否得到一组相对稳定的写实人像。</p>
-<p>这篇记录对应早期 Stable Diffusion 社区的实验环境。模型、插件和参数都有版本依赖，重点是方法与观察，不是一个换张显卡就必然得到同样结果的配方。</p>
-<h2 id="把人物与风格分开学习"><a href="#把人物与风格分开学习" class="headerlink" title="把人物与风格分开学习"></a>把人物与风格分开学习</h2><p>LoRA 通过相对较少的可训练参数，对已有模型进行适配。放到这次实验里，可以分别尝试学习人物特征与视觉风格，再在推理时调整各自的作用强度。</p>
-<p>不过，人物与风格并不是两个天然独立的旋钮。风格图里的人脸也可能被学习进去，这会影响后面的人物还原。</p>
-<h2 id="先选一个边界清楚的目标"><a href="#先选一个边界清楚的目标" class="headerlink" title="先选一个边界清楚的目标"></a>先选一个边界清楚的目标</h2><p>我先选择了背景、构图、服装和色调都相对固定的证件照风格。与开放场景的人像摄影相比，固定场景更容易判断：这次到底是人物不像，还是风格没有出现。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/ai-photography/7f2b9d6a080e493186fb2a605b5160c3.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/ai-photography/7f2b9d6a080e493186fb2a605b5160c3.webp" alt="训练风格参考示意"></a></p>
-<p>底模也会影响人物长相、纹理和光照。实验中可以固定一个写实风格底模作为基线，暂时不同时更换模型、训练参数与提示词。</p>
-<h2 id="准备人物数据"><a href="#准备人物数据" class="headerlink" title="准备人物数据"></a>准备人物数据</h2><p>人脸需要占有足够的有效像素。只有很小的人脸、模糊压缩图或者过于相似的正面照，都不利于模型学到稳定的身份特征。</p>
-<p>角度应有变化，人物身份应保持一致。希望生成侧脸，就不能只用同一个角度的数据；希望支持不同构图，也要在数据质量允许的前提下考虑构图变化。</p>
-<p>原实验发现，少量数据下标签与结果的关系并不总是直观。不过这不能推广成“不需要标签”。标签是否清楚区分人物、服装和场景，会影响模型学到什么。</p>
-<h2 id="准备风格数据"><a href="#准备风格数据" class="headerlink" title="准备风格数据"></a>准备风格数据</h2><p>风格集合应该能用相对一致的语言描述，例如背景、色调、光线和构图习惯。素材越混杂，越难判断训练结果究竟在学习什么。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/ai-photography/82ad52231e384ead87952f67162c8dd7.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/ai-photography/82ad52231e384ead87952f67162c8dd7.webp" alt="风格训练集示意"></a></p>
-<p>如果风格集里含有大量人物，还要留意这些人的脸型和面部特征是否过于集中。风格 LoRA 可能把“某一种脸”也当成风格的一部分。单纯增加人物 LoRA 强度，并不一定能把它抵消。</p>
-<h2 id="参数少改几个，比较才有意义"><a href="#参数少改几个，比较才有意义" class="headerlink" title="参数少改几个，比较才有意义"></a>参数少改几个，比较才有意义</h2><p>在初期实验里，我主要关注训练轮数、重复次数，以及网络维度与缩放相关参数。这些参数没有脱离数据和底模的通用最优值。</p>
-<p>比较时更值得做的是保留中间检查点，使用固定的一组提示词与随机种子，观察效果随训练进展如何变化。训练更久，可能让特征更明显，也可能更容易过拟合。</p>
-<p>目录和模型名统一使用与个人身份无关的示例名称：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data/person/images/</span><br><span class="line">data/style/images/</span><br><span class="line">models/person-lora/</span><br><span class="line">models/style-lora/</span><br></pre></td></tr></table></figure>
+  <div class="prose"><p>有段子说旅行的终极目的已经变成了出图，有没有办法在家动动手指参加朋友圈摄影大赛？</p>
+<h3 id="靠近普通的人的场景是什么"><a href="#靠近普通的人的场景是什么" class="headerlink" title="靠近普通的人的场景是什么"></a>靠近普通的人的场景是什么</h3><p>大家应该已经对AI画画已经并不陌生了，也许你已经试过MidJourney,，也许安装过StableDifussion，变成Prompt科学家可能需要点门槛，但多炼炼总能出图，手指轻轻一点，一张足够fancy的图就出现了。</p>
+<p>然后就没有然后了。</p>
+<p>作为一个已经感觉被时代抛弃的C端开发，总想着这些东西在C端究竟能如何落地呢？</p>
+<h3 id="Lora"><a href="#Lora" class="headerlink" title="Lora"></a>Lora</h3><p>在Diffusion模型的定制调优技术中，除了finetune,目前使用最多的一个技术叫做<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.09685">LoRA: Low-Rank Adaptation of Large Language Models</a>，训练一个效果还不错的Lora, 只需要一台T4 GPU 8G显存的服务器，十几分钟就可训练完毕。真正实现人人有丹炼。</p>
+<p>你可以使用Lora来指定Diffusion时的图像风格，也可以使用Lora来指定Diffusion时人物特性，包括人脸。目前在网上Lora最多的两个玩法就是“训练风格”和“训练任务&#x2F;角色”</p>
+<p>了解了Lora之后，可以在各类Lora分享平台上看看大家用Lora玩出了什么花样，比如<a target="_blank" rel="noopener" href="https://civitai.com/">C站</a>汇集了各种不同风格的Lora。</p>
+<h3 id="写实风格的追捧"><a href="#写实风格的追捧" class="headerlink" title="写实风格的追捧"></a>写实风格的追捧</h3><p>而二次元风格绘画应该目前是AI画画最接近能直接产生可用，有直接使用场景的领域。但如果你在持续关注<a target="_blank" rel="noopener" href="https://civitai.com/">C站</a>会发现，炼丹师们的热情风潮已经渐渐从二次元领域转向三次元，这其中不仅是因为人们发现了Lora和finetune在不可描述领域的真实落地场景，我想也是因为真人&#x2F;真实场景的领域模型调教还存在更大的发展空间，当然也更难，因为真实图像的瑕疵在普通人眼评判中会更加苛刻。</p>
+<p>现在在C站上下载量排名第一的就是这个<a target="_blank" rel="noopener" href="https://civitai.com/models/43331/majicmix-realistic">majicmix-realistic</a>写实风格的finetune模型。后续我们将踩在这个巨人的肩膀上操作。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/0318c5a3642b413bb02b66e306b8e51e.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/0318c5a3642b413bb02b66e306b8e51e.webp" alt="enter image description here"></a></p>
+<p>未了避免产出普通人可能只能赞叹一句fancy的图，我们把视野再拉近一点，我们出一些人人都能欣赏，人人都能评判的图。</p>
+<p>比如前段时间小红书跟风火的“美式证件照”，大概长这个样子：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/7f2b9d6a080e493186fb2a605b5160c3.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/7f2b9d6a080e493186fb2a605b5160c3.webp" alt="截屏2023-07-03 00.42.23"></a></p>
+<p>结合Lora目前角色+风格训练的应用场景，马上我们诞生了一个想法就是，训练一个“美式证件照”Lora, 再训练一个“自己作为角色”的Lora, 两者在一起使用，是否就可以动动手指跟上小红书潮人们的潮流趋势。</p>
+<p>关于训练角色Lora, 推荐教程<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=TpuDOsuKIBo">Generate Studio Quality Realistic Photos By Kohya LoRA Stable Diffusion Training - Full Tutorial</a> ,关于训练风格Lora， 推荐教程<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7m522D01mh0&t=484s">Kasucast #13 - Stable Diffusion: How to train LoRA for Style | LoRA Part 1</a>，训练Lora可以使用目前比较流行的<a target="_blank" rel="noopener" href="https://github.com/bmaltais/kohya_ss">webui</a> ，而Diffusion跑图，当然建议使用最流行<a target="_blank" rel="noopener" href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">stable-diffusion-webui</a></p>
+<p>关于这几个工具的step by step安装步骤，这里我简单列在了这里：<a target="_blank" rel="noopener" href="https://observant-chanter-ee5.notion.site/AIDraw-1daee474eb054a33af1d4d922be6cc63">小白step by step</a>, 或者跟随上述视频教程即可。工具和教程齐活，可以开工了。</p>
+<h3 id="1-训练数据集"><a href="#1-训练数据集" class="headerlink" title="1. 训练数据集"></a>1. 训练数据集</h3><h4 id="1-1-训练角色数据集"><a href="#1-1-训练角色数据集" class="headerlink" title="1.1 训练角色数据集"></a>1.1 训练角色数据集</h4><ol>
+<li><p>人脸大小<br>这里如果只用少量图，且目前大部分训练都适用的512*512图的情况下，对人脸在图像中的占比其实还是有一定要求的，否则，在分辨率有限的情况下，很难产出比较好的效果，可以参考下教程中，不过我也发现，这样的图像在达到一定数量之后，使用一些小比例图，也会更好的扩充后续Difussion出图时可选的人像大小。譬如前述教程中其数据集大概长这样：<br><img src="/pototaker_blog/images/originals/d407f4474131495a8758f0e58a69e5ad.webp" alt="enter image description here"></p>
+</li>
+<li><p>人脸角度<br> 这里人脸角度也很重要，往往并不一定正脸才更像自己，也并不一定正脸才是最好看的那一个。同样也可以参考上面数据集的截图，这位作者使用了不同角度的人脸。</p>
+</li>
+<li><p>有无Caption<br> caption是对每一张图片的文字标注，这里网上对角色数据集的图片caption该如何写，甚至是否要写有一些讨论，我这里的实践是写不写似乎在我现有的场景下差异不大。但后面的风格训练数据集还是强烈建议使用caption.</p>
+</li>
+</ol>
+<h4 id="1-2-训练风格数据集"><a href="#1-2-训练风格数据集" class="headerlink" title="1.2 训练风格数据集"></a>1.2 训练风格数据集</h4><p>在训练风格中，我使用了小红书上各位潮人的po图。风格数据集其实有个很简单的确认方法：他们是同一种可以被你用类似文字总结的风格。更重要的注意事项是我后面列出的lora训练通用注意事项，但是由于我这里是用的风格图中含有大量的人脸，其实后面会发现这是“人脸”+“风格”会遇到的一个最常见的问题就是风格图中的人脸会影响人脸Lora的应用。所以针对我们这个场景，这里只有一个非常玄学的训练集准则：<br>    <strong>选尽量和角色Lora差别不大的带人脸风格数据集，尤其是脸型</strong>。这个问题后面我们还会提到。总之挑挑拣拣，最终我的风格训练集大概长这样(使用了风格最典型和强烈的一批男生PO图)：<br><img src="/pototaker_blog/images/originals/82ad52231e384ead87952f67162c8dd7.webp" alt="enter image description here"></p>
+<p>OK，开始炼丹</p>
+<h3 id="2-训练参数"><a href="#2-训练参数" class="headerlink" title="2. 训练参数"></a>2. 训练参数</h3><p>这里我自己总结的一个通用注意事项是：</p>
+<ol>
+<li>如果你是一个新手，一定要尽量使用默认参数。这是我的训练参数：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">accelerate launch --num_cpu_threads_per_process=2 &quot;train_network.py&quot; --enable_bucket                     </span><br><span class="line">                         --pretrained_model_name_or_path=&quot;/dataset/cpt/majicmixRealistic_v4.safetensors&quot;                          </span><br><span class="line">                         --train_data_dir=&quot;/dataset/train/liuyifei_update/img&quot; --resolution=&quot;512,512&quot;                             </span><br><span class="line">                         --output_dir=&quot;/dataset/train/liuyifei_update/model&quot; --logging_dir=&quot;/dataset/train/liuyifei_update/log&quot;   </span><br><span class="line">                         --network_alpha=&quot;128&quot; --save_model_as=safetensors --network_module=networks.lora --text_encoder_lr=5e-05 </span><br><span class="line">                         --unet_lr=0.0001 --network_dim=128 --output_name=&quot;liuyifei_update&quot; --lr_scheduler_num_cycles=&quot;10&quot;        </span><br><span class="line">                         --learning_rate=&quot;0.0001&quot; --lr_scheduler=&quot;cosine&quot; --lr_warmup_steps=&quot;640&quot; --train_batch_size=&quot;1&quot;          </span><br><span class="line">                         --max_train_steps=&quot;6400&quot; --save_every_n_epochs=&quot;1&quot; --mixed_precision=&quot;fp16&quot; --save_precision=&quot;fp16&quot;      </span><br><span class="line">                         --cache_latents --optimizer_type=&quot;AdamW8bit&quot; --max_data_loader_n_workers=&quot;0&quot; --bucket_reso_steps=64      </span><br><span class="line">                         --xformers --bucket_no_upscale     </span><br></pre></td></tr></table></figure>
 
-<h2 id="先单独找强度，再组合"><a href="#先单独找强度，再组合" class="headerlink" title="先单独找强度，再组合"></a>先单独找强度，再组合</h2><p>我用检查点与 LoRA 推理强度构成一组对照，分别观察人物还原和风格变化。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/ai-photography/eab77ca54b5e41feaf3d2ad9be8c2839.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/ai-photography/eab77ca54b5e41feaf3d2ad9be8c2839.webp" alt="人物 LoRA 检查点与强度对照"></a></p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/ai-photography/c9a059db8cb640f195d27b4e6d071f48.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/ai-photography/c9a059db8cb640f195d27b4e6d071f48.webp" alt="风格 LoRA 检查点与强度对照"></a></p>
-<p>可以先找出一个有效区间，再组合两种 LoRA。不要只挑最像训练图的那张：它也可能意味着模型已经失去了改变姿势、构图和场景的空间。</p>
-<h2 id="推理时固定变量"><a href="#推理时固定变量" class="headerlink" title="推理时固定变量"></a>推理时固定变量</h2><p>提示词先明确人物、构图、背景与服装，再加入人物和风格 LoRA。例如下面只是结构示意，模型名和强度需要替换成自己的实验版本：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">photographic portrait, half-length, white shirt,</span><br><span class="line">blue background, soft studio lighting,</span><br><span class="line">&lt;lora:person-example:0.6&gt;, &lt;lora:style-example:0.8&gt;</span><br></pre></td></tr></table></figure>
+<p>目前无论是训练任务和训练风格，我往往只会修改两个默认参数</p>
+<ol>
+<li><p><strong>epoch num</strong>：这个数字越大，训练出来的风跟越明显，但是如果太大，也可能会产生过拟合，目前我自己的体验是10左右就差不多了</p>
+</li>
+<li><p>** Network Rank (Dimension) 和 Network Alpha**<br>这两个值如果使用默认值，个人体验是产生不了太好的效果，在网上搜索，可以发现使用比较多的是128和200左右。</p>
+</li>
+<li><p><strong>repeat次数不一定越高越好</strong><br>这里图片repeat次数是指Lora训练时训练集img目录的数字前缀，一般认为训练集越纯，可以适当提高repeat次数，但目前我保持在40以下，甚至维持训练集图片数量不超过20，使用repeat也不超过20时产生的效果会比repeat次数更大时要好。</p>
+</li>
+</ol>
+<p>当然，比如前述教程中，还有对训练速率参数的调整等，也可以进行尝试。炼丹重在反复炼。</p>
+<h3 id="3-推理时找到最合适的强度"><a href="#3-推理时找到最合适的强度" class="headerlink" title="3. 推理时找到最合适的强度"></a>3. 推理时找到最合适的强度</h3><p>训练过程中除了pompt词语本身的选取之外，最难把握的就是强度Lora应用的强度，如果训练对数据集的特性把握太弱，那么就无法得到想要那个有数据集特性的结果，但如果强度太高，就会使得结果过拟合，一旦prompt和数据集的描述有比较大的偏差，就会产生非常糟糕的结果。</p>
+<p>当然上面的训练参数会影响这里的“特征”结果，而一旦训练结束之后，主要有下面两个变化量在影响特征强度：</p>
+<ol>
+<li>模型epoch值</li>
+<li>prompt中对lora指定的强度</li>
+</ol>
+<p>可以使用sd-webui的xy轴特性来观察各种强度组合下的效果，这个方法在前述教程<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7m522D01mh0&t=484s">Kasucast #13 - Stable Diffusion: How to train LoRA for Style | LoRA Part 1</a>中有具体展现。</p>
+<p>这里，我的建议是，待组合的Lora先单独确定一下强度，比如，我自己Lora大概长这样：<br><img src="/pototaker_blog/images/originals/eab77ca54b5e41feaf3d2ad9be8c2839.webp" alt="enter image description here"></p>
+<p>纵向是Lora在prompt中指定的强度，横向是model的epoch数，这里应该很容易理解，当epoch和strength越大，生成图会越靠近数据集，但是毕竟prompt无法完全还原数据集中的数据，最后过拟合的结果就是图像崩坏（声明，本人不长过拟合这样子）</p>
+<p>这里可以观察到的一个特性是使用的Diffusion模型本身产生的人物人脸特征会随着角色Lora的强度增强以更小的权重融合到角色人脸中。这一特性在后续写实人像Lora + 写实角色Lora应用中会反复遇到。</p>
+<p>这里基本确认了有效强度范围，比如这里我会选择epcho:5, strength：0.6作为这一Lora的适配强度。（虽然本人也不长这样）</p>
+<p>“美式证件照”Lora的强度效果对比如图：<br><img src="/pototaker_blog/images/originals/c9a059db8cb640f195d27b4e6d071f48.webp" alt="enter image description here"></p>
+<p>同样的方法挑选一下“美式证件照”Lora的适配强度：</p>
+<p>我会选择：epoch:7, strenght：1</p>
+<h3 id="4-推理，文生图"><a href="#4-推理，文生图" class="headerlink" title="4. 推理，文生图"></a>4. 推理，文生图</h3><p>将前述两个确定的epoch 和强度增加到prompt：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Best quality, masterpiece, ultra high res, (photorealistic:1.4), handsome half length portrait of  (guoyimu man:1.1), wearing a big music headphone, young student, black school uniforms, white shirt, pure blue velvet background, freckle on face , in a style of meishilr_style, &lt;lora:guoyimu_02-000006:0.6&gt;, photo in style of  &lt;lora:meishi_simple02-000006:0.6&gt;</span><br></pre></td></tr></table></figure>
+<p>negtive prompt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(blue eyes, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), fat, text, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, business, business uniforms, mature, close up portrait, only T-shirt, Chinese High school, big face, suit, bow tie</span><br></pre></td></tr></table></figure>
 
-<p>当某个随机种子已经给出不错的构图，就锁定它，再比较强度和提示词。否则每次看到的画面都不同，很难知道改善究竟来自哪个修改。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/ai-photography/530489c602884f65aec75d8a0a621cc3.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/ai-photography/530489c602884f65aec75d8a0a621cc3.webp" alt="一次人物与风格组合的结果"></a></p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/ai-photography/f967b0d9ebe940a9a44133195bbb9fc2.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/ai-photography/f967b0d9ebe940a9a44133195bbb9fc2.webp" alt="原实验生成的人像组图"></a></p>
-<p><em>补回原稿结果组图，用多张结果观察构图、身份与纹理是否保持稳定。</em></p>
-<h2 id="这次实验留下的问题"><a href="#这次实验留下的问题" class="headerlink" title="这次实验留下的问题"></a>这次实验留下的问题</h2><p>结果确实能形成一种可辨认的视觉风格，但也能看到面部涂抹感、身份特征偏移，以及强度变化带来的不稳定。固定场景和明显色调掩盖了一部分问题，换成更自由的摄影风格后，这些问题会更突出。</p>
-<p>下一步不是继续堆积修饰词，而是研究人物特征与风格特征如何相互干扰。这个问题在<a href="/pototaker_blog/2023/07/03/lora-style-portrait/">后续实验</a>里继续展开。</p>
-<p>参考：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.09685">LoRA 论文</a>、<a target="_blank" rel="noopener" href="https://github.com/bmaltais/kohya_ss">训练工具</a>、<a target="_blank" rel="noopener" href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">图像推理界面</a>。</p>
+<p><strong>注意事项</strong></p>
+<p>这里需要强调的是基于前文说的“融合”特性，在出图过程中，一定要善用seed, 原始图对风格Lora的影响十分有限，但是对同样有写实人物的角色Lora影响很大。当发现出图有固定问题瑕疵时，锁定seed再进行调整。</p>
+<p>最终训练出来的我自己的美式证件照大概长这样：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/f967b0d9ebe940a9a44133195bbb9fc2.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/f967b0d9ebe940a9a44133195bbb9fc2.webp" alt="截屏2023-07-03 00.14.07"></a></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/530489c602884f65aec75d8a0a621cc3.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/530489c602884f65aec75d8a0a621cc3.webp" alt="enter image description here"></a></p>
+<p>一张假装在紧跟潮流的我自己的美式证件照就诞生了。</p>
+<p>在目前没有进一步调整的情况下，可以看到仍然有以下问题：</p>
+<ol>
+<li>人脸仍然有一定的涂抹感，这是现在很多写实风的通病，不过我们这次的证件照场景，本身的强对比度滤镜掩盖了这一缺陷</li>
+<li>风格+角色融合后角色人脸特征多少会有丢失。（但也许大家就是想要丢失。。。）</li>
+</ol>
+<p>当然基于我们的歪心思，很容易联想到另一种比较容易的方法就是“换脸”，是一个已经非常为人所熟知的技术。不过使用基于difussion Lora的方式，我们可以在不破坏整体风格的情况下随意指定prompt，包括动作，背景，表情，或者是否戴眼镜，一项技术全部搞定。这可能也是现在P图领域在diffusion模型问世之后得到发展的一种P图方式。</p>
+<p>不过看男生发朋友圈没意思，<a href="/pototaker_blog/2023/07/03/lora-style-portrait/">下篇</a>我尝试了使用刘亦菲的脸来搭配更多的摄影风格，是对写实人像更多的尝试分享，可能也会看到写实人像在这一领域有更多的想象。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/09c2be5a9ea54c57a77c765356d75c39.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/09c2be5a9ea54c57a77c765356d75c39.webp" alt="enter image description here"></a></p>
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2023/07/03/lora-style-portrait/"><span class="kicker">← 较新的记录</span><span>角色与摄影风格如何兼得：LoRA 人像实验续篇</span></a>
-  <a href="/pototaker_blog/2019/01/06/Flag/"><span class="kicker">更早的记录 →</span><span>2019：给生活留下一些具体的计划</span></a>
+  <a href="/pototaker_blog/2023/07/03/lora-style-portrait/"><span class="kicker">← 较新的记录</span><span>一键参加朋友圈比赛（2）</span></a>
+  <a href="/pototaker_blog/2019/01/06/Flag/"><span class="kicker">更早的记录 →</span><span>2019 Flag</span></a>
 </nav>
 </main>
     <footer class="site-footer">

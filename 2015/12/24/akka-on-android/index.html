@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>把 Akka 搬到 Android：一次没有完全跑通的实验 · potatoker&#39;s blog</title>
-  <meta name="description" content="从重复配置文件到旧 Dalvik 的运行时限制，记录一次跨运行环境实验的边界。">
+  <title>akka-on-android · potatoker&#39;s blog</title>
+  <meta name="description" content="scala环境没问题了，接下来就是加入akka。其实真正麻烦的在akka的库调用上。。特别是proguard rule的debug简直是摸瞎。(ಥ _ ಥ) 正常来说： 123456dependencies { compile &#34;org.scala-lang:scala-libr…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2015/12/24/akka-on-android/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="从重复配置文件到旧 Dalvik 的运行时限制，记录一次跨运行环境实验的边界。">
+  <meta name="description" content="scala环境没问题了，接下来就是加入akka。其实真正麻烦的在akka的库调用上。。特别是proguard rule的debug简直是摸瞎。(ಥ _ ಥ)  正常来说： 123456dependencies {    compile &quot;org.scala-lang:scala-library:2.11.7&quot;    compile &quot;com.android.support:multidex:1.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="把 Akka 搬到 Android：一次没有完全跑通的实验">
+<meta property="og:title" content="akka-on-android">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2015/12/24/akka-on-android/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="从重复配置文件到旧 Dalvik 的运行时限制，记录一次跨运行环境实验的边界。">
+<meta property="og:description" content="scala环境没问题了，接下来就是加入akka。其实真正麻烦的在akka的库调用上。。特别是proguard rule的debug简直是摸瞎。(ಥ _ ಥ)  正常来说： 123456dependencies {    compile &quot;org.scala-lang:scala-library:2.11.7&quot;    compile &quot;com.android.support:multidex:1.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-12-24T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="Scala">
@@ -35,35 +35,97 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2015.12.24 / 3 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2015.12.24 / 19 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/Scala/">Scala</a><a href="/pototaker_blog/tags/Akka/">Akka</a></div></div>
-    <h1>把 Akka 搬到 Android：一次没有完全跑通的实验</h1>
+    <h1>akka-on-android</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2015-12-24T04:00:00.000Z">2015.12.24</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%8C%85%E6%88%90%E5%8A%9F%E4%B9%8B%E5%89%8D%EF%BC%8C%E5%85%88%E9%81%87%E5%88%B0%E9%85%8D%E7%BD%AE%E8%B5%84%E6%BA%90%E5%86%B2%E7%AA%81"><span class="toc-text">打包成功之前，先遇到配置资源冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8%E4%B8%8A%E9%99%90%E4%B8%8E-LinearAlloc-%E6%98%AF%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-text">方法引用上限与 LinearAlloc 是两个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E7%BC%A9%E5%8F%AF%E4%BB%A5%E5%87%8F%E5%B0%8F%E4%BB%A3%E7%A0%81%EF%BC%8C%E4%BD%86%E4%B9%9F%E4%BC%9A%E6%94%B9%E5%8F%98%E6%A1%86%E6%9E%B6%E8%BF%90%E8%A1%8C%E6%9D%A1%E4%BB%B6"><span class="toc-text">收缩可以减小代码，但也会改变框架运行条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E5%8F%AA%E6%98%AF%E7%97%87%E7%8A%B6"><span class="toc-text">连接失败只是症状</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E6%AC%A1%E5%AE%9E%E9%AA%8C%E7%9C%9F%E6%AD%A3%E5%BE%97%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-text">这次实验真正得到了什么</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_Gradle_duplicate_file_exception"><span class="toc-text">1. Gradle duplicate file exception</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_LinearAlloc_5MB_capacity"><span class="toc-text">2. LinearAlloc 5MB capacity</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Let_u2019s_try_Proguard_21"><span class="toc-text">Let’s try Proguard!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proguard_conclusion"><span class="toc-text">proguard conclusion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Still_using_multidex"><span class="toc-text">Still using multidex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">conclusion</span></a></li></ol></nav></details>
   
-  <div class="prose"><p>在 Android 上跑通 Scala 之后，我继续尝试加入 Akka，希望让移动设备作为一个计算节点参与并行任务。较新的设备曾经成功执行任务，但在更早的设备上，这条路线最终没有完整跑通。</p>
-<p>这篇整理的是那次实验的排查过程。保留失败结论，比把一组偶然成功的配置写成通用方案更有意义。</p>
-<h2 id="打包成功之前，先遇到配置资源冲突"><a href="#打包成功之前，先遇到配置资源冲突" class="headerlink" title="打包成功之前，先遇到配置资源冲突"></a>打包成功之前，先遇到配置资源冲突</h2><p>加入不同 Akka 模块后，打包过程提示重复的 <code>reference.conf</code>。文件名相同，并不意味着内容相同：不同模块可能分别携带自己的默认配置。</p>
-<p>因此，直接保留第一份文件虽然可能让构建通过，却可能丢掉另一个模块需要的配置。理解资源合并的语义，比消除构建报错本身更重要。</p>
-<p>当时曾用手工合并配置来验证问题来源。回看这段经历，修改依赖包并不是一个适合长期维护的办法；更合理的是在构建过程里明确资源合并规则，并验证最终产物实际包含什么。</p>
-<h2 id="方法引用上限与-LinearAlloc-是两个问题"><a href="#方法引用上限与-LinearAlloc-是两个问题" class="headerlink" title="方法引用上限与 LinearAlloc 是两个问题"></a>方法引用上限与 LinearAlloc 是两个问题</h2><p>MultiDex 用来绕过单个 DEX 的方法引用限制，但旧 Dalvik 的类元数据分配限制不会因此自动消失。实验中较新的系统能运行，较旧系统却出现 <code>LinearAlloc exceeded capacity</code>，正是需要区分这两类约束的地方。</p>
-<p>遇到运行时限制，首先要确认失败阶段：安装或优化失败、类加载失败，以及程序启动后连接失败，不应该混在同一份结论里。</p>
-<h2 id="收缩可以减小代码，但也会改变框架运行条件"><a href="#收缩可以减小代码，但也会改变框架运行条件" class="headerlink" title="收缩可以减小代码，但也会改变框架运行条件"></a>收缩可以减小代码，但也会改变框架运行条件</h2><p>我尝试过使用 ProGuard 精简 Scala 和 Akka 依赖。框架里不少类型通过配置、反射和约定被加载，收缩器不一定能从直接调用关系里识别它们。</p>
-<p>根据缺类异常逐条增加 keep 规则，可以推进实验，但并不能保证所有动态路径都已被覆盖。尤其是网络传输、序列化和 Actor 系统初始化，可能只有在完整任务执行时才触发。</p>
-<h2 id="连接失败只是症状"><a href="#连接失败只是症状" class="headerlink" title="连接失败只是症状"></a>连接失败只是症状</h2><p>最后一段卡住的日志表现为远程系统关联失败。它能够证明连接没有建立，但不能单独证明是网络、序列化、配置合并还是收缩规则的问题。</p>
-<p>这时继续盲目增加 keep 规则，反而会丢失排查方向。应该先用同一份程序验证不收缩的基线，再逐项比较运行时配置、完整异常链和最终打包内容。</p>
-<h2 id="这次实验真正得到了什么"><a href="#这次实验真正得到了什么" class="headerlink" title="这次实验真正得到了什么"></a>这次实验真正得到了什么</h2><p>可以确认的结果，是曾在较新 Android 设备上使用 Scala 和 Akka 完成计算节点实验；不能确认的结果，是那套配置可以适配所有旧设备。</p>
-<p>跨运行环境移植时，最好让每个结论都带着条件：在哪个版本、哪些依赖、什么构建设置和哪条任务路径下成立。这样，下次继续实验时才有可靠的起点。</p>
+  <div class="prose">
+<p>scala环境没问题了，接下来就是加入akka。<br/>其实真正麻烦的在akka的库调用上。。特别是proguard rule的debug简直是摸瞎。(ಥ _ ಥ)</p>
+<a id="more"></a>
+<p>正常来说：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> {</span><br/><span class="line">    <span class="keyword">compile</span> <span class="string">"org.scala-lang:scala-library:2.11.7"</span></span><br/><span class="line">    <span class="keyword">compile</span> <span class="string">"com.android.support:multidex:1.0.1"</span></span><br/><span class="line">    <span class="keyword">compile</span> <span class="string">'com.typesafe.akka:akka-actor_2.11:2.3.9'</span></span><br/><span class="line">    <span class="keyword">compile</span> <span class="string">'com.typesafe.akka:akka-remote_2.11:2.3.9'</span></span><br/><span class="line">}</span><br/></pre></td></tr></table></figure>
+<p>把akka的库依赖加入gradle文件，完事。但事实是问题接二连三</p>
+<h2 id="1-_Gradle_duplicate_file_exception"><a class="headerlink" href="#1-_Gradle_duplicate_file_exception" title="1. Gradle duplicate file exception"></a>1. Gradle duplicate file exception</h2><p>当时，具体的错误信息找不到了，不过我的解决方案是在这个<a href="https://code.google.com/p/android/issues/detail?id=61573" rel="external" target="_blank">issue</a>下面找到的,如他描述的，在两个jar中包含相同的文件。但师兄用sbt构建过相同的程序。为什么gradle会出现不得而知。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/></pre></td><td class="code"><pre><span class="line">error: duplicate files during packaging of APK .../basic/build/apk/basic-debug-unaligned<span class="class">.apk</span></span><br/><span class="line">	Path <span class="keyword">in</span> archive: about<span class="class">.html</span></span><br/><span class="line">	Origin <span class="number">1</span>: ...filestore/org<span class="class">.eclipse</span><span class="class">.jetty</span>/jetty-servlet/<span class="number">8.1</span>.<span class="number">8</span>.v20121106/jar/<span class="number">285</span>ea47746e9ab988a8291ea9fd6545b537e0ce9/jetty-servlet-<span class="number">8.1</span>.<span class="number">8</span><span class="class">.v20121106</span><span class="class">.jar</span></span><br/><span class="line">	Origin <span class="number">2</span>: ...filestore/org<span class="class">.eclipse</span><span class="class">.jetty</span>/jetty-client/<span class="number">8.1</span>.<span class="number">8</span>.v20121106/jar/f194a5a07ada9dab48e226c4e8152d120ce1e76f/jetty-client-<span class="number">8.1</span>.<span class="number">8</span><span class="class">.v20121106</span><span class="class">.jar</span></span><br/></pre></td></tr></table></figure>
+<p>我的库依赖为</p>
+<pre><code>'com.typesafe.akka:akka-actor_2.11:2.3.9'
+'com.typesafe.akka:akka-remote_2.11:2.3.9'
+</code></pre><p>类似于上述代码中的错误信息，console提示我这两个jar，包含了本地path:</p>
+<pre><code>&lt;user-home&gt;\.ivy2\cache\com.typesafe.akka\....
+</code></pre><p>然后我来到这个位置，找到上述两个jar，打开后发现确实，其中包含同名文件：reference.conf，可以判断是这个原因gradle显示duplicate file error， 然而我发现这两个文件内容并不相同。我猜想是因为同名的原因，因此我将这两个conf分别加了相应的前缀。然而仍然不可行，错误记录找不到了。但我觉得确实可能有问题，因为修改文件名应该谨慎，其他地方可能有引用。如此寻找其他的方法。</p>
+<p>最终，根据上文中的issue，试出来的办法是：</p>
+<ol>
+<li><p>merge这两份conf文件，因为其实发现这两个配置文件确实仍然有重复的部分，而且都是类json的键值对数据组织方式，所以把其中一份所有的内容加到另一份中，并保证不重复。</p>
+</li>
+<li><p>在gradle中去重。<br/>因为实际上我采取的策略是只使用一份conf文件，但这份conf包含之前两份的功能，但是我并没有删除任何一份，我把这份merge 过的文件加入到上述两个jar中，这样，我就成了两份<strong>真正</strong>相同文件的去重问题了。</p>
+</li>
+</ol>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/></pre></td><td class="code"><pre><span class="line"><span class="title">android</span> {  </span><br/><span class="line">    <span class="title">packagingOptions</span> {    </span><br/><span class="line">        <span class="title">pickFirst</span> <span class="string">'reference.conf'</span>  </span><br/><span class="line">    }  </span><br/><span class="line">}</span><br/></pre></td></tr></table></figure>
+<p>于是就这样解决了这一问题。也是google了好久，当时看到这个<a target="_blank" rel="noopener" href="https://code.google.com/p/android/issues/detail?id=61573">issue</a>的时候，楼已经盖得老高了，很多描述也不是很详细， 看了好久才总结出了这个解决办法。<br/>其实这个问题解决了之后，我的akka就这样真的在我的小米上跑起来了。成功使一台android 5.0设备作为一台slave完成了一项并行处理任务。</p>
+<p>本该一切就这样结束了(ಥ _ ಥ)。</p>
+<h2 id="2-_LinearAlloc_5MB_capacity"><a class="headerlink" href="#2-_LinearAlloc_5MB_capacity" title="2. LinearAlloc 5MB capacity"></a>2. LinearAlloc 5MB capacity</h2><p>然而，并没有什么*用，因为某原因，我仍然需要在使得该程序在g5(api 10,version 2.3.7)上跑起来。</p>
+<p>果然，傲娇的g5没有跑通：</p>
+<p>我出现了类似这个<a href="http://stackoverflow.com/questions/23438213/package-has-mismatched-uid-10124-on-disk-10134-in-settings" rel="external" target="_blank">SO</a>上的问题：</p>
+<pre><code>Package has mismatched uid: 10124 on disk, 10134 in settings
+
+ E/dalvikvm( 7815): LinearAlloc exceeded capacity (5242880), last=1092
+</code></pre><blockquote><p>Solutions:</p>
+<p>Proguard: Proguard removes unreferenced classes/methods from your app. Thus your app’s dex file size decreases. (I’ve solved my problem with proguard)  </p>
+<p>Multiple Dex Files: Split your app to multiple dex files. <a href="https://www.facebook.com/notes/facebook-engineering/under-the-hood-dalvik-patch-for-facebook-for-android/10151345597798920" rel="external" target="_blank">Facebook</a> has a solution for this. Also read this <a href="http://android-developers.blogspot.se/2011/07/custom-class-loading-in-dalvik.html" rel="external" target="_blank">link</a> for managing multiple dex files.</p>
+</blockquote>
+<p>答案中说可以使用Multidex解决，我在想我已经按照google文档multidex方法启动了multidex了啊？但此时我们使用的g5，要重新来看待multidex以及它在低端机上可能产生的问题，再来看<a href="http://developer.android.com/tools/building/multidex.html" rel="external" target="_blank">Building Apps with Over 65K Methods</a>的multidex方法描述：<br/><blockquote><p>Applications that use multidex may not start on devices that run versions of the platform earlier than Android 4.0 (API level 14) due to a Dalvik linearAlloc bug (Issue 22586). If you are targeting API levels earlier than 14, make sure to perform testing with these versions of the platform as your application can have issues at startup or when particular groups of classes are loaded. Code shrinking can reduce or possibly eliminate these potential issues.  </p>
+<p>Applications using a multidex configuration that make very large memory allocation requests may crash during run time due to a Dalvik linearAlloc limit (Issue 78035). The allocation limit was increased in Android 4.0 (API level 14), but apps may still run into this limit on Android versions prior to Android 5.0 (API level 21).</p>
+</blockquote></p>
+<p><strong>So, the problem is Allocation Limit In old android version!</strong>，android5.0提升了很多，而g5的2.3version很小。因此解释虽然使用multidex可以在小米上跑成功而g5则不可以。</p>
+<p>这个问题其实是许多需要大型依赖库app运行在某些低端机上会遇到的继method limit之后的第二个问题<a href="https://code.google.com/p/android/issues/detail?id=22586" rel="external" target="_blank">Issue 22586</a>,后文中简称为allocation limit。想要加入类似akka的大型库依赖，就必须解决这两个问题，关于这两个问题，<a href="https://ingramchen.io/blog/2014/09/prevention-of-android-dex-64k-method-size-limit.html" rel="external" target="_blank">这篇文章</a>有很好的解释分析</p>
+<blockquote><p>安裝 apk 時，如果出現上面提到的兩種錯誤，你通常會看到錯誤訊息有 INSTALL_FAILED_DEXOPT 這行。dexopt 是 dex optimization 的意思，這一步驟會發生在安裝完 apk 之後，它會檢驗 .dex 裡面的指令集是不是合法，也會驗 method 的上限數。超過上限的話，app 還沒啟動就被這一步擋下，直接噴錯。dexopt 也會試著將所有 class/method 都讀進 VM 驗證，這自然會運用到 LinearAlloc buffer。如果 buffer 不夠也是直接噴了。所以程式太大的話，通通會死在 dexopt 這過程裡。</p>
+<footer><strong>預防 Android Dex 64k Method Size Limit</strong><cite><a href="https://ingramchen.io/blog/2014/09/prevention-of-android-dex-64k-method-size-limit.html" rel="external" target="_blank">ingramchen.io/blog/2014/09/prevention-of-android-dex-64k-method-size-limit.html</a></cite></footer></blockquote>
+<blockquote><p>apk是一个zip压缩包，dalvik每次加载apk都要从中解压出class.dex文件，加载过程还涉及到dex的classes需要的杂七杂八的依赖库的加载，真耗时间。于是Android决定优化一下这个问题，在app安装到手机之后，系统运行dexopt程序对dex进行优化，将dex的依赖库文件和一些辅助数据打包成odex文件。存放在cache/dalvik_cache目录下。保存格式为apk路径 @ apk名 @ classes.dex。这样以空间换时间大大缩短读取/加载dex文件的过程。<br/>那刚才那个bug是啥问题呢，原来dexopt程序的dalvik分配一块内存来统计你的app的dex里面的classes的信息，由于classes太多方法太多超过这个linearAlloc 的限制</p>
+<footer><strong>其实你不知道MultiDex到底有多坑</strong><cite><a href="http://zongwu233.github.io/the-touble-of-multidex/" rel="external" target="_blank">zongwu233.github.io/the-touble-of-multidex</a></cite></footer></blockquote>
+<p>虽然使用了multidex,产生了多个dex,然而可能某个dex仍然会过大，而为了载入这个dex的class信息分配的内存有一个最大的限制。<a href="https://www.facebook.com/notes/facebook-engineering/under-the-hood-dalvik-patch-for-facebook-for-android/10151345597798920" rel="external" target="_blank">Under the Hood: Dalvik patch for Facebook for Android</a>这篇文章被引用，被解释说fb写了方案覆盖了这个容量限制，解决该问题。</p>
+<p>民间出高人，除了fb的方法,还有探究这一问题的文章<a href="http://www.birbit.com/how-to-solve-linearalloc-problem/" rel="external" target="_blank">How to Solve LinearAlloc Problem</a>，以及后来我搜中文找到的<a href="http://zongwu233.github.io/the-touble-of-multidex/" rel="external" target="_blank">其实你不知道MultiDex到底有多坑</a>，总结了许多,这标题真的不是为我量身定做的吗(ಥ _ ಥ)，这篇文章解释清楚了我对于method limit 和 linearAlloc的另一些困惑。同时也在解决问题的过程中挖的非常深，包括其中的几篇引用。。。ok,ok, let’s have a break，[姚明脸]。</p>
+<h3 id="Let_u2019s_try_Proguard_21"><a class="headerlink" href="#Let_u2019s_try_Proguard_21" title="Let’s try Proguard!"></a>Let’s try Proguard!</h3><p>也就是说，虽然我之前使用multidex来解决的scala库的methods limit问题，现在我重新使用proguard来解决所有因为依赖库(包括scala、akka)太大引起的问题。<strong>这里的问题包括methods limit和allocation limit</strong></p>
+<p>上面SO答主说明的他采取的并最终解决了linearAlloc问题的方法，我之所以觉得他更有可能解决这个问题是因为<br/>我觉得proguard方法的原理是最直接解决g5上跑较大规模依赖库app的问题，因为它十分具体的减少了构建过程的class的量，这样有效的避免了DEX 64K Methods Limit,同时也使得LinearAlloc Problem不需要考虑，事实上，在使用Multidex解决DEX 64K Methods Limit的时候，官方文档甚至提出在某些低端机上要使用proguard做配合。然而每个不同的依赖都有不同的rules，我必须找到这样一份akka rules。</p>
+<p>总体的思路是：</p>
+<ol>
+<li>在gradle中说明启用proguard及其相关rule。</li>
+<li>在网上查找akka库是否已经有现成的proguard rule文件，有则使用。</li>
+<li>别人的rule并不一定完全适用，build的时候会出现class not found的问题</li>
+<li>根据错误提示，增加keep 规则</li>
+<li>重复3,4直至build和run的时候都没有classNotFound的问题</li>
+</ol>
+<p>这个东西当我第一次看到他的<a href="https://stuff.mit.edu/afs/sipb/project/android/sdk/android-sdk-linux/tools/proguard/docs/index.html#manual/introduction.html" rel="external" target="_blank">文档</a>的时候，就方了，这种朴素的markdown风格加上瀑布一般的排版。。。看不下去。。。总之原理基本上是，根据控制台输出的错误信息，一般是，方法或者类丢失，说明proguard丢弃了这个方法或类，那么在rule文件里把有完全限定名的类使用keep语句手动保留，就可以了。比较典型的有下面两种：  </p>
+<pre><code>如果Build过程提示classNotFound或者methodNotFound就直接keep 
+</code></pre><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/></pre></td><td class="code"><pre><span class="line">-keep class akka.actor.LocalActorRefProvider<span class="variable">$Guardian</span>{</span><br/><span class="line">  *;</span><br/><span class="line">}</span><br/></pre></td></tr></table></figure>
+<p>如果告诉你类似<br/><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br/></pre></td><td class="code"><pre><span class="line">java.lang.RuntimeException: Unable to <span class="operator"><span class="keyword">start</span> activity ComponentInfo{com.myapp/com.myapp.MyActivity}: <span class="keyword">java</span>.lang.NoSuchMethodException: &lt;init&gt; [<span class="keyword">interface</span> com.typesafe.config.Config, <span class="keyword">interface</span> akka.<span class="keyword">event</span>.LoggingAdapter, <span class="keyword">interface</span> <span class="keyword">java</span>.util.<span class="keyword">concurrent</span>.ThreadFactory]</span></span><br/></pre></td></tr></table></figure></p>
+<p>则用：<br/><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/></pre></td><td class="code"><pre><span class="line">-<span class="ruby">keepclasseswithmembers <span class="class"><span class="keyword">class</span> * {</span></span><br/><span class="line"></span>    public &lt;init&gt;(com.typesafe.config.Config, akka.event.LoggingAdapter, java.util.concurrent.ThreadFactory);</span><br/><span class="line">}</span><br/></pre></td></tr></table></figure> </p>
+<p>这两招屡试不爽。。虽然proguard还有许多其他keep方式。。。但实在不想去看瀑布了。。</p>
+<p>在这个过程中数度想要放弃<br/><strong>BUT</strong>确实到最后没有classNotFound的问题了，build也成功了，然而新问题是：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br/></pre></td><td class="code"><pre><span class="line">[<span class="number">11</span>:<span class="number">27</span>:<span class="number">42.149</span>] [WorkerSystem-akka.remote.default-remote-dispatcher-<span class="number">6</span>] [akka.tcp:<span class="regexp">//</span>WorkerSystem<span class="variable">@192</span>.<span class="number">168.1</span>.<span class="number">108</span>:<span class="number">2555</span>/<span class="keyword">system</span>/endpointManager/reliableEndpointWriter-akka.tcp<span class="variable">%3A</span><span class="variable">%2F</span><span class="variable">%2FParallelHOSVD</span><span class="variable">%40192</span>.<span class="number">168.1</span>.<span class="number">102</span><span class="variable">%3A2552</span>-<span class="number">0</span>] Association with remote <span class="keyword">system</span> [akka.tcp:<span class="regexp">//</span>ParallelHOSVD<span class="variable">@192</span>.<span class="number">168.1</span>.<span class="number">102</span>:<span class="number">2552</span>] has failed, address is now gated <span class="keyword">for</span> [<span class="number">5000</span>] ms. Reason is: [exception during creation].</span><br/></pre></td></tr></table></figure>
+<p>然后我用小米同样试着跑了一下，发现一样的问题，所以是我前面的build过程仍然有问题。然而现在已知的错误信息只有这个，并且似乎只是简单地在阐述连接失败，并没有为何失败的信息。从这个节点已经查不下去了。</p>
+<p>事实上，网上确实已有不少akka proguard，<a href="https://github.com/sbt/sbt-proguard/blob/master/src/sbt-test/proguard/akka/project/SampleBuild.scala" rel="external" target="_blank">sbt-proguard</a>，<a href="https://groups.google.com/forum/#!topic/scala-on-android/JwMQCtC2zCs" rel="external" target="_blank">Akka, Android, Proguard</a>,甚至已有和我同样在这样以身试坑的人在：<a href="http://spin.atomicobject.com/2013/06/20/akka-scala-on-android/" rel="external" target="_blank">Getting Scala with Akka Actors Working on Android</a>.</p>
+<blockquote><p>Once the code was running, I would wait for it to crash with a runtime exception, which would tell me what class was missing.<br/>I could then update my ProGuard config, rinse, and repeat.</p>
+</blockquote>
+<h3 id="proguard_conclusion"><a class="headerlink" href="#proguard_conclusion" title="proguard conclusion"></a>proguard conclusion</h3><p>该保留哪些方法哪些class靠人工写一份没有漏洞的rule太难，关于第三方库proguard rule看到过这样的阐述:</p>
+<blockquote><p>Many problems with ProGuard stem from the inclusion of third-party libraries in your project.<br/>the first step in avoiding such errors is to consult the documentation of each third-party library and follow any instructions for deployment with ProGuard.<br/>If the documentation mentions nothing about ProGuard, but the library is open source, then there is no point to obfuscating its code from a security standpoint anyway.</p>
+<footer><strong>A Conservative Guide to ProGuard for Android</strong><cite><a href="http://omgitsmgp.com/2013/09/09/a-conservative-guide-to-proguard-for-android/" rel="external" target="_blank">omgitsmgp.com/2013/09/09/a-conservative-guide-to-proguard-for-android</a></cite></footer></blockquote>
+<h2 id="Still_using_multidex"><a class="headerlink" href="#Still_using_multidex" title="Still using multidex"></a>Still using multidex</h2><p>如果使用Multidex方法，则要解决<br/><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/></pre></td><td class="code"><pre><span class="line">Package has mismatched uid: <span class="number">10124</span> <span class="function_start"><span class="keyword">on</span></span> disk, <span class="number">10134</span> <span class="keyword">in</span> settings   </span><br/><span class="line">E/dalvikvm( <span class="number">7815</span>): LinearAlloc exceeded capacity (<span class="number">5242880</span>), <span class="keyword">last</span>=<span class="number">1092</span></span><br/></pre></td></tr></table></figure></p>
+<p>根据之前的总结其实是Android早期版本的Dalvik linearAlloc bug。。其实当我读完<a href="http://zongwu233.github.io/the-touble-of-multidex/" rel="external" target="_blank">其实你不知道MultiDex到底有多坑</a>。远不止这个bug需要解决。。。这个坑。。等我吃点好的再跳(ಥ _ ಥ).</p>
+<h2 id="conclusion"><a class="headerlink" href="#conclusion" title="conclusion"></a>conclusion</h2><p>所以其实这整个过程，如果不看g5，已经做到了使用scala写android程序，以及在Android5.0设备上使用akka，使移动设备成为一个并行系统的slave进行工作。</p>
+<p>至于g5的结论就是使用proguard可以解决scala库依赖的问题，然而当我再添加akka时，proguard我目前只会采取摸瞎的方式写rules，操作的不确定性极大，如果不使用proguard,使用multidex解决<code>scala&amp;akka-actor&amp;akka-remote</code>这种规模的依赖库依赖问题仍有<strong>Dalvik linearAlloc bug</strong>待解决。</p>
+
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2016/01/09/hadoop%E6%B5%81%E6%B0%B4%E8%B4%A6/"><span class="kicker">← 较新的记录</span><span>Hadoop 1.x 实验笔记：把一次作业跑起来</span></a>
-  <a href="/pototaker_blog/2015/12/23/scala-on-android/"><span class="kicker">更早的记录 →</span><span>在早期 Android 上运行 Scala 的尝试</span></a>
+  <a href="/pototaker_blog/2016/01/09/hadoop%E6%B5%81%E6%B0%B4%E8%B4%A6/"><span class="kicker">← 较新的记录</span><span>Hadoop homework</span></a>
+  <a href="/pototaker_blog/2015/12/23/scala-on-android/"><span class="kicker">更早的记录 →</span><span>scala on android</span></a>
 </nav>
 </main>
     <footer class="site-footer">

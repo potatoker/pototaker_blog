@@ -4,26 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>前 Sora 时代的视频生成：一次工作流实验 · potatoker&#39;s blog</title>
-  <meta name="description" content="回顾早期 AnimateDiff、SVD 与 ControlNet 工作流，讨论风格化、连续性和可控性之间的取舍。">
+  <title>前SORA时代视频生成浅尝 · potatoker&#39;s blog</title>
+  <meta name="description" content="再不总结，一些使用经验就要过期发烂了，，在Sora诞生之前，视频生成领域已经是整个AI投资领域追捧已久的一个概念，本文仅从工程使用的角度出发看看前Sora时代利用开源资源大致能将生成式视频做到什么程度。然后就会更加领悟 Sora 的断层式强大。。。 视频生视频生成式视频领域最简单…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2024/02/20/pre-sora-video/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="回顾早期 AnimateDiff、SVD 与 ControlNet 工作流，讨论风格化、连续性和可控性之间的取舍。">
+  <meta name="description" content="再不总结，一些使用经验就要过期发烂了，，在Sora诞生之前，视频生成领域已经是整个AI投资领域追捧已久的一个概念，本文仅从工程使用的角度出发看看前Sora时代利用开源资源大致能将生成式视频做到什么程度。然后就会更加领悟 Sora 的断层式强大。。。  视频生视频生成式视频领域最简单的一个侧面应该就是视频生成视频，或者叫视频风格化，这个概念其实起源更早，以前 GAN 时代就已经有不少视频风格化的样">
 <meta property="og:type" content="article">
-<meta property="og:title" content="前 Sora 时代的视频生成：一次工作流实验">
+<meta property="og:title" content="前SORA时代视频生成浅尝">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2024/02/20/pre-sora-video/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="回顾早期 AnimateDiff、SVD 与 ControlNet 工作流，讨论风格化、连续性和可控性之间的取舍。">
+<meta property="og:description" content="再不总结，一些使用经验就要过期发烂了，，在Sora诞生之前，视频生成领域已经是整个AI投资领域追捧已久的一个概念，本文仅从工程使用的角度出发看看前Sora时代利用开源资源大致能将生成式视频做到什么程度。然后就会更加领悟 Sora 的断层式强大。。。  视频生视频生成式视频领域最简单的一个侧面应该就是视频生成视频，或者叫视频风格化，这个概念其实起源更早，以前 GAN 时代就已经有不少视频风格化的样">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/video-workflow.svg">
 <meta property="article:published_time" content="2024-02-20T08:15:23.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="视频生成">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/video-workflow.svg">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -36,45 +34,83 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.02.20 / 4 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.02.20 / 11 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/">视频生成</a></div></div>
-    <h1>前 Sora 时代的视频生成：一次工作流实验</h1>
+    <h1>前SORA时代视频生成浅尝</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2024-02-20T08:15:23.000Z">2024.02.20</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E8%BD%AC%E7%BB%98%EF%BC%9A%E5%85%88%E4%BF%9D%E7%95%99%E4%BB%80%E4%B9%88%EF%BC%8C%E5%86%8D%E6%94%B9%E5%8F%98%E4%BB%80%E4%B9%88"><span class="toc-text">视频转绘：先保留什么，再改变什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ControlNet-%E8%AE%A9%E6%94%B9%E5%8F%98%E6%9C%89%E8%BE%B9%E7%95%8C"><span class="toc-text">ControlNet 让改变有边界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%84%B8%E9%83%A8%E4%BF%AE%E5%A4%8D%E4%B8%8E%E6%94%BE%E5%A4%A7%E4%B9%9F%E4%BC%9A%E6%94%B9%E5%8F%98%E6%97%B6%E9%97%B4%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="toc-text">脸部修复与放大也会改变时间连续性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%9B%BE%E4%B8%8E%E5%B1%80%E9%83%A8%E5%88%86%E5%89%B2"><span class="toc-text">参考图与局部分割</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E9%80%9F%E4%B8%8E%E7%94%BB%E8%B4%A8%E9%9C%80%E8%A6%81%E9%87%8D%E6%96%B0%E6%B5%8B%E9%87%8F"><span class="toc-text">加速与画质需要重新测量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%94%9F%E8%A7%86%E9%A2%91%EF%BC%9A%E8%BE%93%E5%85%A5%E5%B7%B2%E7%BB%8F%E5%BD%B1%E5%93%8D%E4%BA%86%E8%BF%90%E5%8A%A8%E7%A9%BA%E9%97%B4"><span class="toc-text">图生视频：输入已经影响了运动空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%AF%B9%E7%85%A7%E8%A6%81%E5%8C%85%E5%90%AB%E5%A4%B1%E8%B4%A5%E7%BB%93%E6%9E%9C"><span class="toc-text">参数对照要包含失败结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E9%9D%99%E6%80%81%E5%A5%BD%E7%9C%8B%EF%BC%8C%E5%88%B0%E8%A7%86%E9%A2%91%E5%8F%AF%E4%BF%A1"><span class="toc-text">从静态好看，到视频可信</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%94%9F%E8%A7%86%E9%A2%91"><span class="toc-text">视频生视频</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#workflow%E4%B8%8E%E6%A6%82%E6%8B%AC%E6%B5%81%E7%A8%8B"><span class="toc-text">workflow与概括流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%BD%E5%A5%96"><span class="toc-text">抽奖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%94%9F%E8%A7%86%E9%A2%91"><span class="toc-text">图生视频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8DSora%E6%97%B6%E4%BB%A3%E7%BB%88%E7%BB%93"><span class="toc-text">前Sora时代终结</span></a></li></ol></nav></details>
   
-  <div class="prose"><p>这份笔记写于 2024 年 2 月。那时，我主要借助开源图像生成工具尝试视频风格化与短片段生成。这里保留的是那个阶段的工程观察，而不是对今天视频模型能力的评判。</p>
-<p>实验分成两个方向：一个已有视频换一种视觉风格，另一个从静态图片生成一小段运动。它们看起来相近，实际面对的约束差别很大。</p>
-<h2 id="视频转绘：先保留什么，再改变什么"><a href="#视频转绘：先保留什么，再改变什么" class="headerlink" title="视频转绘：先保留什么，再改变什么"></a>视频转绘：先保留什么，再改变什么</h2><p>已有视频提供了动作、构图和时间线。风格化希望保留这些结构，同时改变材质、色彩或人物外观。</p>
-<p>可以把当时的工作流概括成：</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/video-workflow.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/video-workflow.svg" alt="视频转绘中的输入、结构约束、风格化与输出"></a></p>
-<p><em>依据原稿的工作流说明重绘，用于补足原稿未保存在本地的内部流程截图。</em></p>
-<p>这只是帮助理解的拆分。真正使用时，还要看工作流是否跨帧处理，以及组件有没有共享或保持时间信息。不能把视频稳定性完全归结为“逐帧画得足够像”。</p>
-<h2 id="ControlNet-让改变有边界"><a href="#ControlNet-让改变有边界" class="headerlink" title="ControlNet 让改变有边界"></a>ControlNet 让改变有边界</h2><p>姿态约束用于保留人物动作，深度约束描述空间关系，边缘约束保留轮廓，细节相关的约束则可能帮助维持局部结构。</p>
-<p>约束增强后，画面通常更贴近原视频，但风格变化的空间也会被压缩。增加约束数量并不保证一直改善效果，几个约束也可能对同一个区域提出冲突要求。</p>
-<p>比较时，应固定输入视频、采样与随机条件，先单独观察每个约束，再尝试组合。</p>
-<h2 id="脸部修复与放大也会改变时间连续性"><a href="#脸部修复与放大也会改变时间连续性" class="headerlink" title="脸部修复与放大也会改变时间连续性"></a>脸部修复与放大也会改变时间连续性</h2><p>在全身镜头里，脸部有效像素很少，修复可以改善细节，但重新绘制也可能抹掉眨眼和细小表情。逐帧都更清晰，并不代表播放时更稳定。</p>
-<p>放大同样会增加新的细节。除了显存与耗时，还要检查这些细节是否在相邻帧保持一致。只看静态截图，很容易忽略播放时的闪烁。</p>
-<h2 id="参考图与局部分割"><a href="#参考图与局部分割" class="headerlink" title="参考图与局部分割"></a>参考图与局部分割</h2><p>IP-Adapter 一类方法能够把参考图引入生成条件，帮助约束风格或视觉特征。它与训练一个 LoRA 的准备成本和控制方式不同，适合先快速验证方向。</p>
-<p>分割则让工作流能够对不同区域使用不同处理。例如服装纹理不稳定时，可以把服装区域单独拿出来观察，而不是提高整个画面的重绘约束。</p>
-<p>但更细的流程也意味着更多误差来源：分割边界不稳、参考图与输入姿势不匹配，以及局部修复与整体光照不一致，都可能让效果变差。</p>
-<h2 id="加速与画质需要重新测量"><a href="#加速与画质需要重新测量" class="headerlink" title="加速与画质需要重新测量"></a>加速与画质需要重新测量</h2><p>实验尝试过 LCM 相关组件、VAE 选择与其他增强方法。它们能否改善结果，取决于底模、推理配置和整条工作流。</p>
-<p>因此不把“更快”直接推导成“更稳定”，也不把某次样例改善写成通用结论。记录耗时、显存、失败率与连续播放效果，比只保存最好的一段视频更有参考价值。</p>
-<h2 id="图生视频：输入已经影响了运动空间"><a href="#图生视频：输入已经影响了运动空间" class="headerlink" title="图生视频：输入已经影响了运动空间"></a>图生视频：输入已经影响了运动空间</h2><p>在当时的 AnimateDiff 与 Stable Video Diffusion 实验中，静态图片的构图会明显影响可生成的运动。场景越复杂，需要同时保持一致的对象越多，稳定性越难判断。</p>
-<p>一些输入更适合很小的镜头变化、轻微人物动作或环境运动。先预想模型有可能完成什么，再准备输入图，比事后用参数补救一个不合适的场景更有效。</p>
-<h2 id="参数对照要包含失败结果"><a href="#参数对照要包含失败结果" class="headerlink" title="参数对照要包含失败结果"></a>参数对照要包含失败结果</h2><p>运动幅度相关参数、采样步数与输入扰动，可以改变结果，但并不独立。原实验里，一个输入已经严重失稳时，继续增加采样步数并不能可靠地救回它。</p>
-<p>我会优先保留同一张输入图上的一组对照，并记录哪些组合完全失败。找到可用区域之后，再换更多输入，检查是不是只对这一张图有效。</p>
-<h2 id="从静态好看，到视频可信"><a href="#从静态好看，到视频可信" class="headerlink" title="从静态好看，到视频可信"></a>从静态好看，到视频可信</h2><p>这次实验让我更清楚地区分了三件事：单帧质量、跨帧连续性，以及动作是否合理。它们都可以独立失败。</p>
-<p>参考项目：<a target="_blank" rel="noopener" href="https://github.com/guoyww/AnimateDiff">AnimateDiff</a>、<a target="_blank" rel="noopener" href="https://github.com/Stability-AI/generative-models">Stable Video Diffusion</a>、<a target="_blank" rel="noopener" href="https://github.com/lllyasviel/ControlNet">ControlNet</a>、<a target="_blank" rel="noopener" href="https://ip-adapter.github.io/">IP-Adapter</a>。</p>
+  <div class="prose"><blockquote>
+<p>再不总结，一些使用经验就要过期发烂了，，在Sora诞生之前，视频生成领域已经是整个AI投资领域追捧已久的一个概念，本文仅从工程使用的角度出发看看前Sora时代利用开源资源大致能将生成式视频做到什么程度。然后就会更加领悟 Sora 的断层式强大。。。</p>
+</blockquote>
+<h2 id="视频生视频"><a href="#视频生视频" class="headerlink" title="视频生视频"></a>视频生视频</h2><p>生成式视频领域最简单的一个侧面应该就是视频生成视频，或者叫视频风格化，这个概念其实起源更早，以前 GAN 时代就已经有不少视频风格化的样例，在AnimateDiff 这个工具出现之后，整个StableDiffusion社区已经活跃着很多视频风格化的尝试，B站上也早有很多<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1K8411v7Yd/?spm_id_from=333.337.search-card.all.click&vd_source=e3736e9f787a4990e30f11e30bb0c82f">整活视频</a>，目前业界比较好的效果有如[原视频待补：ssstwitter.com_1708301314479.mp4]如:</p>
+<p>这是2.19日<a target="_blank" rel="noopener" href="https://domoai.app/">domoAI</a>在他的官方twitter 上发布的其最新的视频生视频效果展示，这是目前业界已经拉到不错融资的主打视频生视频的创业公司之一。</p>
+<p>video2video 简单理解的话，其实就是把视频拆解为视频帧，简化为image2image 然后增加controlnet 部分保证画面主体与原视频一致，这样生成出来的新风格视频也能与原视频一致，自然也就是连贯的。目前在开源社区内能直接搜索找到不少已经有不错效果的video2video 的workflow.</p>
+<style>
+.scaled-video {
+  width: 50%; /* Scale down to 50% of the original size */
+  height: auto; /* Maintain aspect ratio */
+}
+</style>
+
+<video class="scaled-video" controls>
+  <source src="https://blog-1257063193.cos.ap-shanghai.myqcloud.com/15100eedb24efcf4e3e8f9a4a6d9e4b2_xfaqc_b6mmb4.mp4_2F79AF3E96E3669E95EA0CA19ED2E988.MP4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<h3 id="workflow与概括流程"><a href="#workflow与概括流程" class="headerlink" title="workflow与概括流程"></a>workflow与概括流程</h3><p>在看完整的workflow之前可以看下这些视频生视频大概的结构:<br>[原图待补：原图片尚未取回]</p>
+<p>这些 workflow 大致长这个样子，其中最关键的部分是controlnet,</p>
+<ol>
+<li>tile： 给画面增加细节的controlNet 模型，细节增加之后可以帮助画面提升稳定性，因为细节越多，画面重绘的限制越多</li>
+<li>openPose：这个很熟悉了，提取人物动作和表情，保证人物动作和表情的一致性</li>
+<li>depth：画面景深信息，重绘过程中保证画面景深一致性。</li>
+<li>hed: 其实线条类的controlNet 模型都可以，除了Hed 还有lineart，softEdge 等其实都可以进行尝试。</li>
+</ol>
+<p>controlNet是保证稳定性最关键的Node 之一，基本上这些controlNet 应用的越多，强度越高画面就越稳定，反之画面越不稳定，但风格化越重。</p>
+<p>除了controlNet，还有faceResotre 和upscale 放大对画面效果是两个运用了之后就立竿见影的Node，</p>
+<ul>
+<li><p>faceResotre:  在很多全身视频作为输入时，脸部修复尤为重要，这个之前使用过人像text2Image应该会很熟悉，不过这里脸部修复的一个缺点是，有相当的概率会丢失一定的脸部表情，比如眨眼，微小等，因为这里的脸部修复本质上重绘了面部，如果需要重新还原这些表情，需要给脸部修复增加额外的表情 prompt。<br>[原图待补：原图片尚未取回]</p>
+</li>
+<li><p>upscale: 放大也是一个提升效果非常明显的操作，不过这就取决于当前使用的机器的显存大小了，放大意味着细节的全面提升，和 前面 tile 一样细节提升，画面信息量变大，更精致的同时，重绘也会更稳定。</p>
+</li>
+</ul>
+<p>faceResotre 和upscale 是最常见的两个提升视频效果的节点，其实还有很多其他节点对不同的输入都会有不同程度的效果提升。</p>
+<ol>
+<li><p>LCM Lora:  <a target="_blank" rel="noopener" href="https://stable-diffusion-art.com/lcm-lora/">Latent Consistency Model</a> , 这是一个比较常用的用来提升画面生成速度的模型，在video2video 的流程中，其实 LCM 也可以认为提升了稳定性，因为相同的步数下，LCM 收敛之后的效果更好，感觉和前面描述的细节越多时画面越稳定一个原理。总之是一个非常值得嵌入workflow 的 Node，</p>
+</li>
+<li><p>IP Adapter: <a target="_blank" rel="noopener" href="https://stable-diffusion-art.com/ip-adapter/">Image Prompt Adapter</a>也是最近很火的一个组件，仅通过引用一张图片就可以指导模型最终生成的风格效果，或者应用目标人脸，或者指导生成图片的配色，用处非常广，以前需要使用 Lora 才能实现的很多功能，都可以使用 IP Adapter 轻量级实现。比如使用一张图片作为风格化参考:<br>[原图待补：原图片尚未取回]<br>左侧图片为使用下图：<br>[原图待补：原图片尚未取回]<br>作为IPadapter风格参照的结果<br>比如使用人脸作为生成人脸的参考。使用的工作流为附件中的workflow_all_in_one_run.json开启ipadapter</p>
+</li>
+</ol>
+<p>[原图待补：原图片尚未取回]<br>当然效果比训练人脸 Lora 还是要差很多，胜在效率高。使用的工作流为附件中的workflow_ip.json</p>
+<ol start="3">
+<li><p>segmention，对于熟悉img2img流程的同学来说也是很熟悉了，在需要对局部进行重绘时，个人在实践中使用过的 segmention 目前有两种：<br> a: segmentAnything，可以通过Prompt 对指定的内容进行分割，譬如截图中，我使用了”leg”作为prompt，分割出来的 mask 就是人物腿。<br>[原图待补：原图片尚未取回]<br> b:指定的分割模型，segmentAnything 理论上适配大部分的分割，但是有些特定的分割可能还是要交给专门的分割模型，比如衣服，截图中使用了<a target="_blank" rel="noopener" href="https://github.com/switchablenorms/DeepFashion2">DeepFashion2</a>这个模型来给模特的连衣裙增加遮罩。<br>[原图待补：原图片尚未取回]<br> 使用分割意味着对图像进行了细粒度的划分，比如如果我们认为衣服不够稳定，颜色或者花纹变化太大，则可以对衣服部分增加一个更强的Hed 等controlnet。整体其实对脸部重绘的运用是一个道理。包含分割的工作流可以查看附件中的workflow_all_in_one_run.json</p>
+</li>
+<li><p>FreeU，<a target="_blank" rel="noopener" href="https://stable-diffusion-art.com/freeu/">Free launch in Unet</a> 也是我看到的对画面有提升使用比较多而组件，不过在个人实践中，这个效果的提升远不如前面提到的这些Node。</p>
+</li>
+<li><p>vae Model: 这个其实也属于img2img 中比较常见的影响效果的组件，不过这里也提一下因为经常可能会忽略 vae 的选择，实际对视频整体效果影响也非常显著，需要注意。<br>[原图待补：原图片尚未取回]</p>
+</li>
+</ol>
+<p>最后总结一下就是，如果你本来就是一个text2img玩家，那么只需要注意controlnet的组合运用与强度，以及 LCM 对稳定性以及生成速度的提升，其他就是运用一切图片生成的可用办法提高视频帧质量即可。</p>
+<h3 id="抽奖"><a href="#抽奖" class="headerlink" title="抽奖"></a>抽奖</h3><p>大概的workflow定下来之后剩下就是抽奖环节了。理论上上面提供的workflow和参数对于大部分没有复杂场景的视频来说完成风格转绘的成功率尚可的。这里主要需要进行考虑的是风格变化与稳定性之间的平衡，比如如果需要增强风格，可能需要对 HED 等这类controlNet 的强度进行调低。</p>
+<p>下面是一些上面的 workflow 效果与DomoAI 的一些对比以及一些生成案例:</p>
+<p>[原视频待补：copy_4CE447F5-F778-413A-BEA7-11595A4E5557.MOV]<br>[原视频待补：copy_9AB8A22D-45E6-4893-BB15-822C807F1DC0.MOV]</p>
+<p>使用的工作流为附件中的workflow_lcm_with_prepare.json</p>
+<h2 id="图生视频"><a href="#图生视频" class="headerlink" title="图生视频"></a>图生视频</h2><p>视频生视频实际上仍然可以看作扔停留在图片维度上，它仍然把视频看作连续的图片。但是图生视频才真正上升了一个维度，难度也更大，在前Sora时代，这样生成的视频想要保持稳定，同一幕大概只能保持 5s 左右，而且动作幅度小，动作方式固定，尽管如此，Runway，Pika 等仍然成为了此领域的明星公司。在 B 站上也能看到一批利用这些工具和 MideJourney 产生的“AI”大片：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1vg4y167vH/?spm_id_from=333.337.search-card.all.click">AI悬疑电影预告</a>， 或者是做<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1KN4y1Q7Hp/?spm_id_from=333.337.search-card.all.click">广告</a>。其实看多了就会发现，前 Sora 时代的图生视频或者文字生视频擅长的是非实体动画（火焰，流水，烟雾）以及简单的镜头推镜，以及人物非常简单以及短暂的动作表情，所以很多人说前 Sora 时代的视频生成是动图生成，其实挺形象的。</p>
+<p>在开源领域，能够使用的视频生成模型主要是AnimateDiff 和SVD(Stable Video Diffusion)，整体使用下来图生图方式下，Animatediff 限制更多，效果大多数情况下不如SVD, 不过像Animatediff git 主页展示的例子所示，其对动漫风格的动画效果有时会有一些惊喜。<br>[原视频待补：animate_diff_00004_ (1).mp4]<br>但整体泛化性上来说，SVD 的视频效果仍然比 Animatediff 要更稳定，视频本身图像质量也更好。不过 Animatediff 生态中还有如motionLora 这种额外的组件支持，SVD 的可控参数则基本上是在抽奖。<br>    SVD 的主要可控参数就是bucket_id，一般认为bucket_id 越大，动作幅度越大，需要进行多次抽奖找到合适的bucket_id，此外还有Augmentation level 参数，在<a target="_blank" rel="noopener" href="https://www.reddit.com/r/StableDiffusion/comments/184s07o/xy_chart_for_svd_comparing_motion_bucket_id_and/">这篇帖子</a> 的总结中，Augmentation level 大部分情况下作用并不明显，在bucket_id 较大时，会一定程度影响动画。此外，增大sampler 的步数也可以增加最终视频的稳定性，不过这两个参数的调整我目前实验下来必须在bucket_id 的基础上调试，如果 bucket_id 与图片不适配，产生的视频很糟糕，那么其他两个参数是无法救回来的。</p>
+<p>那么，有多少本领就做多大事，我们也尝试使用MidJourney 与 SVD 来尝试做一个劣质版游戏预告：</p>
+<p>[原视频待补：<a target="_blank" rel="noopener" href="https://blog-1257063193.cos.ap-shanghai.myqcloud.com/15100eedb24efcf4e3e8f9a4a6d9e4b2_xfaqc_b6mmb4.mp4_2F79AF3E96E3669E95EA0CA19ED2E988.MP4]">https://blog-1257063193.cos.ap-shanghai.myqcloud.com/15100eedb24efcf4e3e8f9a4a6d9e4b2_xfaqc_b6mmb4.mp4_2F79AF3E96E3669E95EA0CA19ED2E988.MP4]</a></p>
+<p>没错，这类影片，如果要使用 SVD，对输入图片本身就要有一个大概的动画预期，比如我们已经知道了 SVD 擅长做火焰，流水，下雨，落花，烟雾，干净的单人画面等，那么我们在出图的时候就把这些加进去。</p>
+<h2 id="前Sora时代终结"><a href="#前Sora时代终结" class="headerlink" title="前Sora时代终结"></a>前Sora时代终结</h2><p>在OpenAI官网中，在对 Sora 进行介绍描述时，有一句轻轻带过的话：“<strong>图片是单帧的视频</strong>”，联系其视频质量甚至是跨越了其已有的图片生成模型DALL·E,是个很有意思的说法。本文中，或者开源社区中在前 Sora时代，很多情况可以说循着相反的一条路“视频是连续的图片”，再考虑到 OpenAI 众多的先发优势，工程积累和trucks of cards，这其中的因果关系究竟是环境影响了思想，还是思想改变了环境呢。</p>
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2024/06/08/generative-voice/"><span class="kicker">← 较新的记录</span><span>从文字到声音：一次语音合成学习与实验</span></a>
-  <a href="/pototaker_blog/2023/07/03/lora-style-portrait/"><span class="kicker">更早的记录 →</span><span>角色与摄影风格如何兼得：LoRA 人像实验续篇</span></a>
+  <a href="/pototaker_blog/2024/06/08/generative-voice/"><span class="kicker">← 较新的记录</span><span>如何使用生成式语音与偶像对话</span></a>
+  <a href="/pototaker_blog/2023/07/03/lora-style-portrait/"><span class="kicker">更早的记录 →</span><span>一键参加朋友圈比赛（2）</span></a>
 </nav>
 </main>
     <footer class="site-footer">

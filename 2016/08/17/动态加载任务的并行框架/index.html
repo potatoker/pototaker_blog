@@ -4,27 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>Android 动态加载：把计算任务作为插件 · potatoker&#39;s blog</title>
-  <meta name="description" content="从 DexClassLoader 和共享接口出发，整理动态加载计算任务时的类型与运行环境边界。">
+  <title>动态加载任务并行框架 · potatoker&#39;s blog</title>
+  <meta name="description" content="项目已经过去很久了，虽然现在研究方向改变了很多，但是从毕设开始做这个到发现这个和目前流行的一些插件化原理很相似，这里再基于之前做的和之后学到的内容对动态加载做一个总结。 先介绍本来这个项目的机制: 并行框架采用了AKKA,目前已经实现了AKKA框架在Android平台上的运行了，…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2016/08/17/%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%B9%B6%E8%A1%8C%E6%A1%86%E6%9E%B6/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="从 DexClassLoader 和共享接口出发，整理动态加载计算任务时的类型与运行环境边界。">
+  <meta name="description" content="项目已经过去很久了，虽然现在研究方向改变了很多，但是从毕设开始做这个到发现这个和目前流行的一些插件化原理很相似，这里再基于之前做的和之后学到的内容对动态加载做一个总结。  先介绍本来这个项目的机制:  并行框架采用了AKKA,目前已经实现了AKKA框架在Android平台上的运行了，但遇到了Mthod 64K的问题，使用multidex的方法在Android5.0的平台上得到了解决 master">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android 动态加载：把计算任务作为插件">
+<meta property="og:title" content="动态加载任务并行框架">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2016/08/17/%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%B9%B6%E8%A1%8C%E6%A1%86%E6%9E%B6/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="从 DexClassLoader 和共享接口出发，整理动态加载计算任务时的类型与运行环境边界。">
+<meta property="og:description" content="项目已经过去很久了，虽然现在研究方向改变了很多，但是从毕设开始做这个到发现这个和目前流行的一些插件化原理很相似，这里再基于之前做的和之后学到的内容对动态加载做一个总结。  先介绍本来这个项目的机制:  并行框架采用了AKKA,目前已经实现了AKKA框架在Android平台上的运行了，但遇到了Mthod 64K的问题，使用multidex的方法在Android5.0的平台上得到了解决 master">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/legacy/shared-interface.png">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/14691068206589.png">
 <meta property="article:published_time" content="2016-08-17T03:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="并行计算">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/legacy/shared-interface.png">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/originals/14691068206589.png">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -37,45 +37,250 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2016.08.17 / 4 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2016.08.17 / 36 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/Java/">Java</a><a href="/pototaker_blog/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/">并行计算</a></div></div>
-    <h1>Android 动态加载：把计算任务作为插件</h1>
+    <h1>动态加载任务并行框架</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2016-08-17T03:00:00.000Z">2016.08.17</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%8C%BA%E5%88%86%E4%B8%A4%E7%A7%8D%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-text">先区分两种执行方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%AE%E9%80%9A-class-%E6%96%87%E4%BB%B6%E8%BF%98%E4%B8%8D%E6%98%AF-Android-%E5%8F%AF%E5%8A%A0%E8%BD%BD%E4%BB%BB%E5%8A%A1"><span class="toc-text">普通 class 文件还不是 Android 可加载任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A9%E5%AE%BF%E4%B8%BB%E4%B8%8E%E6%8F%92%E4%BB%B6%E5%85%B1%E4%BA%AB%E4%B8%80%E4%BB%BD%E6%8E%A5%E5%8F%A3"><span class="toc-text">让宿主与插件共享一份接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E8%BA%AB%E4%BB%BD%E8%BF%98%E5%8C%85%E5%90%AB%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">类的身份还包含类加载器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DexClassLoader-%E5%8F%AA%E6%98%AF%E5%85%B6%E4%B8%AD%E4%B8%80%E7%8E%AF"><span class="toc-text">DexClassLoader 只是其中一环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E8%BF%98%E6%98%AF%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8"><span class="toc-text">反射还是接口调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%8F%92%E4%BB%B6%E4%B8%8E%E7%95%8C%E9%9D%A2%E6%8F%92%E4%BB%B6%E7%9A%84%E9%9A%BE%E5%BA%A6%E4%B8%8D%E5%90%8C"><span class="toc-text">计算插件与界面插件的难度不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E4%BB%BB%E5%8A%A1%E9%9C%80%E8%A6%81%E5%8F%AF%E4%BF%A1%E6%9D%A5%E6%BA%90%E4%B8%8E%E5%A4%B1%E8%B4%A5%E9%9A%94%E7%A6%BB"><span class="toc-text">动态任务需要可信来源与失败隔离</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-__u76F4_u63A5_u6267_u884C_u7684_u4EFB_u52A1"><span class="toc-text">1. 直接执行的任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DVM_u548CJVM_u7684_u533A_u522B"><span class="toc-text">DVM和JVM的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-calss_u6587_u4EF6_u4F5C_u4E3A_u4EFB_u52A1_u5355_u4F4D"><span class="toc-text">2.calss文件作为任务单位</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1_DexClassLoader__u548C_PathClassLoader"><span class="toc-text">3.1 DexClassLoader 和 PathClassLoader</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1_loadClass_28_29"><span class="toc-text">3.1.1 loadClass()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2DexClassLoader__u548C_PathClassLoader_u7684_u533A_u522B"><span class="toc-text">3.1.2DexClassLoader 和 PathClassLoader的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-3_u52A0_u8F7D_u7C7B_u7684_u8FC7_u7A0B"><span class="toc-text">3.1.3加载类的过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-4_Dynamic_Class_Reloading"><span class="toc-text">3.1.4 Dynamic Class Reloading</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-5__u8C03_u7528_u52A0_u8F7D_u65B9_u6CD5_u7684_u4E24_u79CD_u65B9_u5F0F"><span class="toc-text">3.1.5 调用加载方法的两种方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-5-1_interface_u65B9_u6CD5"><span class="toc-text">3.1.5.1 interface方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-5-2__u53CD_u5C04_u65B9_u6CD5"><span class="toc-text">3.1.5.2 反射方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#u4E8C_u8005_u6BD4_u8F83"><span class="toc-text">二者比较</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u4EE3_u7406"><span class="toc-text">代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u83B7_u53D6Resources_u5BF9_u8C61"><span class="toc-text">获取Resources对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5173_u4E8Einterface_u5B9E_u73B0_u88AB_u52A0_u8F7D_u5BF9_u8C61_u7684_u65B9_u6CD5_u8C03_u7528"><span class="toc-text">关于interface实现被加载对象的方法调用</span></a></li></ol></li></ol></nav></details>
   
-  <div class="prose"><p>这次实验希望让 Android 程序在运行时加载新的计算任务，而不是每加一种任务都重新打包整个应用。任务只需要计算能力，不需要插件界面，这让问题可以先缩小到类加载与接口调用。</p>
-<h2 id="先区分两种执行方式"><a href="#先区分两种执行方式" class="headerlink" title="先区分两种执行方式"></a>先区分两种执行方式</h2><p>一种方式是把任务作为独立程序执行，自己处理入口、输入和输出；另一种方式是在已有进程里加载任务类，通过对象和方法调用完成计算。</p>
-<p>后者更容易复用宿主的调度、日志和通信能力，也是这篇笔记主要讨论的路线。</p>
-<h2 id="普通-class-文件还不是-Android-可加载任务"><a href="#普通-class-文件还不是-Android-可加载任务" class="headerlink" title="普通 class 文件还不是 Android 可加载任务"></a>普通 class 文件还不是 Android 可加载任务</h2><p>在当时的实验工具链中，Java 编译产生的 class 需要进一步转换成 Android 运行时使用的 DEX 表示。文件外层虽然可能是 JAR 或 APK，但真正需要确认的是里面是否包含目标运行环境能够加载的代码。</p>
-<p>因此，看到扩展名是 <code>.jar</code>，不能直接判断它适合拿给 Android 的类加载器。</p>
-<h2 id="让宿主与插件共享一份接口"><a href="#让宿主与插件共享一份接口" class="headerlink" title="让宿主与插件共享一份接口"></a>让宿主与插件共享一份接口</h2><p>可以先约定一个非常小的任务接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ComputeTask</span> &#123;</span><br><span class="line">    <span class="type">byte</span>[] execute(<span class="type">byte</span>[] input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <div class="prose">
+<p>项目已经过去很久了，虽然现在研究方向改变了很多，但是从毕设开始做这个到发现这个和目前流行的一些插件化原理很相似，这里再基于之前做的和之后学到的内容对动态加载做一个总结。</p>
+<a id="more"></a>
+<p>先介绍本来这个项目的机制:</p>
+<ol>
+<li>并行框架采用了AKKA,目前已经实现了AKKA框架在Android平台上的运行了，但遇到了Mthod 64K的问题，使用multidex的方法在Android5.0的平台上得到了解决</li>
+<li>master向集群中的slave发送dex格式或者经过dx工具转换过的jar文件，然后slave执行这些文件或这些文件中的部分代码:<ol>
+<li>发送只含有main函数的.dex文件:有些任务比较简单，一个main函数就能搞定，执行他们只需要像在pc上执行java命令一样，不过这里在安卓上，是使用dalvik命令</li>
+<li>发送转换过的jar文件(其实和上面的.dex文件用的是同一个转换工具，同一个转换命令只是output的文件格式不同)，slave的程序中动态的加载这个jar里面的class来使用，执行。</li>
+</ol>
+</li>
+</ol>
+<h2 id="1-__u76F4_u63A5_u6267_u884C_u7684_u4EFB_u52A1"><a class="headerlink" href="#1-__u76F4_u63A5_u6267_u884C_u7684_u4EFB_u52A1" title="1. 直接执行的任务"></a>1. 直接执行的任务</h2><p>这个时候在服务器端，用对应的命令把一个project打包成dex，然后把对应的dex文件发送给集群中待命的slave,slave收到了dex文件后，使用Java的process builder类创建子进程，子进程执行的命令是dalvik命令，就和java命令可以执行jar一样，dalvik命令可以执行dex中的main函数。</p>
+<pre><code>dx.bat --dex --output = output.jar input.jar
+</code></pre><p>不过实际上我自己的毕设中用的是.dex格式:</p>
+<pre><code>dx --dex --output=matrixTime.dex matrixTime.jar
+</code></pre><p>另,不过看到<a href="http://stackoverflow.com/questions/27349097/load-dex-file-dynamically-on-android-5-0" rel="external" target="_blank">有人</a>说生成dex格式的在5.0以后使用classLoader有问题，所以统一成了jar文件,<a href="http://stackoverflow.com/questions/4163167/convert-class-file-to-dex-file" rel="external" target="_blank">有人</a>解释清楚了不管是直接执行还是classloader都可以用jar的。</p>
+<p>然后使用dalvik 命令执行这个dex文件里的main函数:</p>
+<pre><code>/system/bin/dalvikvm -cp /data/data/edu.mit.haoqili.file_transfer/test/Hello.dex hello.Hello
+</code></pre><p>通过:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/><span class="line">7</span><br/><span class="line">8</span><br/></pre></td><td class="code"><pre><span class="line">proc=Runtime.getRuntime().exec(<span class="string">"su"</span>);</span><br/><span class="line">String cmd3=<span class="string">"/system/bin/dalvikvm -cp "</span>+dexPath+<span class="string">" "</span>+className;</span><br/><span class="line"></span><br/><span class="line">Log.i(<span class="string">"cmd3 "</span>,cmd3);</span><br/><span class="line">os = <span class="keyword">new</span> DataOutputStream(proc.getOutputStream());</span><br/><span class="line">os.writeBytes(cmd3 + <span class="string">"\n"</span>);</span><br/><span class="line">os.writeBytes(<span class="string">"exit\n"</span>);</span><br/><span class="line">os.flush();</span><br/></pre></td></tr></table></figure>
+<p>来向这个子进程输入这个命令<br/>通过：<code>java.io.InputStream is=proc.getInputStream();</code>来得到运行结果</p>
+<h3 id="DVM_u548CJVM_u7684_u533A_u522B"><a class="headerlink" href="#DVM_u548CJVM_u7684_u533A_u522B" title="DVM和JVM的区别"></a>DVM和JVM的区别</h3><p>DVM是基于寄存器的虚拟机，JVM是基于栈的虚拟机</p>
+<p>看一下这个，一行普通的C代码:</p>
+<pre><code>a = b + c;  
+</code></pre><p>把他变成汇编语言:</p>
+<pre><code>add a, b, c 
+</code></pre><p>那看起来就更像机器指令了，对吧？这种就是所谓“三地址指令”（3-address instruction），一般形式为：</p>
+<pre><code>op dest, src1, src2 
+</code></pre><p>许多操作都是二元运算+赋值。三地址指令正好可以指定两个源和一个目标，能非常灵活的支持二元操作与赋值的组合。ARM处理器的主要指令集就是三地址形式的。 </p>
+<blockquote>
+<p>三地址与二地址形式的指令集，一般就是通过“基于寄存器的架构”来实现的。例如典型的RISC架构会要求除load和store以外，其它用于运算的指令的源与目标都要是寄存器。 </p>
+</blockquote>
+<p>有没有0地址的指令呢，有的，同样的上面的代码翻译过来:</p>
+<pre><code>iconst_1  
+iconst_2  
+iadd  
+istore_0 
+</code></pre><p>其实现依赖于一种常见的数据结构——没错，就是栈。上面的iconst_1、iconst_2两条指令，分别向一个叫做“求值栈”（evaluation stack，也叫做operand stack“操作数栈”或者expression stack“表达式栈”）的地方压入整型常量1、2。iadd指令则从求值栈顶弹出2个值，将值相加，然后把结果压回到栈顶</p>
+<blockquote>
+<p>零地址形式的指令集一般就是通过“基于栈的架构”来实现的</p>
+</blockquote>
+<p>零地址指令的“密度”可以非常高——可以用更少空间放下更多条指令。因此在空间紧缺的环境中，零地址指令是种可取的设计。但零地址指令要完成一件事情，一般会比二地址或者三地址指令许多更多条指令.</p>
+<p>总之就是，基于栈的架构指令会占用较少的内存空间，但完成操作需要更多的load/store指令，也意味着更多的指令分派（instruction dispatch）次数与内存访问次数</p>
+<p><strong>所以一般认为基于寄存器的架构对VM来说也是更快的</strong></p>
+<p>那么回到正题，DVM就是基于寄存器的，JVM是基于栈的。</p>
+<p>为什么JVM要基于栈呢?</p>
+<ol>
+<li>实现简单<br/>由于指令中不必显式指定源与目标，VM可以设计得很简单，不必考虑为临时变量分配空间的问题，求值过程中的临时数据存储都让求值栈包办就行。 </li>
+<li>该VM是为某类资源非常匮乏的硬件而设计的<br/>这类硬件的存储器可能很小，每一字节的资源都要节省。零地址指令比其它形式的指令更紧凑，所以是个自然的选择。 </li>
+<li>考虑到可移植性<br/>如果一个VM采用基于栈的架构，则无论在怎样的实际机器上，都很好实现——它的源架构里没有任何通用寄存器，所以实现VM时可以比较自由的分配实际机器的寄存器。于是这样的VM可移植性就比较高</li>
+</ol>
+<p>但DVM的寄存器是虚拟寄存器:</p>
+<blockquote>
+<p>与JVM相似，在Dalvik VM中每个线程都有自己的PC和调用栈，方法调用的活动记录以帧为单位保存在调用栈上。PC记录的是以16位为单位的偏移量而不是以字节为单位的。<br/>与JVM不同的是，Dalvik VM的栈帧中没有局部变量区与求值栈，取而代之的是一组虚拟寄存器。每个方法被调用时都会得到自己的一组虚拟寄存器。</p>
+</blockquote>
+<p>到此为止，两者各有好处，再深入就hold不住了。更详细的额关于编译器，解释器的内容在<a href="http://rednaxelafx.iteye.com/blog/492667" rel="external" target="_blank">这里</a>非常好的文章。</p>
+<h2 id="2-calss_u6587_u4EF6_u4F5C_u4E3A_u4EFB_u52A1_u5355_u4F4D"><a class="headerlink" href="#2-calss_u6587_u4EF6_u4F5C_u4E3A_u4EFB_u52A1_u5355_u4F4D" title="2.calss文件作为任务单位"></a>2.calss文件作为任务单位</h2><p>这就要用到dynamic class loading了</p>
+<p>如何理解的dynamic class loading了:</p>
+<blockquote>
+<p>there are situations where custom class loading can come in handy. Here are a couple of scenarios:</p>
+<ul>
+<li>Big apps can contain more than 64K method references, which is the maximum number of supported in a dex file. To get around this limitation, developers can partition part of the program into multiple secondary dex files, and load them at runtime.</li>
+<li>Frameworks can be designed to make their execution logic extensible by dynamic code loading at runtime.</li>
+</ul>
+</blockquote>
+<p>也许我上面这个需求算是第二个需求了吧</p>
+<p>在说这个项目相关之前，来看看介绍andorid dynamic class loader的例子吧:</p>
+<p>完整的在<a href="http://dsgwords.blogspot.com/2013/03/android-runtime-class-loading.html" rel="external" target="_blank">这里</a></p>
+<ol>
+<li><p>把要执行的input.jar 转换成可以被dalvik load的outpu.jar：</p>
+<pre><code>On Windows: dx.bat --dex --output = output.jar input.jar
+</code></pre></li>
+<li><p>生成相应的classLoader:</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/></pre></td><td class="code"><pre><span class="line">String dexFile = <span class="string">"/output.jar"</span>;</span><br/><span class="line">File f = <span class="keyword">new</span> File(Environment.getExternalStorageDirectory().toString() + dexFile);</span><br/><span class="line"><span class="keyword">final</span> File optimizedDexOutputPath = getDir(<span class="string">"outdex"</span>, <span class="number">0</span>);</span><br/><span class="line">DexClassLoader classLoader = <span class="keyword">new</span> DexClassLoader(f.getAbsolutePath(),</span><br/><span class="line">optimizedDexOutputPath.getAbsolutePath(),<span class="keyword">null</span>, getClassLoader());</span><br/></pre></td></tr></table></figure>
+<p>上面就是为了使用classLoader的loadclass函数得到class对象:<br/><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br/></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">Class</span>&lt;?&gt; <span class="title">myClass</span> = <span class="title">classLoader</span>.<span class="title">loadClass</span>(<span class="title">completeClassName</span>);</span></span><br/></pre></td></tr></table></figure></p>
+<p>然后通过反射调生成该类的对象以及用其中的函数:</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/></pre></td><td class="code"><pre><span class="line">Object obj = (Object)myClass.newInstance();</span><br/><span class="line">   <span class="function"><span class="keyword">Method</span> <span class="title">m</span> = <span class="title">myClass</span>.<span class="title">getMethod</span><span class="params">(methodToInvoke)</span>;</span></span><br/><span class="line">   m.invoke(obj);</span><br/></pre></td></tr></table></figure>
+<p>首先看一看函数:</p>
+<pre><code>DexClassLoader (String dexPath, 
+            String optimizedDirectory, 
+            String librarySearchPath, 
+            ClassLoader parent)
+</code></pre><blockquote>
+<p>Parameters</p>
+<ul>
+<li>dexPath<br/>String: the list of jar/apk files containing classes and resources, delimited by File.pathSeparator, which defaults to”:” on Android</li>
+<li>optimizedDirectory<br/>String: directory where optimized dex files should be written; must not be null</li>
+<li>librarySearchPath<br/>String: the list of directories containing native libraries, delimited by File.pathSeparator; may be null</li>
+<li>parent<br/>ClassLoader: the parent class loader</li>
+</ul>
+</blockquote>
+<ul>
+<li>第一个参数dexPath就是要加载的jar文件的绝对路径，这里可以是SD卡也可是InternalStorage.</li>
+<li>第二个参数optimizedDirectory是要把读取优化的classes信息缓存的地方，这里一般是internalStorage,放在外存不安全常使用<code>File dexOutputDir = context.getCodeCacheDir();</code>来生成这个dir.</li>
+</ul>
+<blockquote>
+<p>optimizedDirectory是用来缓存我们需要加载的dex文件的，并创建一个DexFile对象，如果它为null，那么会直接使用dex文件原有的路径来创建DexFile</p>
+</blockquote>
+<ul>
+<li>第三个参数好像一般都是NUll</li>
+<li>第四个参数是生成的classLoader的父loader，这个是一定要指定的，一般就指定当前所在类的classLoader,使用<code>getClassLoader()</code></li>
+</ul>
+<p>先在这里停一停，来看看classLoader这个东西</p>
+<p>##3. classLoader</p>
+<p>ClassLoader就是专门用来处理类加载工作的,一个运行中的APP 不仅只有一个类加载器。</p>
+<ul>
+<li>比如在Android系统启动的时候会创建一个Boot类型的ClassLoader实例，用于加载一些系统Framework层级需要的类</li>
+<li>此外，APP也有自己的类，这些类保存在APK的dex文件里面，所以APP启动的时候，也会创建一个自己的ClassLoader实例，用于加载自己dex文件中的类</li>
+<li>一个运行的Android应用至少有2个ClassLoader，一个是BootClassLoader（系统启动的时候创建的），另一个是PathClassLoader（应用启动时创建的，用于加载“/data/app/me.kaede.anroidclassloadersample-1/base.apk”里面的类）</li>
+</ul>
+<h3 id="3-1_DexClassLoader__u548C_PathClassLoader"><a class="headerlink" href="#3-1_DexClassLoader__u548C_PathClassLoader" title="3.1 DexClassLoader 和 PathClassLoader"></a>3.1 DexClassLoader 和 PathClassLoader</h3><p>在Android中，ClassLoader是一个抽象类，实际开发过程中，我们一般是使用其具体的子类DexClassLoader、PathClassLoader这些类加载器来加载类的，它们的不同之处是：</p>
+<ul>
+<li>DexClassLoader可以加载jar/apk/dex，可以从SD卡中加载未安装的apk；</li>
+<li>PathClassLoader只能加载系统中已经安装过的apk；</li>
+</ul>
+<h4 id="3-1-1_loadClass_28_29"><a class="headerlink" href="#3-1-1_loadClass_28_29" title="3.1.1 loadClass()"></a>3.1.1 loadClass()</h4><p>JVM中ClassLoader通过defineClass方法加载jar里面的Class，而Android中这个方法被弃用了。</p>
+<p>看看使用defineClass的例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/><span class="line">7</span><br/><span class="line">8</span><br/><span class="line">9</span><br/><span class="line">10</span><br/><span class="line">11</span><br/><span class="line">12</span><br/><span class="line">13</span><br/><span class="line">14</span><br/><span class="line">15</span><br/><span class="line">16</span><br/><span class="line">17</span><br/><span class="line">18</span><br/><span class="line">19</span><br/><span class="line">20</span><br/><span class="line">21</span><br/><span class="line">22</span><br/><span class="line">23</span><br/><span class="line">24</span><br/><span class="line">25</span><br/><span class="line">26</span><br/><span class="line">27</span><br/><span class="line">28</span><br/><span class="line">29</span><br/><span class="line">30</span><br/><span class="line">31</span><br/><span class="line">32</span><br/><span class="line">33</span><br/><span class="line">34</span><br/><span class="line">35</span><br/><span class="line">36</span><br/><span class="line">37</span><br/><span class="line">38</span><br/><span class="line">39</span><br/></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span></span>{</span><br/><span class="line"></span><br/><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClassLoader</span><span class="params">(ClassLoader parent)</span> </span>{</span><br/><span class="line">        <span class="keyword">super</span>(parent);</span><br/><span class="line">    }</span><br/><span class="line"></span><br/><span class="line">    <span class="function"><span class="keyword">public</span> Class <span class="title">loadClass</span><span class="params">(String name)</span> <span class="keyword">throws</span> ClassNotFoundException </span>{</span><br/><span class="line">        <span class="keyword">if</span>(!<span class="string">"reflection.MyObject"</span>.equals(name))</span><br/><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</span><br/><span class="line"></span><br/><span class="line">        <span class="keyword">try</span> {</span><br/><span class="line">            String url = <span class="string">"file:C:/data/projects/tutorials/web/WEB-INF/"</span> +</span><br/><span class="line">                            <span class="string">"classes/reflection/MyObject.class"</span>;</span><br/><span class="line">            URL myUrl = <span class="keyword">new</span> URL(url);</span><br/><span class="line">            URLConnection connection = myUrl.openConnection();</span><br/><span class="line">            InputStream input = connection.getInputStream();</span><br/><span class="line">            ByteArrayOutputStream buffer = <span class="keyword">new</span> ByteArrayOutputStream();</span><br/><span class="line">            <span class="keyword">int</span> data = input.read();</span><br/><span class="line"></span><br/><span class="line">            <span class="keyword">while</span>(data != -<span class="number">1</span>){</span><br/><span class="line">                buffer.write(data);</span><br/><span class="line">                data = input.read();</span><br/><span class="line">            }</span><br/><span class="line"></span><br/><span class="line">            input.close();</span><br/><span class="line"></span><br/><span class="line">            <span class="keyword">byte</span>[] classData = buffer.toByteArray();</span><br/><span class="line"></span><br/><span class="line">            <span class="keyword">return</span> defineClass(<span class="string">"reflection.MyObject"</span>,</span><br/><span class="line">                    classData, <span class="number">0</span>, classData.length);</span><br/><span class="line"></span><br/><span class="line">        } <span class="keyword">catch</span> (MalformedURLException e) {</span><br/><span class="line">            e.printStackTrace();</span><br/><span class="line">        } <span class="keyword">catch</span> (IOException e) {</span><br/><span class="line">            e.printStackTrace();</span><br/><span class="line">        }</span><br/><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br/><span class="line">    }</span><br/><span class="line">}</span><br/></pre></td></tr></table></figure>
+<p>没错，这个例子之前就举过了。<br/>Android中这个方法被弃用了而使用<code>loadClass()</code>方法。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/></pre></td><td class="code"><pre><span class="line"><span class="keyword">Class</span> libProviderClazz = <span class="keyword">null</span>;</span><br/><span class="line">libProviderClazz = cl.loadClass(<span class="string">"com.example.dex.lib.LibraryProvider"</span>);</span><br/></pre></td></tr></table></figure>
+<p>或者上面的Class&lt;?&gt;，虽然不知道这里加或者不加的区别是啥.</p>
+<h4 id="3-1-2DexClassLoader__u548C_PathClassLoader_u7684_u533A_u522B"><a class="headerlink" href="#3-1-2DexClassLoader__u548C_PathClassLoader_u7684_u533A_u522B" title="3.1.2DexClassLoader 和 PathClassLoader的区别"></a>3.1.2DexClassLoader 和 PathClassLoader的区别</h4><p>PathClassLoader的构造函数:</p>
+<pre><code>PathClassLoader (String dexPath, 
+                ClassLoader parent)
+</code></pre><blockquote>
+<p>optimizedDirectory必须是一个内部存储路径，还记得我们之前说过的，无论哪种动态加载，加载的可执行文件一定要存放在内部存储。DexClassLoader可以指定自己的optimizedDirectory，所以它可以加载外部的dex，因为这个dex会被复制到内部路径的optimizedDirectory；而PathClassLoader没有optimizedDirectory，所以它只能加载内部的dex，这些大都是存在系统中已经安装过的apk里面的。</p>
+</blockquote>
+<h4 id="3-1-3_u52A0_u8F7D_u7C7B_u7684_u8FC7_u7A0B"><a class="headerlink" href="#3-1-3_u52A0_u8F7D_u7C7B_u7684_u8FC7_u7A0B" title="3.1.3加载类的过程"></a>3.1.3加载类的过程</h4><p>源码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/><span class="line">7</span><br/><span class="line">8</span><br/><span class="line">9</span><br/><span class="line">10</span><br/><span class="line">11</span><br/><span class="line">12</span><br/><span class="line">13</span><br/><span class="line">14</span><br/><span class="line">15</span><br/><span class="line">16</span><br/><span class="line">17</span><br/><span class="line">18</span><br/><span class="line">19</span><br/><span class="line">20</span><br/><span class="line">21</span><br/><span class="line">22</span><br/><span class="line">23</span><br/><span class="line">24</span><br/><span class="line">25</span><br/></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String className) <span class="keyword">throws</span> ClassNotFoundException {</span><br/><span class="line">      <span class="keyword">return</span> loadClass(className, <span class="keyword">false</span>);</span><br/><span class="line">  }</span><br/><span class="line"></span><br/><span class="line">  <span class="keyword">protected</span> Class&lt;?&gt; loadClass(String className, <span class="keyword">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException {</span><br/><span class="line">      Class&lt;?&gt; clazz = findLoadedClass(className);</span><br/><span class="line">      <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) {</span><br/><span class="line">          ClassNotFoundException suppressed = <span class="keyword">null</span>;</span><br/><span class="line">          <span class="keyword">try</span> {</span><br/><span class="line">              clazz = parent.loadClass(className, <span class="keyword">false</span>);</span><br/><span class="line">          } <span class="keyword">catch</span> (ClassNotFoundException e) {</span><br/><span class="line">              suppressed = e;</span><br/><span class="line">          }</span><br/><span class="line"></span><br/><span class="line">          <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) {</span><br/><span class="line">              <span class="keyword">try</span> {</span><br/><span class="line">                  clazz = findClass(className);</span><br/><span class="line">              } <span class="keyword">catch</span> (ClassNotFoundException e) {</span><br/><span class="line">                  e.addSuppressed(suppressed);</span><br/><span class="line">                  <span class="keyword">throw</span> e;</span><br/><span class="line">              }</span><br/><span class="line">          }</span><br/><span class="line">      }</span><br/><span class="line">      <span class="keyword">return</span> clazz;</span><br/><span class="line">  }</span><br/></pre></td></tr></table></figure>
+<p>加载类的逻辑是:</p>
+<ol>
+<li>在自己加载类的缓存中是否已经加载过此类，如果加载过直接返回，否则2</li>
+<li>parent Loader递归的调用loadClass,由父Loader去加载，父Loader加载成功的话就会返回，否则3</li>
+<li>所有继承路线上的父loader都没办法加载这个类，那么才由自己来加载</li>
+</ol>
+<h4 id="3-1-4_Dynamic_Class_Reloading"><a class="headerlink" href="#3-1-4_Dynamic_Class_Reloading" title="3.1.4 Dynamic Class Reloading"></a>3.1.4 Dynamic Class Reloading</h4><p>之所以把这个单独拿出来，是因为之前好像看到过插件化修复Bug用到了这个dynamic class reload，可以在程序运行的时候直接修改某个需要用到的类。</p>
+<p>这里唯一要注意的是，因为如果只是单纯的用同一个classLoader对象去load一个同名的class文件什么都不会发生，因为在系统看来只是重复加载。</p>
+<p>解决办法也很简单，就是重新生成一个classLoader去加载即可:</p>
+<blockquote>
+<p>Classes will be unloaded and garbage collected like any other object, if there is no remaining reference to them. That means there must be no reachable instance of the class (as loaded by that particular classloader instance) and the classloader instance itself must be eligible for garbage collection as well.<br/>So basically, all you have to do is to create a new classloader instance to load the new version of the class, and make sure that no references to instances of the old version remain.</p>
+</blockquote>
+<p>下面这段代码是重复加载defineClass示例代码中的MyObject.class的一个示例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/><span class="line">7</span><br/><span class="line">8</span><br/><span class="line">9</span><br/><span class="line">10</span><br/><span class="line">11</span><br/><span class="line">12</span><br/><span class="line">13</span><br/><span class="line">14</span><br/><span class="line">15</span><br/><span class="line">16</span><br/><span class="line">17</span><br/><span class="line">18</span><br/><span class="line">19</span><br/><span class="line">20</span><br/><span class="line">21</span><br/><span class="line">22</span><br/><span class="line">23</span><br/></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span></span><br/><span class="line">    ClassNotFoundException,</span><br/><span class="line">    IllegalAccessException,</span><br/><span class="line">    InstantiationException </span>{</span><br/><span class="line"></span><br/><span class="line">    ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();</span><br/><span class="line">    MyClassLoader classLoader = <span class="keyword">new</span> MyClassLoader(parentClassLoader);</span><br/><span class="line">    Class myObjectClass = classLoader.loadClass(<span class="string">"reflection.MyObject"</span>);</span><br/><span class="line"></span><br/><span class="line">    AnInterface2       object1 =</span><br/><span class="line">            (AnInterface2) myObjectClass.newInstance();</span><br/><span class="line"></span><br/><span class="line">    MyObjectSuperClass object2 =</span><br/><span class="line">            (MyObjectSuperClass) myObjectClass.newInstance();</span><br/><span class="line"></span><br/><span class="line">    <span class="comment">//create new class loader so classes can be reloaded.</span></span><br/><span class="line">    classLoader = <span class="keyword">new</span> MyClassLoader(parentClassLoader);</span><br/><span class="line">    myObjectClass = classLoader.loadClass(<span class="string">"reflection.MyObject"</span>);</span><br/><span class="line"></span><br/><span class="line">    object1 = (AnInterface2)       myObjectClass.newInstance();</span><br/><span class="line">    object2 = (MyObjectSuperClass) myObjectClass.newInstance();</span><br/><span class="line"></span><br/><span class="line">}</span><br/></pre></td></tr></table></figure>
+<p>另外，注意到这里有个interface的转型。为什么reload要用到转型呢?这个<a href="http://tutorials.jenkov.com/java-reflection/dynamic-class-loading-reloading.html" rel="external" target="_blank">作者</a>是有回答的:</p>
+<blockquote>
+<p>A class is identified by its fully qualified class name + the ClassLoader that loaded it.</p>
+<p>A ClassLoader cannot load the same class more than once. Thus, to reload a class you must use a new ClassLoader. However, if you load the same class with a new ClassLoader, it is <em>not</em> identified as the same class as first time it was loaded with another ClassLoader. Thus, you cannot cast instances of the reloaded class directly to instances of that class. Look at this example:</p>
+<p>MyObject myObject = myObjectClass.newInstance();</p>
+<p>The MyObject type specified for the type of the variable will <em>not</em> be identified as the same class as myObjectClass, if they have been loaded by different ClassLoaders. The ClassLoader loading the class with the above variable declaration will also load MyObject. When you later reload MyObject with a new ClassLoader, the two classes are not the same anymore.</p>
+<p>Instead you have to cast instances of the reloaded class to a type that is always loaded by the same (first) ClassLoader. That could be an interface or superclass which you never reload, but which has the same interface as you need from the reloaded classes.</p>
+</blockquote>
+<p>其实这里理解的有点模糊，不过，大概可以明白的是，原来的类叫MyObject,新加载的类也叫Myobject,但其实这俩根本不是同一个类，因为这俩都自己新new了一个classLoader来load，Java判断这俩根本不是同一个类，所以如果在第二次Load完想要得到一个instance的时候如果流程都直接是:</p>
+<pre><code>Object1 object1 = myObjectClass.newInstance()
+Object1 object_reload = myObjectClass2.newInstance()
+</code></pre><p>会报:ClassCastException.我理解的是因为第一个类先load了，系统认为Object1这个类名就是第一个类，可是重新加载的是一个新的类，所以这里有强制转换的错误。</p>
+<p>但是如果在写这两个类的时候让他们implement同一个接口。那么他们分别强制转换为同一个接口对象就可以正常调用了</p>
+<h4 id="3-1-5__u8C03_u7528_u52A0_u8F7D_u65B9_u6CD5_u7684_u4E24_u79CD_u65B9_u5F0F"><a class="headerlink" href="#3-1-5__u8C03_u7528_u52A0_u8F7D_u65B9_u6CD5_u7684_u4E24_u79CD_u65B9_u5F0F" title="3.1.5 调用加载方法的两种方式"></a>3.1.5 调用加载方法的两种方式</h4><h5 id="3-1-5-1_interface_u65B9_u6CD5"><a class="headerlink" href="#3-1-5-1_interface_u65B9_u6CD5" title="3.1.5.1 interface方法"></a>3.1.5.1 interface方法</h5><ol>
+<li>在一级dex(本来就在源程序中)中定义一个包含方法名的interface.二级dex(要load的)的要加载类要implement这个方法。</li>
+<li>在Load完成之后，使用newInstance得到一个被加载类的实例，然后然后转型为上面已经定义好的interface.</li>
+<li>由于已经cast成了interface，这时可以任意调用里面的方法了</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/><span class="line">7</span><br/><span class="line">8</span><br/><span class="line">9</span><br/></pre></td><td class="code"><pre><span class="line"><span class="comment">// Load the library.</span></span><br/><span class="line">      libProviderClazz =</span><br/><span class="line">          cl.loadClass(<span class="string">"com.example.dex.lib.LibraryProvider"</span>);</span><br/><span class="line">      <span class="comment">// Cast the return object to the library interface so that the</span></span><br/><span class="line">      <span class="comment">// caller can directly invoke methods in the interface.</span></span><br/><span class="line">      <span class="comment">// Alternatively, the caller can invoke methods through reflection,</span></span><br/><span class="line">      <span class="comment">// which is more verbose. </span></span><br/><span class="line">      LibraryInterface lib = (LibraryInterface) libProviderClazz.newInstance();</span><br/><span class="line">      lib.showAwesomeToast(<span class="keyword">this</span>, <span class="string">"hello"</span>);</span><br/></pre></td></tr></table></figure>
+<p>可以看到，这里没有通过反射的方法去得到showAwesomeToast这个方法，而是直接调用了这个方法。</p>
+<h5 id="3-1-5-2__u53CD_u5C04_u65B9_u6CD5"><a class="headerlink" href="#3-1-5-2__u53CD_u5C04_u65B9_u6CD5" title="3.1.5.2 反射方法"></a>3.1.5.2 反射方法</h5><p>反射可以”窥探”得到一个类里面的任何东西，当然包括方法:<br/>只要获取了Class对象，就可以:</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">Method</span> <span class="title">m</span> = <span class="title">myClass</span>.<span class="title">getMethod</span><span class="params">(methodToInvoke, param1.<span class="keyword">class</span>, param2.<span class="keyword">class</span>, ...)</span>;</span></span><br/><span class="line">m.invoke(obj, param1, param2, ...);</span><br/></pre></td></tr></table></figure>
+<p>譬如，已经通过New instance得到了对象obj：</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span> msg = <span class="string">"parameter"</span>;</span><br/><span class="line">Method m = <span class="keyword">myClass</span>.getMethod(methodToInvoke, <span class="built_in">String</span>.<span class="keyword">class</span>);</span><br/><span class="line">m.invoke(obj, msg);</span><br/></pre></td></tr></table></figure>
+<p><code>m.invoke(obj, msg);</code>表示在对象上调用m方法，参数是msg.</p>
+<h5 id="u4E8C_u8005_u6BD4_u8F83"><a class="headerlink" href="#u4E8C_u8005_u6BD4_u8F83" title="二者比较"></a>二者比较</h5><blockquote>
+<p>The advantage of using reflection is that it doesn’t require the secondary dex file to implement any particular interfaces. However, one should be aware that reflection is verbose and slow.</p>
+</blockquote>
+<p>###Android程序比起一般Java程序在使用动态加载时麻烦在哪里</p>
+<blockquote>
+<p>通过上面的分析，我们知道使用ClassLoader动态加载一个外部的类是非常容易的事情，所以很容易就能实现动态加载新的可执行代码的功能，但是比起一般的Java程序，在Android程序中使用动态加载主要有两个麻烦的问题：</p>
+<ol>
+<li><p>Android中许多组件类（如Activity、Service等）是需要在Manifest文件里面注册后才能工作的（系统会检查该组件有没有注册），所以即使动态加载了一个新的组件类进来，没有注册的话还是无法工作；</p>
+</li>
+<li><p>Res资源是Android开发中经常用到的，而Android是把这些资源用对应的R.id注册好，运行时通过这些ID从Resource实例中获取对应的资源。如果是运行时动态加载进来的新类，那类里面用到R.id的地方将会抛出找不到资源或者用错资源的异常，因为新类的资源ID根本和现有的Resource实例中保存的资源ID对不上；</p>
+</li>
+</ol>
+</blockquote>
+<p>对应的解决方案:</p>
+<h4 id="u4EE3_u7406"><a class="headerlink" href="#u4EE3_u7406" title="代理"></a>代理</h4><p>对第一个问题，网上说的比较多的就是代理的方式了，如果插件的某些方法是定义在activity里面，那么在客户端可以创建一个空壳activity，这个空壳activity没有具体的动作，但是有完整的生命周期，并且在manifest中注册过。相当于是本地的一个代理，他会调用插件中的方法来补足空壳activity中的一些动作。这样既做到了插件的动态加载，同时又保证了就想使用正常的activity一样去使用插件中的函数。</p>
+<p>原理是这样。网上这样的例子也挺多的。</p>
+<h4 id="u83B7_u53D6Resources_u5BF9_u8C61"><a class="headerlink" href="#u83B7_u53D6Resources_u5BF9_u8C61" title="获取Resources对象"></a>获取Resources对象</h4><p>对于第二个问题。一般我们使用Resouces,都是通过上下文也就是context.getResource得到resouce对象来对资源进行使用的。这里插件是被动态加载进来的，自然开始是没有上下文的。比如换肤操作，其中主要就是对一些图片等资源的利用。那么怎么才能得到Resouces对象呢，这篇博文<a href="http://blog.csdn.net/u010687392/article/details/47121729" rel="external" target="_blank"> 插件化开发—动态加载技术加载已安装和未安装的apk-Sunzxyong</a>就是对这样一个换肤例子的阐述。</p>
+<ol>
+<li><p>从已安装的apk中去获得皮肤资源</p>
+<p> 这个我记得微博客户端好像就是皮肤是一个单独的apk进行安装，不知道是不是传统的这种从已安装的apk中去动态获取资源的方式进行换肤的。这种情况下，是可以根据包名来获取context的:</p>
+<pre><code>Context plugnContext = this.createPackageContext(packageName, CONTEXT_IGNORE_SECURITY | CONTEXT_INCLUDE_CODE); 
+</code></pre><p> 从已安装的apk中动态加载类，可以直接使用pathClassLoader</p>
+</li>
+<li><p>从external Storage中的jar文件来获取资源</p>
+<p> 这个jar文件里面其实就是dex.class，上面举例就一直是这种情况。此时就不可以通过包名来创建context了，不过虽说创建不了context，我们要获取资源其实使用的是Resource对象，其实是可以不适用context就得到这个对象的：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/><span class="line">6</span><br/><span class="line">7</span><br/><span class="line">8</span><br/><span class="line">9</span><br/><span class="line">10</span><br/><span class="line">11</span><br/><span class="line">12</span><br/><span class="line">13</span><br/><span class="line">14</span><br/><span class="line">15</span><br/><span class="line">16</span><br/></pre></td><td class="code"><pre><span class="line">protected <span class="keyword">void</span> loadResources(<span class="built_in">String</span> dexPath) {    </span><br/><span class="line">       <span class="keyword">try</span> {    </span><br/><span class="line">           AssetManager assetManager = AssetManager.<span class="keyword">class</span>.newInstance();    </span><br/><span class="line">           Method addAssetPath = assetManager.getClass().getMethod(<span class="string">"addAssetPath"</span>, <span class="built_in">String</span>.<span class="keyword">class</span>);    </span><br/><span class="line">           addAssetPath.invoke(assetManager, dexPath);    </span><br/><span class="line">           mAssetManager = assetManager;    </span><br/><span class="line">       } <span class="keyword">catch</span> (Exception e) {    </span><br/><span class="line">           e.printStackTrace();    </span><br/><span class="line">       }    </span><br/><span class="line">       Resources superRes = <span class="keyword">super</span>.getResources();    </span><br/><span class="line">       superRes.getDisplayMetrics();    </span><br/><span class="line">       superRes.getConfiguration();    </span><br/><span class="line">       mResources = <span class="keyword">new</span> Resources(mAssetManager, superRes.getDisplayMetrics(),superRes.getConfiguration());    </span><br/><span class="line">       mTheme = mResources.newTheme();    </span><br/><span class="line">       mTheme.setTo(<span class="keyword">super</span>.getTheme());  </span><br/><span class="line">   }</span><br/></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>可以看到使用了反射的机制去往管理资源的对象中加上插件资源的路径，这个mResource对象就是可以用来得到插件资源的Resouce对象了，这整个机制在<a href="http://blog.csdn.net/jiangwei0910410003/article/details/47679843" rel="external" target="_blank">Android中插件开发篇之—-应用换肤原理解析-尼古拉斯_赵四</a>有详细的解说。我的这个项目并没有用到资源的加载，不过这是插件化中一个非常重要的课题。</p>
+<h3 id="u5173_u4E8Einterface_u5B9E_u73B0_u88AB_u52A0_u8F7D_u5BF9_u8C61_u7684_u65B9_u6CD5_u8C03_u7528"><a class="headerlink" href="#u5173_u4E8Einterface_u5B9E_u73B0_u88AB_u52A0_u8F7D_u5BF9_u8C61_u7684_u65B9_u6CD5_u8C03_u7528" title="关于interface实现被加载对象的方法调用"></a>关于interface实现被加载对象的方法调用</h3><p>使用interface转型方法的时候有个疑问，上面LibraryInterface是被加载的类com.example.dex.lib.LibraryProvider实现的接口。疑问在于，插件的类由于要implement接口,自然和接口有关，但同时在主程序里我们要用到这个interface的转型，也需要定义这个interface，所以插件和主程序都有这个Interface？</p>
+<p>根据<a href="https://testerhome.com/topics/5026" rel="external" target="_blank">这一篇</a></p>
+<p>方法是:</p>
+<ul>
+<li><p>把com.example.dex.lib.LibraryProvider打包成jar以后用dx工具转换成plugin.jar</p>
+</li>
+<li><p>把com.example.dex.interface.LibraryInterface打包成jar然后直接这个jar放到主工程的lib下:</p>
+</li>
+</ul>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/14691068206589.png" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img alt="" src="/pototaker_blog/images/originals/14691068206589.png"/></a></p>
+<ul>
+<li>plugin.jar则是放在SD卡上，把这个路径传给dexClassLoader单做参数，用这个Loader来加载LibraryProvider生成instance并直接强制转换为LibraryInterface就可以了</li>
+</ul>
+<p>虽然插件的类也需要implement interface，但如果也加到插件中一起打包的话会和主程序中的interface冲突，然而一开始看到<a href="http://www.cnblogs.com/over140/archive/2011/11/23/2259367.html" rel="external" target="_blank">网上</a>有很奇怪的把interface也打包进被加载dex的。然而这篇里他自己后来也指出错误了。</p>
+<p><a href="http://blog.csdn.net/bboyfeiyu/article/details/11710497" rel="external" target="_blank">这里</a>也是一个奇怪的把interface打包进去的。</p>
+<blockquote>
+<ul>
+<li>@Description: 项目工程中必须定义接口， 而被引入的第三方jar包实现这些接口，然后进行动态加载 。 </li>
+<li>相当于第三方按照接口协议来开发， 使得第三方应用可以以插件的形式动态加载到应用平台中</li>
+</ul>
+</blockquote>
+<p>而且他在下一例让被加载类实现接口，一起打包，但是在主工程里面没用到interface的强制转换方法，而是用的反射的方法调用函数。</p>
+<p><a href="https://segmentfault.com/a/1190000004062952" rel="external" target="_blank">这篇文章</a>讲的很好，但是在这个问题上没有指明，下面有人指出了这一点:</p>
+<blockquote>
+<p>有一个疑问，使用接口的方式。<br/>如果将 IF 和 Impl 都打包进了 dex 文件，那么主项目里同时存在 IF，<br/>两个 IF 在加载的时候会不会有问题呢。<br/>我在尝试接口的方式的时候，抛出了这个异常<br/>java.lang.IllegalAccessError: Class ref in pre-verified class resolved to unexpected implementation<br/>还是说我自己理解有误？<br/>尝试了一下，不能把 IF 文件也打包进去，IF 文件不冲突的时候，则不报错。</p>
+</blockquote>
+<p><a href="https://segmentfault.com/a/1190000004086213" rel="external" target="_blank">这个系列</a>讲的都挺好的。</p>
 
-<p>宿主持有这份接口定义，插件实现它。任务输入输出也尽量使用边界清晰的数据，避免把宿主内部对象图整个暴露出去。</p>
-<p>共享接口应由宿主的类加载路径提供。插件可以在编译时依赖它，但不应再携带一份由另一个加载器定义的副本，否则即使类名相同，也可能不能完成预期的类型转换。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/legacy/shared-interface.png" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/legacy/shared-interface.png" alt="宿主项目单独携带共享接口库"></a></p>
-<p><em>原笔记中的通用演示项目：共享接口由宿主加载，插件在编译时依赖这一约定。</em></p>
-<h2 id="类的身份还包含类加载器"><a href="#类的身份还包含类加载器" class="headerlink" title="类的身份还包含类加载器"></a>类的身份还包含类加载器</h2><p>在讨论动态加载时，只记住完全限定类名是不够的。类由哪个加载器定义，同样影响运行时类型身份。</p>
-<p>这也是为什么“重新创建一个加载器，再加载同名类”并不等价于“把原对象变成新版本”。旧对象仍属于原来的类型，新对象必须通过稳定的共同接口与宿主交互。</p>
-<h2 id="DexClassLoader-只是其中一环"><a href="#DexClassLoader-只是其中一环" class="headerlink" title="DexClassLoader 只是其中一环"></a>DexClassLoader 只是其中一环</h2><p>实验使用 <code>DexClassLoader</code> 加载转换后的任务。这里需要明确代码路径、运行时所需目录以及父加载器的关系。</p>
-<p>典型的父级委派会先尝试已加载的类和父加载器，再寻找自身可提供的类。实际行为受实现与平台版本影响，不能简单地认为“磁盘上的文件变了，下次 loadClass 就会换成新版本”。</p>
-<p>如果要更新插件，需要额外设计版本、任务生命周期和旧对象退出机制。</p>
-<h2 id="反射还是接口调用"><a href="#反射还是接口调用" class="headerlink" title="反射还是接口调用"></a>反射还是接口调用</h2><p>反射适合探索一个未知类，或者调用一个很小的约定入口；接口调用则把约定提前到了编译阶段，方法签名、异常以及数据格式更清晰。</p>
-<p>对计算任务，我更倾向于把反射限制在构造阶段，随后转为共享接口。这样调度器只处理 <code>ComputeTask</code>，不需要知道每个插件的具体类名和方法细节。</p>
-<h2 id="计算插件与界面插件的难度不同"><a href="#计算插件与界面插件的难度不同" class="headerlink" title="计算插件与界面插件的难度不同"></a>计算插件与界面插件的难度不同</h2><p>能够加载一个普通类，不代表就能直接运行完整 Activity。组件注册、生命周期、资源、主题和上下文都会引入额外约束。</p>
-<p>这次实验没有涉及界面资源加载，因此不能据此得出“完整应用插件化已解决”的结论。先把计算任务的边界做好，比把所有插件化问题一起引入更可控。</p>
-<h2 id="动态任务需要可信来源与失败隔离"><a href="#动态任务需要可信来源与失败隔离" class="headerlink" title="动态任务需要可信来源与失败隔离"></a>动态任务需要可信来源与失败隔离</h2><p>任务包的来源、版本和完整性应被明确记录。动态执行与宿主同进程代码，通常也意味着它获得了宿主的运行环境，而不是天然处在一个安全沙箱里。</p>
-<p>在调度层，还要规定超时、取消、失败重试与结果格式。类能被加载只是第一步，真正的并行任务系统还需要回答：一项任务失败后，其他任务是否能够继续。</p>
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2016/08/17/%E5%9B%9E%E6%BA%AF%E6%B3%95/"><span class="kicker">← 较新的记录</span><span>用一棵决策树理解回溯法</span></a>
-  <a href="/pototaker_blog/2016/08/17/Binder/"><span class="kicker">更早的记录 →</span><span>理解 Binder：一次跨进程调用经过了什么</span></a>
+  <a href="/pototaker_blog/2016/08/17/%E5%9B%9E%E6%BA%AF%E6%B3%95/"><span class="kicker">← 较新的记录</span><span>回溯法</span></a>
+  <a href="/pototaker_blog/2016/08/17/Binder/"><span class="kicker">更早的记录 →</span><span>浅析Binder机制</span></a>
 </nav>
 </main>
     <footer class="site-footer">

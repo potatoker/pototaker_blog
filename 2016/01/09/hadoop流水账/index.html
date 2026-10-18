@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>Hadoop 1.x 实验笔记：把一次作业跑起来 · potatoker&#39;s blog</title>
-  <meta name="description" content="记录早期 Hadoop 实验中的配置目录、节点进程、HDFS 输入输出与日志排查。">
+  <title>Hadoop homework · potatoker&#39;s blog</title>
+  <meta name="description" content="本来想要多花时间把这份作业尽量做好，结果懒癌晚期让我在deadline前两天才开始做。。。 其实现在自己连门都没入，不过近段时间恐怕都没有时间继续学习hadoop了，所以下次做实验最好能尽快回忆起已学的记下这篇流水账，。此外发现自己对linux仍然各种不熟，，，形成了这篇本质流水…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2016/01/09/hadoop%E6%B5%81%E6%B0%B4%E8%B4%A6/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="记录早期 Hadoop 实验中的配置目录、节点进程、HDFS 输入输出与日志排查。">
+  <meta name="description" content="本来想要多花时间把这份作业尽量做好，结果懒癌晚期让我在deadline前两天才开始做。。。 其实现在自己连门都没入，不过近段时间恐怕都没有时间继续学习hadoop了，所以下次做实验最好能尽快回忆起已学的记下这篇流水账，。此外发现自己对linux仍然各种不熟，，，形成了这篇本质流水账 project基于hadoop 1.0.4. 属于很早的版本  1. hadoop安装我装的是hadoop 1.0">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hadoop 1.x 实验笔记：把一次作业跑起来">
+<meta property="og:title" content="Hadoop homework">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2016/01/09/hadoop%E6%B5%81%E6%B0%B4%E8%B4%A6/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="记录早期 Hadoop 实验中的配置目录、节点进程、HDFS 输入输出与日志排查。">
+<meta property="og:description" content="本来想要多花时间把这份作业尽量做好，结果懒癌晚期让我在deadline前两天才开始做。。。 其实现在自己连门都没入，不过近段时间恐怕都没有时间继续学习hadoop了，所以下次做实验最好能尽快回忆起已学的记下这篇流水账，。此外发现自己对linux仍然各种不熟，，，形成了这篇本质流水账 project基于hadoop 1.0.4. 属于很早的版本  1. hadoop安装我装的是hadoop 1.0">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2016-01-09T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="Hadoop">
 <meta property="article:tag" content="Linux">
@@ -34,43 +34,121 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2016.01.09 / 4 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2016.01.09 / 10 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Hadoop/">Hadoop</a><a href="/pototaker_blog/tags/Linux/">Linux</a></div></div>
-    <h1>Hadoop 1.x 实验笔记：把一次作业跑起来</h1>
+    <h1>Hadoop homework</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2016-01-09T04:00:00.000Z">2016.01.09</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E7%A1%AE%E8%AE%A4%E4%B8%89%E4%B8%AA%E7%8E%AF%E5%A2%83"><span class="toc-text">先确认三个环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%8C%89%E8%81%8C%E8%B4%A3%E5%88%86%E5%BC%80"><span class="toc-text">配置按职责分开</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E8%A7%82%E5%AF%9F%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%EF%BC%8C%E5%86%8D%E6%8F%90%E4%BA%A4%E4%BB%BB%E5%8A%A1"><span class="toc-text">先观察守护进程，再提交任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BA%E5%88%86%E6%9C%AC%E5%9C%B0%E8%B7%AF%E5%BE%84%E4%B8%8E-HDFS-%E8%B7%AF%E5%BE%84"><span class="toc-text">区分本地路径与 HDFS 路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%90%AF%E4%B8%8E%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%B8%8D%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B"><span class="toc-text">重启与格式化不是一回事</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-_hadoop_u5B89_u88C5"><span class="toc-text">1. hadoop安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-__u9884_u7F6E_u8F6F_u4EF6"><span class="toc-text">1. 预置软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-jdk"><span class="toc-text">1.jdk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_ssh"><span class="toc-text">2. ssh</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-__u5B89_u88C5hadoop"><span class="toc-text">2. 安装hadoop</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-__u5728_u96C6_u7FA4_u4E0A_u8FD0_u884Cmapreduce_u7A0B_u5E8F"><span class="toc-text">2. 在集群上运行mapreduce程序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-__u5C06Master_u7684pubkey_u62F7_u8D1D_u5230slave_u4E0A"><span class="toc-text">1. 将Master的pubkey拷贝到slave上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-__u4E3Aproject_u521B_u5EFA_u6587_u4EF6_u5939_u53CAconf_u6587_u4EF6"><span class="toc-text">2. 为project创建文件夹及conf文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_u542F_u52A8hadoop"><span class="toc-text">3.启动hadoop</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_u683C_u5F0F_u5316hdfs_3A"><span class="toc-text">1.格式化hdfs:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-__u5728master_u4E0A_u542F_u52A8hadoop_u5B88_u62A4_u8FDB_u7A0B"><span class="toc-text">2. 在master上启动hadoop守护进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_u4F7F_u7528jps_u67E5_u770B_u5168_u90E8hadoop_u76F8_u5173_u8FDB_u7A0B"><span class="toc-text">3.使用jps查看全部hadoop相关进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_Hadoop_webUI_u8BBF_u95EE"><span class="toc-text">4. Hadoop webUI访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-__u505C_u6B62hadoop_u5B88_u62A4_u8FDB_u7A0B"><span class="toc-text">5. 停止hadoop守护进程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-__u6D4B_u8BD5_u96C6_u7FA4"><span class="toc-text">4. 测试集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-__u65B0_u5EFA_u6D4B_u8BD5_u6587_u672C_u6587_u4EF6test-txt_uFF0C_u6DFB_u52A0_u4EFB_u610F_u6587_u672C"><span class="toc-text">1. 新建测试文本文件test.txt，添加任意文本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-__u628A_u8BE5_u6587_u4EF6_u653E_u5165hdfs_u4E2D"><span class="toc-text">2. 把该文件放入hdfs中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_u8FD0_u884C_u6D4B_u8BD5_u7A0B_u5E8F"><span class="toc-text">3.运行测试程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">conclusion</span></a></li></ol></li></ol></nav></details>
   
-  <div class="prose"><p>最初学习 Hadoop 时，我花了不少时间在算法之外：环境变量是否生效、节点能否互相连接、程序究竟读取了哪一份配置。这里把当年的实验重新整理成一条能回忆起来的路径。</p>
-<p>实验基于 Hadoop 1.0.4 与当时的 Java 环境。本文保留 1.x 的进程模型，作为历史学习笔记；后续版本的部署方式不应直接照搬。</p>
-<h2 id="先确认三个环境"><a href="#先确认三个环境" class="headerlink" title="先确认三个环境"></a>先确认三个环境</h2><p>第一是 Java 环境。命令行使用的 Java、Hadoop 脚本配置的 <code>JAVA_HOME</code> 以及实际安装目录应该一致。</p>
-<p>第二是节点间通信。实验节点需要能解析彼此的主机名，并使用预期的账户连接。示例中统一使用 <code>worker-a</code>、<code>worker-b</code> 这类名称，实际环境的账号和地址不属于算法配置。</p>
-<p>第三是 Hadoop 的配置目录。当时反复出错的地方，就是修改了实验目录里的配置文件，程序却仍读取安装目录的默认配置。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HADOOP_HOME=/opt/hadoop</span><br><span class="line"><span class="built_in">export</span> HADOOP_CONF_DIR=<span class="string">&quot;<span class="variable">$HOME</span>/hadoop-lab/conf&quot;</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$PATH</span>:<span class="variable">$HADOOP_HOME</span>/bin&quot;</span></span><br></pre></td></tr></table></figure>
+  <div class="prose">
+<p>本来想要多花时间把这份作业尽量做好，结果懒癌晚期让我在deadline前两天才开始做。。。</p>
+<p>其实现在自己连门都没入，不过近段时间恐怕都没有时间继续学习hadoop了，所以下次做实验最好能尽快回忆起已学的记下这篇流水账，。<br/>此外发现自己对linux仍然各种不熟，，，形成了这篇本质流水账</p>
+<p>project基于hadoop 1.0.4. 属于很早的版本</p>
+<a id="more"></a>
+<h1 id="1-_hadoop_u5B89_u88C5"><a class="headerlink" href="#1-_hadoop_u5B89_u88C5" title="1. hadoop安装"></a>1. hadoop安装</h1><p>我装的是hadoop 1.0.4,似乎hadoop几次更新改变都很大，不过作为入门，安全起见，还是使用了老师演示版本。并且也选择了对应的Jdk6</p>
+<h2 id="1-__u9884_u7F6E_u8F6F_u4EF6"><a class="headerlink" href="#1-__u9884_u7F6E_u8F6F_u4EF6" title="1. 预置软件"></a>1. 预置软件</h2><h3 id="1-jdk"><a class="headerlink" href="#1-jdk" title="1.jdk"></a>1.jdk</h3><p>sudo apt-get install openjdk-6-jdk</p>
+<p>安装完之后增加到环境变量</p>
+<pre><code>export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64   
 
-<p>变量值只是目录示例，关键是让启动脚本与提交任务的终端使用同一份配置。</p>
-<h2 id="配置按职责分开"><a href="#配置按职责分开" class="headerlink" title="配置按职责分开"></a>配置按职责分开</h2><p>在当时的 1.x 环境里，<code>core-site.xml</code> 保存通用设置，<code>hdfs-site.xml</code> 描述文件系统，<code>mapred-site.xml</code> 描述 MapReduce 配置；节点清单另外保存。</p>
-<p>实验还把训练结果路径作为自定义配置传给程序。比起把路径散落在源码里，通过配置读取更方便切换不同输入，也便于复现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Configuration</span> <span class="variable">conf</span> <span class="operator">=</span> context.getConfiguration();</span><br><span class="line"><span class="type">Path</span> <span class="variable">modelPath</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Path</span>(conf.get(<span class="string">&quot;model.path&quot;</span>));</span><br></pre></td></tr></table></figure>
+export PATH=$PATH:$JAVA_HOME/bin 
+</code></pre><p>用来检查是否生效：</p>
+<pre><code>javac -version  
+</code></pre><h3 id="2-_ssh"><a class="headerlink" href="#2-_ssh" title="2. ssh"></a>2. ssh</h3><pre><code>sudo apt-get install ssh
+</code></pre><p>查看是否启动</p>
+<pre><code>$ps -e|grep ssh
+</code></pre><p><em>-e Select all processes. Identical to -A.</em><br/><em>-f does full-format listing.</em></p>
+<p>如果看到sshd和ssh-agent两个进程，则成功。</p>
+<h2 id="2-__u5B89_u88C5hadoop"><a class="headerlink" href="#2-__u5B89_u88C5hadoop" title="2. 安装hadoop"></a>2. 安装hadoop</h2><p>1.创建用户组hadoop以及用户hadoopu：          </p>
+<pre><code>sudo addgroup hadoop 
 
-<h2 id="先观察守护进程，再提交任务"><a href="#先观察守护进程，再提交任务" class="headerlink" title="先观察守护进程，再提交任务"></a>先观察守护进程，再提交任务</h2><p>Hadoop 1.x 的实验里，需要分别检查文件系统和计算调度相关进程。NameNode、DataNode 与 JobTracker、TaskTracker 承担不同职责：文件能写进去，不代表计算节点已经可用。</p>
-<p>进程列表只是第一步。还要看日志和状态页面，确认节点确实注册成功，而不是启动后立即退出。</p>
-<h2 id="区分本地路径与-HDFS-路径"><a href="#区分本地路径与-HDFS-路径" class="headerlink" title="区分本地路径与 HDFS 路径"></a>区分本地路径与 HDFS 路径</h2><p>本地创建的输入文件不会自动出现在 HDFS。需要先上传，再把 HDFS 路径交给作业。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -<span class="built_in">mkdir</span> /user/demo/input</span><br><span class="line">hadoop fs -put sample.txt /user/demo/input/</span><br><span class="line">hadoop fs -<span class="built_in">ls</span> /user/demo/input</span><br></pre></td></tr></table></figure>
+sudo adduser --ingroup hadoop hadoopu
+</code></pre><p>2.将下载的hadoop.tar.gz拷入hadoopu家目录下：</p>
+<pre><code>cp /downloads/hadoop-1.0.4-bin.tar.gz /home/hadoopu/
+</code></pre><p>3.解压hadoop包</p>
+<pre><code>tar xzf hadoop-1.0.4-bin.tar.gz
+</code></pre><p>4.进入hadoop-env.sh所在目录（hadoop-1.0.4/conf/），对该文件进行如下内容的修改：</p>
+<pre><code>export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+</code></pre><p>（/usr/lib/jvm/java-6-openjdk-amd64为jdk安装目录）</p>
+<p>5.为了方便更改环境变量，将环境变量的设置写入/etc/profile：</p>
+<pre><code>export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64 
+export HADOOP_HOME=/home/hadoopu/hadoop-1.0.4 
+export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin 
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/htmlconverter.jar:$JAVA_HOME/lib/jconsole.jar:$JAVA_HOME/lib/sa-jdi.jar
+</code></pre><p>执行该文件，使配置生效：</p>
+<pre><code>source /etc/profile
+</code></pre><blockquote><p>The /etc/profile file contains system wide environment stuff and startup programs.</p>
+<p>The /etc/profile file is used to set system wide environmental variables on users shells. The variables are sometimes the same ones that are in the .bash_profile, however this file is used to set an initial PATH or PS1 for all shell users of the system.</p>
+</blockquote>
+<p>ok. 至此安装完成了</p>
+<h1 id="2-__u5728_u96C6_u7FA4_u4E0A_u8FD0_u884Cmapreduce_u7A0B_u5E8F"><a class="headerlink" href="#2-__u5728_u96C6_u7FA4_u4E0A_u8FD0_u884Cmapreduce_u7A0B_u5E8F" title="2. 在集群上运行mapreduce程序"></a>2. 在集群上运行mapreduce程序</h1><h2 id="1-__u5C06Master_u7684pubkey_u62F7_u8D1D_u5230slave_u4E0A"><a class="headerlink" href="#1-__u5C06Master_u7684pubkey_u62F7_u8D1D_u5230slave_u4E0A" title="1. 将Master的pubkey拷贝到slave上"></a>1. 将Master的pubkey拷贝到slave上</h2><p>如果没有生产过ssh-key:</p>
+<pre><code>ssh-keygen -t rsa -b 4096 -C "mypc"
+</code></pre><p>放到目标上机器，一步到位最方便的ssh-copy-id：</p>
+<pre><code>ssh-copy-id username@hostname
+</code></pre><h2 id="2-__u4E3Aproject_u521B_u5EFA_u6587_u4EF6_u5939_u53CAconf_u6587_u4EF6"><a class="headerlink" href="#2-__u4E3Aproject_u521B_u5EFA_u6587_u4EF6_u5939_u53CAconf_u6587_u4EF6" title="2. 为project创建文件夹及conf文件"></a>2. 为project创建文件夹及conf文件</h2><p>在/home/hadoopu下：  </p>
+<pre><code>mkdir HadoopClusterTest  
 
-<p>同样，输出目录通常要求在任务开始前不存在。这个约束能防止程序不小心覆盖已有结果，也是第一次跑 WordCount 时很容易遇到的报错。</p>
-<h2 id="重启与格式化不是一回事"><a href="#重启与格式化不是一回事" class="headerlink" title="重启与格式化不是一回事"></a>重启与格式化不是一回事</h2><p>实验中曾误把格式化当作重新启动的一部分。格式化会涉及文件系统元数据，不能作为普通故障的默认处理步骤。</p>
-<p>遇到节点不能启动、文件操作受限或者安全模式提示，应先阅读日志，确认配置、目录状态和数据节点情况。只有明确知道自己在初始化一个可丢弃的实验环境时，才考虑重新建立文件系统。</p>
-<p>这次作业留下的经验，是先把环境、配置和数据位置理清，再讨论分布式程序本身。很多看起来像框架故障的问题，实际发生在这些边界上。</p>
+cd HadoopClusterTest/ 
+
+mkdir conf  
+
+cp HADOOP_HOME/conf/* conf
+</code></pre><p>编辑相关配置文件：  </p>
+<p>core-site.xml: 用于配置Common组件的属性<br/>hdfs-site.xml: 用于配置HDFS的属性<br/>mapred-site.xml: 用于配置MapReduce的属性<br/>masters 指定master节点 slaves 指定slave节点</p>
+<p>这个project <a href="https://github.com/potatoker/hadoop-nbCliassifier/tree/master/conf" rel="external" target="_blank">conf</a>只是对老师的示例conf做了非常简单的改变.<br/>这个conf包括的只是最基本的一些配置，许多属性的设置都是默认值，今后需要更好的理解hadoop才可以完善各项配置。</p>
+<p>另：可以自己添加属性。</p>
+<figure class="highlight pf"><figcaption><span>core-site.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/></pre></td><td class="code"><pre><span class="line"><span class="variable">&lt;property&gt;</span></span><br/><span class="line"><span class="variable">&lt;name&gt;</span>token_in_class_num_path<span class="variable">&lt;/name&gt;</span></span><br/><span class="line"><span class="variable">&lt;value&gt;</span>hdfs://localhost/<span class="keyword">user</span>/hadoopu/classfnum/part-r-<span class="number">00000</span><span class="variable">&lt;/value&gt;</span></span><br/><span class="line"><span class="variable">&lt;/property&gt;</span></span><br/></pre></td></tr></table></figure>
+<p>然后在程序中，conf读入了配置文件的键值对，包括自己添加的.<br/><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/><span class="line">4</span><br/><span class="line">5</span><br/></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Configuration conf;  </span><br/><span class="line"><span class="keyword">private</span> FileSystem fs;    </span><br/><span class="line">conf = context.getConfiguration();  </span><br/><span class="line">fs = FileSystem.get(<span class="keyword">new</span> URI(<span class="string">"hdfs:///"</span>), conf);  </span><br/><span class="line">Path token_in_class_num_path = <span class="keyword">new</span>  Path(conf.get(TOKEN_IN_CLASS_NUM_PATH));</span><br/></pre></td></tr></table></figure></p>
+<p>在project的应用是训练结果作为sequencefile放在hdfs中，分类时在程序中通过conf获取该训练结果文件所在路径，从而将文件内容读入程序.</p>
+<p><strong>这里我想使用自己目录下的配置文件，需要修改环境变量:</strong></p>
+<pre><code>export HADOOP_CONF_DIR=~/HadoopClusterTest/conf 
+</code></pre><p>这一步十分关键，好几次自己忽略了，因而产生问题。</p>
+<h2 id="3-_u542F_u52A8hadoop"><a class="headerlink" href="#3-_u542F_u52A8hadoop" title="3.启动hadoop"></a>3.启动hadoop</h2><h3 id="1-_u683C_u5F0F_u5316hdfs_3A"><a class="headerlink" href="#1-_u683C_u5F0F_u5316hdfs_3A" title="1.格式化hdfs:"></a>1.格式化hdfs:</h3><pre><code>hadoop fs namenode -format
+</code></pre><h3 id="2-__u5728master_u4E0A_u542F_u52A8hadoop_u5B88_u62A4_u8FDB_u7A0B"><a class="headerlink" href="#2-__u5728master_u4E0A_u542F_u52A8hadoop_u5B88_u62A4_u8FDB_u7A0B" title="2. 在master上启动hadoop守护进程"></a>2. 在master上启动hadoop守护进程</h3><pre><code>start-all.sh
+</code></pre><h3 id="3-_u4F7F_u7528jps_u67E5_u770B_u5168_u90E8hadoop_u76F8_u5173_u8FDB_u7A0B"><a class="headerlink" href="#3-_u4F7F_u7528jps_u67E5_u770B_u5168_u90E8hadoop_u76F8_u5173_u8FDB_u7A0B" title="3.使用jps查看全部hadoop相关进程"></a>3.使用jps查看全部hadoop相关进程</h3><p>在master上应该有一下三个进程:</p>
+<pre><code>JobTracker
+NameNode
+SecondaryNameNode
+</code></pre><p>在slave上应该有以下两个进程：</p>
+<pre><code>TaskTracker
+DataNode
+</code></pre><p>并且可以看到core-site中的hadoop.tmp.dir属性指定的tmpdir被创建.</p>
+<h3 id="4-_Hadoop_webUI_u8BBF_u95EE"><a class="headerlink" href="#4-_Hadoop_webUI_u8BBF_u95EE" title="4. Hadoop webUI访问"></a>4. Hadoop webUI访问</h3><ol>
+<li><p>查看集群状态：<a href="http://masterIP:50070" rel="external" target="_blank">http://masterIP:50070</a></p>
+</li>
+<li><p>查看hdfs：<a href="http://mastetIP:50030" rel="external" target="_blank">http://mastetIP:50030</a></p>
+</li>
+</ol>
+<p>各类log都可以通过webUI访问，集群工作时通过webUI进行监控也十分方便</p>
+<h3 id="5-__u505C_u6B62hadoop_u5B88_u62A4_u8FDB_u7A0B"><a class="headerlink" href="#5-__u505C_u6B62hadoop_u5B88_u62A4_u8FDB_u7A0B" title="5. 停止hadoop守护进程"></a>5. 停止hadoop守护进程</h3><pre><code>stop-all.sh
+</code></pre><p>这里遇到过一个问题是，基于上述的配置文件，当我二次格式化hdfs的时候失败，并且发现namenode启动不了了。<br/>    查看log，二次格式化失败的原因似乎是因为当前hdfs在安全模式下,在安全模式下也无法删除hdfs上的文件。要解除安全模式:</p>
+<pre><code>hadoop dfsadmin -safemode leave
+</code></pre><p>重开：</p>
+<pre><code>hadoop dfsadmin -safemode get
+</code></pre><p>其实一般都不需要重新格式化hdfs…要重启的话只需stop.all.sh和start-all.sh切换即可。</p>
+<h2 id="4-__u6D4B_u8BD5_u96C6_u7FA4"><a class="headerlink" href="#4-__u6D4B_u8BD5_u96C6_u7FA4" title="4. 测试集群"></a>4. 测试集群</h2><p>当然，如果做测试，可以直接使用从HADOOP_HOME中拷贝过来的conf，几乎不用做修改，只用修改slaves和master文件增加ip即可.<br/>现测试运行自带的程序wordCount</p>
+<h3 id="1-__u65B0_u5EFA_u6D4B_u8BD5_u6587_u672C_u6587_u4EF6test-txt_uFF0C_u6DFB_u52A0_u4EFB_u610F_u6587_u672C"><a class="headerlink" href="#1-__u65B0_u5EFA_u6D4B_u8BD5_u6587_u672C_u6587_u4EF6test-txt_uFF0C_u6DFB_u52A0_u4EFB_u610F_u6587_u672C" title="1. 新建测试文本文件test.txt，添加任意文本"></a>1. 新建测试文本文件test.txt，添加任意文本</h3><h3 id="2-__u628A_u8BE5_u6587_u4EF6_u653E_u5165hdfs_u4E2D"><a class="headerlink" href="#2-__u628A_u8BE5_u6587_u4EF6_u653E_u5165hdfs_u4E2D" title="2. 把该文件放入hdfs中"></a>2. 把该文件放入hdfs中</h3><p>在hdfs中创建目录input:</p>
+<pre><code>hadoop fs -mkdir /user/hadoopu/input  
+</code></pre><p>将本地文件系统的中的test.txt放入上述hdfs的input目录下：  </p>
+<pre><code>hadoop fs -put /home/hadoopu/test.txt /user/hadoopu/input/
+</code></pre><p>通过 -ls 参数可以查看：</p>
+<pre><code>haddoop fs -ls /user/hadoopu/input
+</code></pre><h3 id="3-_u8FD0_u884C_u6D4B_u8BD5_u7A0B_u5E8F"><a class="headerlink" href="#3-_u8FD0_u884C_u6D4B_u8BD5_u7A0B_u5E8F" title="3.运行测试程序"></a>3.运行测试程序</h3><p>切换到之前的HadoopCluster目录下运行:</p>
+<pre><code>hadoop jar $HADOOP_HOME/hadoop-examples-1.0.4.jar wordcount /user/hadoopu/input/test/txt /user/hadoopu/output
+</code></pre><p>后一个目录代表输出文件夹，如果运行前存在的话会报错。</p>
+<p>wordcount表示要运行这个jar包中的主类wordcount，它应该是一个完全限定名，更多情况下形如pagege1.pakage2.wordcount</p>
+<h2 id="conclusion"><a class="headerlink" href="#conclusion" title="conclusion"></a>conclusion</h2><p>其实做这个实验的时候真的暴露了很多问题，自己对真正hadoop的运行过程及原理还没有摸到皮毛，感觉这个只能算是个人note….whatever， no one else will see it.</p>
+<p>马上要接下hz的活了，并行这一块的工程能力的恶补要提上日程了。</p>
+
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2016/05/17/%E5%8D%95%E4%BE%8B/"><span class="kicker">← 较新的记录</span><span>Java 单例：初始化时机与安全发布</span></a>
-  <a href="/pototaker_blog/2015/12/24/akka-on-android/"><span class="kicker">更早的记录 →</span><span>把 Akka 搬到 Android：一次没有完全跑通的实验</span></a>
+  <a href="/pototaker_blog/2016/05/17/%E5%8D%95%E4%BE%8B/"><span class="kicker">← 较新的记录</span><span>单例</span></a>
+  <a href="/pototaker_blog/2015/12/24/akka-on-android/"><span class="kicker">更早的记录 →</span><span>akka-on-android</span></a>
 </nav>
 </main>
     <footer class="site-footer">

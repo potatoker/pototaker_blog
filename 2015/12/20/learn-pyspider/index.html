@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>一次爬虫框架选型与调试记录 · potatoker&#39;s blog</title>
-  <meta name="description" content="从动态页面、任务调度和结果处理出发，回顾一次使用 pyspider 的学习过程。">
+  <title>learn pyspider · potatoker&#39;s blog</title>
+  <meta name="description" content="虽然知道当时实验室的活以及随之到来的各种考试已经占满了时间表，但是仅仅因为我自己很想做，还是接下来了。 心路历程大概了解了爬虫的情况之后，觉得还是用框架比较好。当时的需求是： 爬的数据量要比较大，当时他们甚至提出多买几台服务器的提议。 需要的信息很多是实时刷新，这也是需要这个审核…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2015/12/20/learn-pyspider/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="从动态页面、任务调度和结果处理出发，回顾一次使用 pyspider 的学习过程。">
+  <meta name="description" content="虽然知道当时实验室的活以及随之到来的各种考试已经占满了时间表，但是仅仅因为我自己很想做，还是接下来了。 心路历程大概了解了爬虫的情况之后，觉得还是用框架比较好。当时的需求是：  爬的数据量要比较大，当时他们甚至提出多买几台服务器的提议。 需要的信息很多是实时刷新，这也是需要这个审核发布系统的原因，可是随时尽快的得到最新的爬虫数据。 希望可以方便的添加爬虫，也便于这个部分给非技术人员的交接。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一次爬虫框架选型与调试记录">
+<meta property="og:title" content="learn pyspider">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2015/12/20/learn-pyspider/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="从动态页面、任务调度和结果处理出发，回顾一次使用 pyspider 的学习过程。">
+<meta property="og:description" content="虽然知道当时实验室的活以及随之到来的各种考试已经占满了时间表，但是仅仅因为我自己很想做，还是接下来了。 心路历程大概了解了爬虫的情况之后，觉得还是用框架比较好。当时的需求是：  爬的数据量要比较大，当时他们甚至提出多买几台服务器的提议。 需要的信息很多是实时刷新，这也是需要这个审核发布系统的原因，可是随时尽快的得到最新的爬虫数据。 希望可以方便的添加爬虫，也便于这个部分给非技术人员的交接。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-12-20T05:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="爬虫">
@@ -34,35 +34,72 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2015.12.20 / 3 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2015.12.20 / 5 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Python/">Python</a><a href="/pototaker_blog/tags/%E7%88%AC%E8%99%AB/">爬虫</a></div></div>
-    <h1>一次爬虫框架选型与调试记录</h1>
+    <h1>learn pyspider</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2015-12-20T05:00:00.000Z">2015.12.20</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E6%8A%8A%E9%9C%80%E6%B1%82%E6%8B%86%E5%BC%80"><span class="toc-text">先把需求拆开</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8E%E6%9D%A5%E5%B0%9D%E8%AF%95-pyspider"><span class="toc-text">为什么后来尝试 pyspider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E7%9A%84%E7%93%B6%E9%A2%88%E5%BE%80%E5%BE%80%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-text">动态页面的瓶颈往往在浏览器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E5%A4%84%E7%90%86%E9%9C%80%E8%A6%81%E5%8D%95%E7%8B%AC%E8%AE%BE%E8%AE%A1"><span class="toc-text">结果处理需要单独设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E5%9E%8B%E7%95%99%E4%B8%8B%E7%9A%84%E7%BB%8F%E9%AA%8C"><span class="toc-text">选型留下的经验</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u5FC3_u8DEF_u5386_u7A0B"><span class="toc-text">心路历程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u5177_u4F53_u4F7F_u7528"><span class="toc-text">具体使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B89_u88C5_u8FC7_u7A0B"><span class="toc-text">安装过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528"><span class="toc-text">使用</span></a></li></ol></li></ol></nav></details>
   
-  <div class="prose"><p>最初接触爬虫时，我以为问题只是“请求网页，再把需要的字段解析出来”。真正做起一个采集实验，才发现任务调度、动态页面、失败重试和结果处理会占去更多时间。</p>
-<p>这篇保留的是早期使用 pyspider 的经历，其中的工具和浏览器组件属于当年的环境，适合回看选型思路，不宜照着版本清单直接部署。</p>
-<h2 id="先把需求拆开"><a href="#先把需求拆开" class="headerlink" title="先把需求拆开"></a>先把需求拆开</h2><p>实验需要定期更新数据，希望能方便地增加采集任务，也希望在出错时直接看到请求和处理结果。对我而言，调试界面和可观察性与吞吐量同样重要。</p>
-<p>当时先尝试了 Scrapy。对于普通 HTML 页面，处理流程很清晰；遇到依赖 JavaScript 的页面后，则需要再判断：数据是否来自可以直接访问的接口，还是必须执行浏览器脚本。</p>
-<p>这两条路线的成本不同。分析接口通常更轻，但需要理解请求参数与状态；浏览器渲染更接近实际页面，却会消耗更多内存、时间和并发资源。</p>
-<h2 id="为什么后来尝试-pyspider"><a href="#为什么后来尝试-pyspider" class="headerlink" title="为什么后来尝试 pyspider"></a>为什么后来尝试 pyspider</h2><p>当时的 pyspider 将脚本编辑、任务状态和结果查看放进了 Web 控制台。对于刚上手的人，这种反馈很直接：发起一次请求，就能看到页面、解析字段和后续任务是否符合预期。</p>
-<p>另一个有用的特点是组件分离。调度、抓取、处理与结果保存各自承担职责。遇到数据不更新，不必一开始就怀疑所有代码，可以先确认任务有没有被调度，再看抓取是否成功，最后检查解析和落库。</p>
-<h2 id="动态页面的瓶颈往往在浏览器"><a href="#动态页面的瓶颈往往在浏览器" class="headerlink" title="动态页面的瓶颈往往在浏览器"></a>动态页面的瓶颈往往在浏览器</h2><p>实验中出现过浏览器工作进程不稳定的情况。降低请求速率、限制并发，再观察进程内存与失败率，比直接增加工作进程更有帮助。</p>
-<p>增加抓取进程并不必然提高整体速度。如果浏览器已经成为瓶颈，队列堆积只会让任务等待更久。合理的做法是分别测量请求耗时、页面执行耗时和结果处理耗时，再决定扩容哪一部分。</p>
-<h2 id="结果处理需要单独设计"><a href="#结果处理需要单独设计" class="headerlink" title="结果处理需要单独设计"></a>结果处理需要单独设计</h2><p>默认结果保存往往面向任务调试，不一定适合业务数据结构。我当时需要把结构化结果拆成不同字段，因此增加了结果处理层。</p>
-<p>可以把这层理解成一个明确的接口：输入是已解析的记录，输出是经过校验和去重的数据。把采集逻辑与数据库逻辑分开，后面修改表结构、增加字段或者重跑任务都会更容易。</p>
-<h2 id="选型留下的经验"><a href="#选型留下的经验" class="headerlink" title="选型留下的经验"></a>选型留下的经验</h2><p>一个框架是否好用，不只取决于功能清单，还取决于出问题时能否看清它正在做什么。对初学者而言，清晰的组件边界、可复现的单任务调试和完整的失败信息，往往能节省最多时间。</p>
-<p>参考项目：<a target="_blank" rel="noopener" href="https://github.com/binux/pyspider">pyspider</a>、<a target="_blank" rel="noopener" href="https://github.com/scrapy/scrapy">Scrapy</a>。</p>
+  <div class="prose">
+<p>虽然知道当时实验室的活以及随之到来的各种考试已经占满了时间表，但是仅仅因为我自己很想做，还是接下来了。</p>
+<h1 id="u5FC3_u8DEF_u5386_u7A0B"><a class="headerlink" href="#u5FC3_u8DEF_u5386_u7A0B" title="心路历程"></a>心路历程</h1><p>大概了解了爬虫的情况之后，觉得还是用框架比较好。<br/>当时的需求是：</p>
+<ol>
+<li>爬的数据量要比较大，当时他们甚至提出多买几台服务器的提议。</li>
+<li>需要的信息很多是实时刷新，这也是需要这个审核发布系统的原因，可是随时尽快的得到最新的爬虫数据。</li>
+<li>希望可以方便的添加爬虫，也便于这个部分给非技术人员的交接。</li>
+</ol>
+<a id="more"></a>
+<p>然后大概了解了当前的爬虫技术的情况，首先进入视野的当然是scrapy。确实，scrapy非常容易上手，几个组件的工作流程清晰。不过我当时马上遇到了要解析js请求的问题。对于不需要js渲染的网站，当时很快成功了，面对需要渲染的网站：主要办法</p>
+<ol>
+<li>手动模拟请求方式</li>
+<li>配合轻型浏览器作为中间件来渲染网页</li>
+</ol>
+<p>不过看过了某家网站的请求，发现似乎其request是加密的，每次js request是不一样的，因此觉得第一个办法打了折，并且关于渲染时间和人工分析时间的trade off，目前情况，我还是觉得后者比较昂贵。</p>
+<p>至于第二种办法，我找到了这个组件： <a href="http://blog.scrapinghub.com/2015/03/02/handling-javascript-in-scrapy-with-splash/" rel="external" target="_blank">Splash</a>,<a href="http://splash.readthedocs.org/en/stable/" rel="external" target="_blank">文档</a>，其实发现splash的定制化很高，但是文档也很长。没耐心看的时候有点头疼，中间我在调试的时候发现了另外一个爬虫框架：<a href="http://docs.pyspider.org/en/latest/Working-with-Results/" rel="external" target="_blank">pyspider</a>，这是它的描述：</p>
+<blockquote><ul>
+<li>Write script in Python  </li>
+<li>Powerful WebUI with script editor, task monitor, project manager and result viewer  </li>
+<li>MySQL, MongoDB, Redis, SQLite, PostgreSQL with SQLAlchemy as database backend</li>
+<li>RabbitMQ, Beanstalk, Redis and Kombu as message queue</li>
+<li>Task priority, retry, periodical, recrawl by age, etc…</li>
+<li>Distributed architecture, Crawl Javascript pages, Python 2&amp;3, etc…</li>
+</ul>
+</blockquote>
+<p>完全符合需求，更重要的是，文档中也直接给出当时比较头疼的js渲染问题例子，感觉比较适合自己小白的身份。而且文档一点也不长，解释很清楚，所以立马上手试验，对了，关键是有web端控制台，简直就是小白的利器。考虑到当时最主要的解析js的问题，同样目钱的需求是能立刻使功能实现，另外phantomjs也允许做出进一步的渲染需求，所以马上就转手Pyspider了。</p>
+<p>以一个小白的身份感受比较深的是这几点好处：</p>
+<ol>
+<li>组件结构清晰，适应分布式的处理方式，因此也容易根据各个组建的状态分析问题。</li>
+<li>控制台友好，方便在其他终端查看服务器上的爬虫状态，更重要的是，在其他终端就可以很方便的进行调试。</li>
+<li>组件的配置非常灵活，可以适应不同的爬虫规模。</li>
+</ol>
+<p>特别是自己感受的前两点，<strong>非常方便找bug和分析问题</strong>，一直觉得调试方便时使用轮子的最重要的一点.<br/>另外这个框架是北邮的一位同学写的，在group里是有问必答。感谢轮子主。。。还有比这一点更适合小白的吗<em>(:зゝ∠)</em></p>
+<h1 id="u5177_u4F53_u4F7F_u7528"><a class="headerlink" href="#u5177_u4F53_u4F7F_u7528" title="具体使用"></a>具体使用</h1><h2 id="u5B89_u88C5_u8FC7_u7A0B"><a class="headerlink" href="#u5B89_u88C5_u8FC7_u7A0B" title="安装过程"></a>安装过程</h2><p>除了官方文档，参考这位同学的<a href="https://imlonghao.com/9.html" rel="external" target="_blank">博文</a>，这位博主的<a href="https://imlonghao.com/10.html" rel="external" target="_blank">轻松组建分布式 pyspider 集群</a>也是很好的参考。</p>
+<h2 id="u4F7F_u7528"><a class="headerlink" href="#u4F7F_u7528" title="使用"></a>使用</h2><p>作者的文档比较清晰，这里有几处花时间较多的点：</p>
+<ol>
+<li><p>phamtomjs挂掉  </p>
+<p>crawl rate这里，作者提到了<a href="http://en.wikipedia.org/wiki/Token_bucket" rel="external" target="_blank">token_bucket</a>，之前有时候会遇到phantomjs挂掉的情况，实验过后发现应该适合crawl rate的设置有关。遇到phamtomjs挂掉的问题，我现在的解决办法是：</p>
+</li>
+</ol>
+<ul>
+<li>设置crawl rate变小，默认1/3,我会改成0.5/3，</li>
+<li>在不同的端口多开几个phantomjs的process和对应的 fetcher的process</li>
+</ul>
+<p>其实关于速率这个问题，我还没有仔细的研究过该怎么找到最好的适应不同爬虫规模的那个point，作者也提供了爬虫平均速率在Webui的展示，但是赶着完成其他部分。以后不同规模和环境的爬虫跑起来以后，可能这个问题还是需要搞清楚。</p>
+<ol>
+<li>重写result处理方法</li>
+</ol>
+<p>在框架中的result默认处理方式是将所有结构化信息打包成了一个jsonobject存储在了默认以project为名的表中。并且框架不提供关于进一步处理result的接口，这样的话，需要重写result处理这部分的程序。重写on_result方法（刚方法是处理前面爬虫组件传递的result的回调方法）。默认是project, taskid等此类task信息加上一个result jsonobject作为插入数据库的feild，这里，我需要把result json拆分成单独的field插入到指定的表中。重写的<a href="https://github.com/potatoker/pyspider-files" rel="external" target="_blank">my_result_worker</a>这个类将被作为参数指定执行result_worker组件。把这两个文件放到pyspider的根目录下即可。</p>
+
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2015/12/23/scala-on-android/"><span class="kicker">← 较新的记录</span><span>在早期 Android 上运行 Scala 的尝试</span></a>
-  <a href="/pototaker_blog/2015/12/20/json%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/"><span class="kicker">更早的记录 →</span><span>跨语言传递 JSON：从采集脚本到移动端</span></a>
+  <a href="/pototaker_blog/2015/12/23/scala-on-android/"><span class="kicker">← 较新的记录</span><span>scala on android</span></a>
+  <a href="/pototaker_blog/2015/12/20/json%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/"><span class="kicker">更早的记录 →</span><span>json使用总结</span></a>
 </nav>
 </main>
     <footer class="site-footer">

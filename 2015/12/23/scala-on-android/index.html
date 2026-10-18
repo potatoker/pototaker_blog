@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>在早期 Android 上运行 Scala 的尝试 · potatoker&#39;s blog</title>
-  <meta name="description" content="从构建工具、DEX 方法引用限制和代码收缩，回顾把 Scala 程序搬到 Android 的过程。">
+  <title>scala on android · potatoker&#39;s blog</title>
+  <meta name="description" content="今天大概要宣布第一条路走不通了。 感觉还是有必要把这条路重新理一下。。。毕竟并不是什么效果都没有看到。 任务：在安卓手机上实现akka remote，我也不知道做这件事情到底有什么意义= = 现有条件： 一个需要akka跑的scala分布式程序。 丧心病狂的来了，由于某种更加扭曲…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2015/12/23/scala-on-android/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="从构建工具、DEX 方法引用限制和代码收缩，回顾把 Scala 程序搬到 Android 的过程。">
+  <meta name="description" content="今天大概要宣布第一条路走不通了。 感觉还是有必要把这条路重新理一下。。。毕竟并不是什么效果都没有看到。 任务：在安卓手机上实现akka remote，我也不知道做这件事情到底有什么意义&#x3D; &#x3D; 现有条件：   一个需要akka跑的scala分布式程序。 丧心病狂的来了，由于某种更加扭曲的实验方式的限制，最终实验必须要在一台g5上跑起来。   scala on android 经过搜索之后，发现在安">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在早期 Android 上运行 Scala 的尝试">
+<meta property="og:title" content="scala on android">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2015/12/23/scala-on-android/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="从构建工具、DEX 方法引用限制和代码收缩，回顾把 Scala 程序搬到 Android 的过程。">
+<meta property="og:description" content="今天大概要宣布第一条路走不通了。 感觉还是有必要把这条路重新理一下。。。毕竟并不是什么效果都没有看到。 任务：在安卓手机上实现akka remote，我也不知道做这件事情到底有什么意义&#x3D; &#x3D; 现有条件：   一个需要akka跑的scala分布式程序。 丧心病狂的来了，由于某种更加扭曲的实验方式的限制，最终实验必须要在一台g5上跑起来。   scala on android 经过搜索之后，发现在安">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-12-23T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="Scala">
@@ -34,36 +34,80 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2015.12.23 / 3 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2015.12.23 / 10 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/Scala/">Scala</a></div></div>
-    <h1>在早期 Android 上运行 Scala 的尝试</h1>
+    <h1>scala on android</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2015-12-23T04:00:00.000Z">2015.12.23</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%85%B3%E6%98%AF%E6%9E%84%E5%BB%BA%E9%93%BE%E8%B7%AF"><span class="toc-text">第一关是构建链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%85%B3%E6%98%AF-DEX-%E7%9A%84%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8%E9%99%90%E5%88%B6"><span class="toc-text">第二关是 DEX 的方法引用限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E7%BC%A9%E8%A7%84%E5%88%99%E8%A6%81%E7%85%A7%E9%A1%BE%E5%8A%A8%E6%80%81%E8%B0%83%E7%94%A8"><span class="toc-text">收缩规则要照顾动态调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MultiDex-%E4%B8%8D%E7%AD%89%E4%BA%8E%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E6%97%A7%E8%AE%BE%E5%A4%87%E9%99%90%E5%88%B6"><span class="toc-text">MultiDex 不等于解决所有旧设备限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%95%99%E4%B8%8B%E7%9A%84%E5%88%A4%E6%96%AD%E6%96%B9%E6%B3%95"><span class="toc-text">留下的判断方法</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#scala_on_android"><span class="toc-text">scala on android</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_use_proguard"><span class="toc-text">1. use proguard.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_Use_MultiDex"><span class="toc-text">2. Use MultiDex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#in_the_end"><span class="toc-text">in the end</span></a></li></ol></li></ol></li></ol></nav></details>
   
-  <div class="prose"><p>这次实验的出发点很直接：已有一段 Scala 程序，想知道它能否运行在 Android 设备上。Scala 可以编译成 JVM 字节码，但“能够编译”距离“在目标手机上稳定运行”还有不少路要走。</p>
-<p>本文记录的是 2015 年前后的工具链经验。提到的 Gradle 插件和旧系统限制都有明确的历史背景，不代表今天的推荐项目模板。</p>
-<h2 id="第一关是构建链路"><a href="#第一关是构建链路" class="headerlink" title="第一关是构建链路"></a>第一关是构建链路</h2><p>Scala 项目常用的构建工具与 Android 项目的工具链并不完全一致。当时我选择沿着 Android Studio 使用的 Gradle 路线尝试，借助已有插件完成 Scala 编译，再进入 Android 的打包流程。</p>
-<p>这个阶段最重要的是先跑通一个最小程序。语言插件、运行库、Android 插件和设备版本同时变化，会让问题很难归因。</p>
-<h2 id="第二关是-DEX-的方法引用限制"><a href="#第二关是-DEX-的方法引用限制" class="headerlink" title="第二关是 DEX 的方法引用限制"></a>第二关是 DEX 的方法引用限制</h2><p>应用引用 Scala 运行库之后，依赖体积和方法数量会明显增加。单个 DEX 文件的方法引用数量有上限，这个限制针对引用表，并不是对源代码行数或者 APK 字节大小的限制。</p>
-<p>当时主要考虑两种办法：代码收缩和 MultiDex。</p>
-<p>代码收缩会删除不可达代码，必要时还会优化、混淆。MultiDex 则把代码分装到多个 DEX 文件里。这两个方法解决的问题有交集，但并不等价：一个减少需要携带的代码，另一个改变打包和加载方式。</p>
-<h2 id="收缩规则要照顾动态调用"><a href="#收缩规则要照顾动态调用" class="headerlink" title="收缩规则要照顾动态调用"></a>收缩规则要照顾动态调用</h2><p>只要程序存在反射、配置中指定类名，或者框架在运行时查找构造函数，静态分析就可能看不到真实的调用关系。此时必须为需要保留的类和成员提供规则。</p>
-<p>最小程序构建成功，并不能证明收缩规则已经完整。要继续测试那些依赖反射或配置加载的实际路径，尤其不能把所有 <code>ClassNotFoundException</code> 都简单地当作“少写了一条 keep”。</p>
-<h2 id="MultiDex-不等于解决所有旧设备限制"><a href="#MultiDex-不等于解决所有旧设备限制" class="headerlink" title="MultiDex 不等于解决所有旧设备限制"></a>MultiDex 不等于解决所有旧设备限制</h2><p>当时 Android 5.0 的 ART 与更早期 Dalvik 的多 DEX 加载方式不同。较旧系统除了方法引用上限，还可能遇到类元数据分配等运行时限制。因此，较新设备成功运行，不能直接推导出较旧设备也能成功。</p>
-<p>实验里，精简依赖后曾在旧设备上跑通 Scala，但继续加入大型框架时仍出现问题。这个过程让我意识到，语言兼容、构建成功和目标运行时兼容是三个不同的结论。</p>
-<h2 id="留下的判断方法"><a href="#留下的判断方法" class="headerlink" title="留下的判断方法"></a>留下的判断方法</h2><p>先固定一组语言、构建工具和设备版本；再分别验证最小程序、核心依赖以及完整运行路径。每加一层，就保留可复现的基线。</p>
-<p>如果只是为了某种语法引入一整套较重的运行库，也应把打包、启动和兼容成本一起算进去。语言特性带来的便利，只有在目标环境里才能被完整评估。</p>
-<p>原实验使用的插件：<a target="_blank" rel="noopener" href="https://github.com/saturday06/gradle-android-scala-plugin">gradle-android-scala-plugin</a>。</p>
+  <div class="prose">
+<p>今天大概要宣布第一条路走不通了。</p>
+<p>感觉还是有必要把这条路重新理一下。。。毕竟并不是什么效果都没有看到。</p>
+<p>任务：在安卓手机上实现akka remote，我也不知道做这件事情到底有什么意义= =</p>
+<p>现有条件： </p>
+<ol>
+<li>一个需要akka跑的scala分布式程序。</li>
+<li>丧心病狂的来了，由于某种更加扭曲的实验方式的限制，最终实验必须要在一台g5上跑起来。</li>
+</ol>
+<a id="more"></a>
+<h1 id="scala_on_android"><a class="headerlink" href="#scala_on_android" title="scala on android"></a>scala on android</h1><p> 经过搜索之后，发现在安卓平台上跑scala并不是什么新鲜事了，scala作为一门基于java虚拟机的语言，同样第一步需要预编译成class文件，然后打包成apk安装到android上，原理上是完全没有问题的。</p>
+<p>不过当时遇到的问题是，一般scala使用的build tool 是sbt，而我目前使用的IDE android studio使用的是gradle. 这样记得当时google出来的scala on android的一些插件或者套路基本根据这两种build tool来的。我也不知道该使用哪一种，因为实际上两种我都并没有很了解，似乎走了不少弯路。  </p>
+<p>不过最终，让我跑通的是：<a href="https://github.com/saturday06/gradle-android-scala-plugin" rel="external" target="_blank">基于gradle的</a>，毕竟这是android studio自带的build tool, 配置起来可能会方便一点。</p>
+<p>这里遇到一个问题是<a href="https://developer.android.com/tools/building/multidex.html" rel="external" target="_blank">DEX 64K Methods Limit</a>.当依赖的库太多的时候(这个scala语言库本身还是比较大)，毕竟这些Jar包都要被一起build成一个dex文件，而默认一个apk只包含一个dex文件。 android的build机制对这样的一个库的容量有所限制.：</p>
+<blockquote><p>As the Android platform has continued to grow, so has the size of Android apps. When your application and the libraries it references reach a certain size, you encounter build errors that indicate your app has reached a limit of the Android app build architecture. Earlier versions of the build system report this error as follows:</p>
+<pre><code>Conversion to Dalvik format failed:
+Unable to execute dex: method ID not in [0, 0xffff]: 65536
+</code></pre><p>More recent versions of the Android build system display a different error, which is an indication of the same problem:</p>
+<pre><code>trouble writing output:
+Too many field references: 131000; max is 65536.
+You may try using --multi-dex option.
+</code></pre></blockquote>
+<p>其实这个问题在解决scala库依赖的时候根本不需要我操心。。因为我只用在作者已经配置好的<a href="https://github.com/saturday06/gradle-android-scala-plugin/tree/master/sample/simple" rel="external" target="_blank">sample</a>上继续写程序就可以了。</p>
+<h3 id="1-_use_proguard"><a class="headerlink" href="#1-_use_proguard" title="1. use proguard."></a>1. use proguard.</h3><p>android devloper上有简单地概念介绍：</p>
+<blockquote><p>The ProGuard tool shrinks, optimizes, and obfuscates your code by removing unused code and renaming classes, fields, and methods with semantically obscure names. The result is a smaller sized .apk file that is more difficult to reverse engineer.</p>
+<footer><strong>ProGuard</strong><cite><a href="http://developer.android.com/tools/help/proguard.html" rel="external" target="_blank">developer.android.com/tools/help/proguard.html</a></cite></footer></blockquote>
+<p>这东西有两个作用，一个是减小apk的大小，一个是对方法名进行混淆。我需要用到他的第一个作用，思路就是引用的库中，很多方法其实根本用不到，所以proguard就会帮助build tool把引用到的那一部分加入编译，这样就不会使dex文件过大。那么他是怎么判断哪些方法该被加入编译，哪些是没用的呢，这东西还没有那么智能。。需要一份rules来规定哪些方法和类是需要保存的，虽然sdk tool自带一份默认的rules，但是！一般情况还是需要debug一下，然后手动修改rules文件。如果是第三方的jar包，那就更没得跑了。</p>
+<p>其实在使用scala lib的时候并不需要这一步，因为之前提到过，直接使用作者已经配置好的<a href="https://github.com/saturday06/gradle-android-scala-plugin/tree/master/sample/simple" rel="external" target="_blank">sample</a>就可以了，不过这个sample使用的是第二种方法。但是如果想要使用progurad来解决这个问题也可以在网上找到现成的scala库的<a href="https://github.com/pocorall/hello-scaloid-gradle/blob/master/proguard-rules.txt" rel="external" target="_blank">proguard rule</a>,这个方法我也使用过，也可以成功跑通scala.</p>
+<p>scala这一块已经解决，然而。。akka似乎并没有提供这样一份东西。。详细的内容在后一篇。</p>
+<h3 id="2-_Use_MultiDex"><a class="headerlink" href="#2-_Use_MultiDex" title="2. Use MultiDex"></a>2. Use MultiDex</h3><p>事实上我使用的作者的sample 并没有使用proguard方法，而是使用 multidex。<br/>解决思路就是，以前一个apk只有一个dex包，dex又有大小限制，那么我就吧class分成多个dex打包，使用不同dex中的class的时候就动态加载。这样就不会超过这个限制。</p>
+<p>官方解释：<br/><blockquote><p>Versions of the platform prior to Android 5.0 use the Dalvik runtime for executing app code. By default, Dalvik limits apps to a single classes.dex bytecode file per APK. In order to get around this limitation, you can use the multidex support library, which becomes part of the primary DEX file of your app and then manages access to the additional DEX files and the code they contain. </p>
+<p>Android 5.0 and higher uses a runtime called ART which natively supports loading multiple dex files from application APK files.</p>
+</blockquote></p>
+<p>其实主要是在gradle的build文件中添加multidex方法的依赖库，然后修改一些关联的配置<br/><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br/><span class="line">2</span><br/><span class="line">3</span><br/></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> {</span><br/><span class="line">  <span class="keyword">compile</span> <span class="string">'com.android.support:multidex:1.0.0'</span></span><br/><span class="line">}</span><br/></pre></td></tr></table></figure> </p>
+<p>详细的内容太仍然在<a href="https://developer.android.com/tools/building/multidex.html#mdex-gradle" rel="external" target="_blank">Configuring Your App for Multidex with Gradle</a> 。</p>
+<p><strong>这里有非常重要的一点是multidex方法不能直接适用于低端机，我使用的是android 5.0device，在akka-on-andorid中我使用了multidex试图解决大型库依赖的问题，但会产生另外的问题。但是Android 2.3.7使用proguard之后是可以跑这个scala库的。</strong></p>
+<h3 id="in_the_end"><a class="headerlink" href="#in_the_end" title="in the end"></a>in the end</h3><p>总结一下，在android上使用scala:</p>
+<ol>
+<li><p>根据IDE下载scala语言的parse插件，我在android studio中使用的是<a href="http://www.jetbrains.net/confluence/display/SCA/Scala+Plugin+for+IntelliJ+IDEA" rel="external" target="_blank">这款</a>。这样IDE可以识别scala.</p>
+</li>
+<li><p>使用这款支持scala编译的<a href="https://github.com/saturday06/gradle-android-scala-plugin" rel="external" target="_blank">插件</a>，并根据其read文件来解决可能遇到的<a href="https://developer.android.com/tools/building/multidex.html" rel="external" target="_blank">DEX 64K Methods Limit</a>问题。<br/>有两个解决方法：如果使用multidex，参考<a href="https://developer.android.com/tools/building/multidex.html#mdex-gradle" rel="external" target="_blank">Configuring Your App for Multidex with Gradle</a>，步骤并不多。甚至你可以直接使用该<a href="https://github.com/saturday06/gradle-android-scala-plugin/tree/master/sample/simple" rel="external" target="_blank">sample</a>的build配置，在此基础上写程序即可；如果使用proguard，先上网搜索该库的proguard文件，常常会有人已经写出来了，这里<a href="https://github.com/pocorall/hello-scaloid-gradle/blob/master/proguard-rules.txt" rel="external" target="_blank">hello-scaloid-gradle</a>就做了提供。</p>
+</li>
+<li><p>使用scala来写android app~<br/>可以使用一些框架，比如<a href="https://github.com/pocorall/scaloid" rel="external" target="_blank">scaloid</a></p>
+</li>
+</ol>
+<blockquote><p>Scaloid is a library that simplifies your Android code.<br/>It makes your code easy to understand and maintain by leveraging Scala language.</p>
+</blockquote>
+<p><span class="missing-resource">[原图待补：历史图片链接暂不可用]</span></p>
+<p>如上图所示， 确实，即使利用scala多范式语言的特性，就可以对比java写出同样功能但清爽许多的code。但是使用scala无法忽视的一点是，加入了scala语言库这个容量巨大的依赖(或者是因为太复杂的类继承关系)<a href="https://code.google.com/p/android/issues/detail?id=22586" rel="external" target="_blank">issue 22586</a>中讨论的就是sacala引起的LinearAlloc exceeded问题。<br/><blockquote><p>由於 Android dex 的種種限制，造成 method 數量有上限的問題，再加上第三方 library 揮霍無度，使得即使你的 App 還很小，卻不小心會撞上這個 64k method 數限制。建議：</p>
+<ol>
+<li>慎選第三方 library，最好採用前先用 dex-method-count 度量一下</li>
+<li>scala, groovy 這類非原生的開發語言想都不要想，它們只會帶來更多的問題。用非 Java 語言開發可以，但是僅限於 NDK</li>
+<li>要替 Google play service 瘦身</li>
+<li>square 出品的 library 都很適合 Android 使用</li>
+<li>Android 2.3 的可用 method 數更少，約 56000，不過這只要 proguard 後達成即可。</li>
+</ol>
+<footer><strong>預防 Android Dex 64k Method Size Limit</strong><cite><a href="https://ingramchen.io/blog/2014/09/prevention-of-android-dex-64k-method-size-limit.html" rel="external" target="_blank">ingramchen.io/blog/2014/09/prevention-of-android-dex-64k-method-size-limit.html</a></cite></footer></blockquote><br/>如果你只是想要用android5.0 以上的device玩玩scala，大概都不会出现问题，但是，用这个写app的话，没办法保证会在什么样的千奇百怪的android device上出现问题。</p>
+
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2015/12/24/akka-on-android/"><span class="kicker">← 较新的记录</span><span>把 Akka 搬到 Android：一次没有完全跑通的实验</span></a>
-  <a href="/pototaker_blog/2015/12/20/learn-pyspider/"><span class="kicker">更早的记录 →</span><span>一次爬虫框架选型与调试记录</span></a>
+  <a href="/pototaker_blog/2015/12/24/akka-on-android/"><span class="kicker">← 较新的记录</span><span>akka-on-android</span></a>
+  <a href="/pototaker_blog/2015/12/20/learn-pyspider/"><span class="kicker">更早的记录 →</span><span>learn pyspider</span></a>
 </nav>
 </main>
     <footer class="site-footer">

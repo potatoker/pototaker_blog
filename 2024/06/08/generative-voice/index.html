@@ -4,29 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>从文字到声音：一次语音合成学习与实验 · potatoker&#39;s blog</title>
-  <meta name="description" content="梳理 TTS、声音转换和音色适配，并把数据准备、训练与听感评测连成一条实验路径。">
+  <title>如何使用生成式语音与偶像对话 · potatoker&#39;s blog</title>
+  <meta name="description" content="大家最近应该关注到了OpenAI在移动端chatGPT应用上的最新更新，重点新特性多模态之外还有一个语音功能： [原视频待补：copy_1A5BA413-F6B1-42CE-84B1-69C9E91E4CEA (1).MP4] 然后你就会在B站上看到各种一堆惊呼AGI到来的视频：…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2024/06/08/generative-voice/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="梳理 TTS、声音转换和音色适配，并把数据准备、训练与听感评测连成一条实验路径。">
+  <meta name="description" content="大家最近应该关注到了OpenAI在移动端chatGPT应用上的最新更新，重点新特性多模态之外还有一个语音功能： [原视频待补：copy_1A5BA413-F6B1-42CE-84B1-69C9E91E4CEA (1).MP4] 然后你就会在B站上看到各种一堆惊呼AGI到来的视频：  虽然实际上你会发现这些视频测评的内容和标题其实还是基于GPT4 语言大模型本身，早在今年上半年GPT4 早已发布，但">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从文字到声音：一次语音合成学习与实验">
+<meta property="og:title" content="如何使用生成式语音与偶像对话">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2024/06/08/generative-voice/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="梳理 TTS、声音转换和音色适配，并把数据准备、训练与听感评测连成一条实验路径。">
+<meta property="og:description" content="大家最近应该关注到了OpenAI在移动端chatGPT应用上的最新更新，重点新特性多模态之外还有一个语音功能： [原视频待补：copy_1A5BA413-F6B1-42CE-84B1-69C9E91E4CEA (1).MP4] 然后你就会在B站上看到各种一堆惊呼AGI到来的视频：  虽然实际上你会发现这些视频测评的内容和标题其实还是基于GPT4 语言大模型本身，早在今年上半年GPT4 早已发布，但">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/voice-training.svg">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/articles/voice/0afe8b034a844269aefe92b71155533d.webp">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/articles/voice/932f502f20dd4b1687ba634b2e29e756.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/f7f4b0dc7f7740d1b2aed31aa9500b80.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/dab6deb71b8044049b14d14731897edc.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/7c028b78dd95472ca4a7f0fcf4af0b5d.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/0afe8b034a844269aefe92b71155533d.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/63847dc74bb341e19a0231e31e41bd67.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/4be843e65f59490da5dabab3ce5932e9.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/8e33a90c913346d39f19ff62265bf2de.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/originals/0d89cd6d107b425a8cae5408fd4fb657.webp">
 <meta property="article:published_time" content="2024-06-08T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T09:00:00.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="语音">
 <meta property="article:tag" content="TTS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/voice-training.svg">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/originals/f7f4b0dc7f7740d1b2aed31aa9500b80.webp">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -39,51 +44,134 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.06.08 / 4 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2024.06.08 / 18 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/AI/">AI</a><a href="/pototaker_blog/tags/%E8%AF%AD%E9%9F%B3/">语音</a><a href="/pototaker_blog/tags/TTS/">TTS</a></div></div>
-    <h1>从文字到声音：一次语音合成学习与实验</h1>
+    <h1>如何使用生成式语音与偶像对话</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2024-06-08T04:00:00.000Z">2024.06.08</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TTS-%E4%B8%8E%E5%A3%B0%E9%9F%B3%E8%BD%AC%E6%8D%A2%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">TTS 与声音转换解决什么问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E5%BE%AE%E8%B0%83%E8%B5%B0%E5%90%91%E7%9F%AD%E5%8F%82%E8%80%83%E9%9F%B3%E9%A2%91"><span class="toc-text">从微调走向短参考音频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A%E2%80%9C%E5%83%8F%E4%B8%8D%E5%83%8F%E2%80%9D%E6%8B%86%E6%88%90%E5%87%A0%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="toc-text">把“像不像”拆成几个维度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E8%A6%81%E5%85%88%E5%90%AC%E8%BF%87%EF%BC%8C%E5%86%8D%E4%BA%A4%E7%BB%99%E8%84%9A%E6%9C%AC"><span class="toc-text">训练数据要先听过，再交给脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%BB%BA%E7%AB%8B%E8%83%BD%E5%A4%9F%E5%A4%8D%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%BA%BF"><span class="toc-text">先建立能够复现的基线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%98%E8%A6%81%E9%87%8D%E6%96%B0%E7%AE%97%E4%B8%80%E9%81%8D%E6%88%90%E6%9C%AC"><span class="toc-text">移动端还要重新算一遍成本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E5%AE%9E%E9%AA%8C%E8%83%BD%E8%AF%B4%E6%98%8E%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="toc-text">一次实验能说明的范围</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E9%9F%B3%E5%90%88%E6%88%90%E6%8A%80%E6%9C%AF%E5%88%86%E7%B1%BB"><span class="toc-text">语音合成技术分类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Text-to-Speech"><span class="toc-text">1.Text-to-Speech</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Voice-Change-Voice-Conversion"><span class="toc-text">2.Voice Change&#x2F; Voice Conversion</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%85%8B%E9%9A%86"><span class="toc-text">1.实时语音克隆</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E8%AF%AD%E9%9F%B3%E7%BC%96%E8%BE%91%E5%8C%85"><span class="toc-text">2.语音编辑包</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E9%9F%B5%E5%BE%8B%E7%BB%84%E5%90%88"><span class="toc-text">3. 韵律组合</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E7%A7%BB%E5%8A%A8%E7%AB%AFTTS-%E6%8E%A8%E7%90%86"><span class="toc-text">4. 移动端TTS 推理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%AE%BA%E5%8F%91%E5%B1%95%E6%83%85%E5%86%B5"><span class="toc-text">理论发展情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%8C%E4%B8%9A%E5%86%85%E8%90%BD%E5%9C%B0%E6%83%85%E5%86%B5"><span class="toc-text">行业内落地情况</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%BE%AE%E8%BD%AFAzure"><span class="toc-text">1. 微软Azure</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-Halo%E6%9C%89%E6%88%8F%EF%BC%88%E6%A0%BC%E5%AD%90%E4%BA%92%E5%8A%A8%E5%A4%A9%E4%BD%BF%E8%BD%AE%EF%BC%89"><span class="toc-text">2. Halo有戏（格子互动天使轮）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E7%89%B9%E7%9C%8B%E7%A7%91%E6%8A%80%EF%BC%88%E5%A4%A9%E4%BD%BF%E8%BD%AE%EF%BC%89"><span class="toc-text">3. 特看科技（天使轮）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-voice-ai"><span class="toc-text">4. voice.ai</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-xeva"><span class="toc-text">5. xeva</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B"><span class="toc-text">自己动手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-VITS-fast-fine-tuning"><span class="toc-text">1.VITS-fast-fine-tuning</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-CjangCjengh%E7%89%88%EF%BC%9A"><span class="toc-text">2.CjangCjengh版：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-vits-chinese%EF%BC%9A"><span class="toc-text">3.vits_chinese：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83"><span class="toc-text">开始训练</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></nav></details>
   
-  <div class="prose"><p>第一次认真体验自然语音交互时，我的感受是：同样一段回答，读出来和显示在屏幕上，给人的体验很不一样。声音增加了节奏、停顿和情绪，也让技术上的小错误变得更容易被察觉。</p>
-<p>这篇整理自早期语音合成笔记。重点放在任务分类与实验方法，模型效果和工具选择保留当时的背景，不作为当前产品排名。</p>
-<h2 id="TTS-与声音转换解决什么问题"><a href="#TTS-与声音转换解决什么问题" class="headerlink" title="TTS 与声音转换解决什么问题"></a>TTS 与声音转换解决什么问题</h2><p>TTS 的输入主要是文本，输出是语音。模型除了说出正确内容，还要处理断句、重音、语速与韵律。</p>
-<p>声音转换通常以已有语音为输入，尝试改变其中的说话人音色，同时保留部分内容与表达。因为输入已经携带了时间和韵律信息，它面对的约束与“从文本开始生成”并不相同。</p>
-<p>所以，一个模型在歌声转换里表现好，不代表它必然擅长长文本朗读；一个 TTS 样例听起来像某位说话人，也不代表它能稳定处理任意内容。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/voice-training.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/voice-training.svg" alt="音色适配从数据准备、基线到训练与比较的过程"></a></p>
-<p><em>根据本文实验步骤重绘；每一步都应能在固定测试文本上比较。</em></p>
-<h2 id="从微调走向短参考音频"><a href="#从微调走向短参考音频" class="headerlink" title="从微调走向短参考音频"></a>从微调走向短参考音频</h2><p>早期实验常见的路线是准备目标说话人的训练数据，对预训练模型进行适配。另一类方法尝试在推理时利用较短参考音频，减少甚至省去针对该音色的单独训练。</p>
-<p>两者各有条件。参考音频短，并不意味着背景噪声、语种差异和录音环境都不重要；微调步骤多，也不意味着面对新内容就一定稳定。</p>
-<p>对我来说，首先要问的是目标：想要一套固定音色的朗读服务，还是一次性尝试不同声音？是否需要跨语言、情绪控制或流式输出？任务不同，实验路线也会不同。</p>
-<h2 id="把“像不像”拆成几个维度"><a href="#把“像不像”拆成几个维度" class="headerlink" title="把“像不像”拆成几个维度"></a>把“像不像”拆成几个维度</h2><p>听感可以从内容准确、音色相似、发音自然、韵律合理以及长句稳定性分别记录。同一个结果可能音色很像，却在某些音节突然失真；也可能发音正确，但停顿和情绪像是在拼接。</p>
-<p>单个精心挑选的短句不够。最好准备一组固定测试文本，包含数字、日期、专有名词、较长句子以及不同标点，让不同设置接受同样的考验。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/articles/voice/0afe8b034a844269aefe92b71155533d.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/articles/voice/0afe8b034a844269aefe92b71155533d.webp" alt="语音合成听感评测的多个维度"></a></p>
-<p><em>原稿引用的听感评测示意表，用于说明评价维度，不是所有任务通用的评分标准。</em></p>
-<h2 id="训练数据要先听过，再交给脚本"><a href="#训练数据要先听过，再交给脚本" class="headerlink" title="训练数据要先听过，再交给脚本"></a>训练数据要先听过，再交给脚本</h2><p>实验用的数据应是自己的录音或已获得相应用途授权的音频。清理数据时要排除多人重叠、音乐干扰、截断音节和文字转写错位。</p>
-<p>自动切分、识别和去噪能降低准备成本，但不能替代抽样检查。去噪过重可能损伤音色；切分太碎可能丢失语气；文本与音频不一致，会让模型学到错误对应。</p>
-<p>一个通用的数据组织方式如下，路径和名称不绑定任何真实人员：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">voice-data/</span><br><span class="line">  clips/</span><br><span class="line">    sample-0001.wav</span><br><span class="line">    sample-0002.wav</span><br><span class="line">  transcripts.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/articles/voice/932f502f20dd4b1687ba634b2e29e756.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/articles/voice/932f502f20dd4b1687ba634b2e29e756.webp" alt="原稿引用的语音模型训练设置对照"></a></p>
-<p><em>原稿保留的研究与复现配置对照。数据规模不同，不能仅按训练耗时比较。</em></p>
-<h2 id="先建立能够复现的基线"><a href="#先建立能够复现的基线" class="headerlink" title="先建立能够复现的基线"></a>先建立能够复现的基线</h2><p>固定模型版本、采样率、预处理方式与测试文本，先确认预训练模型可以正常推理。再加入目标音频，记录训练设置与中间检查点。</p>
-<p>不能只按“训练了多久”比较结果。硬件、批量、数据量与训练脚本不同，时长本身没有可比性。更有用的是保留配置、数据清单和相同测试文本下的输出。</p>
-<h2 id="移动端还要重新算一遍成本"><a href="#移动端还要重新算一遍成本" class="headerlink" title="移动端还要重新算一遍成本"></a>移动端还要重新算一遍成本</h2><p>把模型导出成另一种格式，不代表移动端体验已经完成。还需要检查算子支持、首包等待、内存、持续播放与推理并发，以及不同设备上的速度差异。</p>
-<p>如果设备无法持续快于音频播放速度，开头几句听起来正常，长时间运行后仍可能出现断续。端侧实验要测完整会话，而不只测一个短样例。</p>
-<h2 id="一次实验能说明的范围"><a href="#一次实验能说明的范围" class="headerlink" title="一次实验能说明的范围"></a>一次实验能说明的范围</h2><p>原实验说明，借助开源项目，个人已经可以较低成本地探索定制语音。但其中仍存在发音异常、长句不稳定和音色偏移。是否“像真人”，最终要放进具体使用场景判断。</p>
-<p>可参考的公开项目：<a target="_blank" rel="noopener" href="https://github.com/jaywalnut310/vits">VITS</a>、<a target="_blank" rel="noopener" href="https://github.com/suno-ai/bark">Bark</a>、<a target="_blank" rel="noopener" href="https://github.com/svc-develop-team/so-vits-svc">so-vits-svc</a>。</p>
+  <div class="prose"><p>大家最近应该关注到了OpenAI在移动端chatGPT应用上的最新更新，重点新特性多模态之外还有一个语音功能：</p>
+<p>[原视频待补：copy_1A5BA413-F6B1-42CE-84B1-69C9E91E4CEA (1).MP4]</p>
+<p>然后你就会在B站上看到各种一堆惊呼AGI到来的视频：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/f7f4b0dc7f7740d1b2aed31aa9500b80.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/f7f4b0dc7f7740d1b2aed31aa9500b80.webp" alt="enter image description here"></a></p>
+<p>虽然实际上你会发现这些视频测评的内容和标题其实还是基于GPT4 语言大模型本身，早在今年上半年GPT4 早已发布，但这些视频却等到此时才来惊呼。</p>
+<p><strong>这就是交互的作用</strong></p>
+<p>作为GPT3.5 的chatGPT 也是深知和人交互的重要性，其对比 GPT3 的一个重要优化点即是把与普通用户的交互体验进行定点优化，看起来不这么高大上的目标实际正是chatGPT 出圈的原因。</p>
+<p>虽然语音合成技术从语音导航到短视频小帅小美在我们生活中已经司空见惯。</p>
+<p>但OpenAI此次功能更新可以说也是使用了目前语音合成领域自然程度的最高的水准。</p>
+<blockquote>
+<p>The new voice capability is powered by a new text-to-speech model, capable of generating human-like audio from just text and a few seconds of sample speech. We collaborated with professional voice actors to create each of the voices. We also use Whisper, our open-source speech recognition system, to transcribe your spoken words into text.</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://openai.com/blog/chatgpt-can-now-see-hear-and-speak">ChatGPT can now see, hear, and speak</a></p>
+<p>此次chatGPT 移动端更新也是沿着对普通用户交互体验的优化更新了语音功能，此篇文章就以外行工程人员的角度借此契机来简单梳理目前语音合成领域的发展并展示如何快速自己训练指定人声语音。</p>
+<p>我是用目前的开源项目用极低的成本训练的小龙的声音如下：</p>
+<p>[原视频待补：allen_caixukun.mp4]</p>
+<h3 id="语音合成技术分类"><a href="#语音合成技术分类" class="headerlink" title="语音合成技术分类"></a>语音合成技术分类</h3><h4 id="1-Text-to-Speech"><a href="#1-Text-to-Speech" class="headerlink" title="1.Text-to-Speech"></a>1.Text-to-Speech</h4><p>即 TTS。文本转语音，早期的TTS几乎和拨号按键的数字提示音一个效果，最基本的逻辑就是把文本每一个字都发音出来。诺基亚功能机时代手机内置的辅助功能是TTS，短视频配音里的小帅小美也是 TTS。</p>
+<p>在目前使用最广泛的TTS服务微软Azure的文档里，已经把它叫做“神经网络声音服务”。参考<a target="_blank" rel="noopener" href="https://paperswithcode.com/task/text-to-speech-synthesis">tts-state-of-art</a>中介绍的在典型Benchmark数据集上截止到2022，的跑分排名如下：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/dab6deb71b8044049b14d14731897edc.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/dab6deb71b8044049b14d14731897edc.webp" alt="enter image description here"></a></p>
+<p>其中NaturalSpeech 和VITS 都是用了 variational autoencoder (VAE)模型。但也就是在几年上半年，微软在这一领域又发布了极高的进展<a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/project/vall-e-x/vall-e-x/">vall-e</a></p>
+<p>虽然real-time的音色学习并不是什么新鲜概念，但是其优秀的泛化性和效果还是实现了这一领域新的突破，可以在官网听听他们提供的Demo。vall-e 虽然优秀，但目前仍然是闭源的，且并未完全集成到微软的对外服务，目前工程界可以使用到的流行的几种实现如下：</p>
+<p>● <a target="_blank" rel="noopener" href="https://github.com/microsoft/NeuralSpeech">微软 Azure AI 语音</a> 提供的 TTS 服务也是目前落地应用感知最多的 TTS 服务之一，前述中1的短视频“小帅”、“小美“等语音均来自微软提供的服务。</p>
+<p>● <a target="_blank" rel="noopener" href="https://github.com/suno-ai/bark">bark</a> 是目前TTS推理开源实现中star最多的项目之一，它强调Text-to-Audio即可以在声音中加入各种其他非文字声音，比如叹气，笑声，口头禅等，意在对 TTS 进行更好的人声模拟优化和真实音频场景优化，它本身主要提供内置的各种语音模型，效果对比微软的服务也非常不错，但是中文方面官网内置模型不太好，不过也可以用后面提到的vits来做训练得到自定义模型后放到bark中进行推理。</p>
+<p>●<a target="_blank" rel="noopener" href="https://github.com/jaywalnut310/vits">vits</a> 则是目前模型训练开源社区最繁荣的项目之一，比如目前围绕vits的开发社区中衍生了大量围绕二次元游戏领域的<a target="_blank" rel="noopener" href="https://genshinvoice.top/">模型和工具</a>，不过社区中目前数量最多的应该还是英文和日文预训练模型。</p>
+<h4 id="2-Voice-Change-Voice-Conversion"><a href="#2-Voice-Change-Voice-Conversion" class="headerlink" title="2.Voice Change&#x2F; Voice Conversion"></a>2.Voice Change&#x2F; Voice Conversion</h4><p>即VC。声音转声音，可以理解成声音转换。虽然这一领域的落地场景没有 TTS 那么广泛直接，但有很多偏门的场景，也一直在发展和扩充想象空间，最近最火的应用就是“AI 孙燕姿”，TTS 输入是文本，如果要强调发音的自然，许多维持发音自然特性需要模型兼顾到，VC 输入本身是语音，可以理解为简化了一部分合成逻辑。在唱歌领域强调的是音色，音调，咬字特性等，落地场景可以很好的 契合。不过对 前面概念的TTS训练方式来说，最终应用场景不论音频作为输入还是文本作为输入其实差别没有那么大，譬如剪映中提供的特色声线既可以被用作 TTS 也可以被用做 VC。</p>
+<p>拿 AI 孙燕姿举例，其背后的模型是 <a target="_blank" rel="noopener" href="https://github.com/svc-develop-team/so-vits-svc">GitHub - svc-develop-team&#x2F;so-vits-svc: SoftVC VITS Singing Voice Conversion</a>其生态也已经有了不错的发展，因此促成了 AI 歌手的一时火爆。</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>在整个Speech Processing 领域其实还有很多任务分类，包括，ASR，语音分割，语音超分等，列举几个例子如下：</p>
+<h5 id="1-实时语音克隆"><a href="#1-实时语音克隆" class="headerlink" title="1.实时语音克隆"></a>1.实时语音克隆</h5><p>比如<a target="_blank" rel="noopener" href="https://huggingface.co/spaces/coqui/xtts">coqui</a>，演示效果见<br>[原视频待补：Screen-2023-09-22-162638.mp4]</p>
+<p>本身底数据语音合成效果其实不错，但是学习到的我的声音特征还是差那么点意思。目前这一领域最好的效果可以参考<a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/project/vall-e-x/vall-e-x/">vall-e</a>的Demo，但并没有提供推理体验。</p>
+<h5 id="2-语音编辑包"><a href="#2-语音编辑包" class="headerlink" title="2.语音编辑包"></a>2.语音编辑包</h5><p>meta 最近推出的voicebox打包了许多常用的语音处理功能</p>
+<blockquote>
+<p>Voicebox can synthesize speech across six languages, remove transient noise, edit content, transfer audio style within and across languages, and generate diverse speech samples. Moreoever, it generates speech up to 20x faster than state-of-the-art auto-regressive models</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://ai.meta.com/blog/voicebox-generative-ai-model-speech/">https://ai.meta.com/blog/voicebox-generative-ai-model-speech/</a></p>
+<h5 id="3-韵律组合"><a href="#3-韵律组合" class="headerlink" title="3. 韵律组合"></a>3. 韵律组合</h5><p>也确实在最近的一些论文发表中，会把TTS+声音感情（韵律）结合在一起作为一个更定制化的声音效果：<br>[原视频待补：copy_E54211E4-75E5-45DF-AB80-B240932850BA.MP4]</p>
+<p>来源:<a target="_blank" rel="noopener" href="https://mega-tts.github.io/mega2_demo/">MegaTTS 2</a></p>
+<h5 id="4-移动端TTS-推理"><a href="#4-移动端TTS-推理" class="headerlink" title="4. 移动端TTS 推理"></a>4. 移动端TTS 推理</h5><p>目前看到的适配vits的移动端 TTS 推理实现:<a target="_blank" rel="noopener" href="https://github.com/weirdseed/Vits-Android-ncnn">vits-ncnn</a>,需要把原始的vits模型先使用<a target="_blank" rel="noopener" href="https://github.com/weirdseed/vits-ncnn-convert-tool">脚本</a>转换为ncnn 格式的模型，再在移动端推理，但仍然存在一些适配问题:</p>
+<p>[原视频待补：Record_2023-09-21-19-38-59_e66403720119a986798dfb.mp4]</p>
+<h3 id="理论发展情况"><a href="#理论发展情况" class="headerlink" title="理论发展情况"></a>理论发展情况</h3><p>语音合成发展从最初可以分为以下几个阶段：</p>
+<ol>
+<li><p>基于语料库拼接合成<br> 需要大规模的真人音库，通过匹配拼接输出语音句子。</p>
+</li>
+<li><p>基于深度学习的参数合成<br> 用深度学习网络构造文本和音库之间的映射，其中的输入的中间结果涉及语言发音分析；输出的中间结果涉及声学参数，声学模型，通过声码器输出。</p>
+</li>
+<li><p>基于神经网络的端到端合成<br> 输入文本输出波形数据，跳过声码器。</p>
+</li>
+</ol>
+<p>目前最新的模型比如Vits，微软的NaturalSpeech, Vall-e 都已经在第三个端到端的模型领域。<br>Speech Processing 模型发展史：<br><img src="/pototaker_blog/images/originals/7c028b78dd95472ca4a7f0fcf4af0b5d.webp" alt="enter image description here"></p>
+<p>在<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.00359.pdf">这篇</a>综述中最近深度学习领域语音任务技术的发展图描述可以看到最近两年才推出的Whisper 和Vall-E 都已经实现了相当跨度的发展，其中比如Whisper还进一步推动了 TTS 领域训练集的构建成本。在整个语音任务领域，仍然是未来可期的。</p>
+<p>在继续之前我们可以先理清下，语音合成效果好坏的标准是什么，目前比较常用的为Mean Opnion Score, MOS,其实还是一种人工从各个维度打分的方法：</p>
+<p><img src="/pototaker_blog/images/originals/0afe8b034a844269aefe92b71155533d.webp" alt="enter image description here"><br><a target="_blank" rel="noopener" href="https://blog.legalhub.cn/2022/03/15/AI-%E6%8A%80%E6%9C%AF%E6%B5%8B%E8%AF%84-%C2%B7-TTS%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3/">AI 技术测评 · TTS文字转语音</a></p>
+<p>这里我们简化一下这个评判标准：</p>
+<p>音色特色声线（无电音，人声音色接近真人） + 人声自然度（语气词，抑扬顿挫） + 情感</p>
+<p>这里有几个比较典型的合成示例：</p>
+<p>音色贴合好：<br>[原视频待补：copy_C396499D-1327-4CE7-AAC3-242F5FB83DB3.MP4]</p>
+<p>增加语气词：</p>
+<p>[原视频待补：RPReplay_Final1695369693.MP4]</p>
+<p>人声自然度（接近真人，比如可以听到口水声音）：[原视频待补：RPReplay_Final1695292634.MP4]</p>
+<p>差不多可以看出这几个示例各自的区别。</p>
+<p>拿最近火热的数字人举例，定制人声的泛化自然度当作我们标准，目前能看到的效果最好的之二应该是：微软的vall-e 和 openAI 最新的语音功能：</p>
+<p>openAI 提到的new tequniche 是闭源的，vall-e 有论文，但是模型和具体代码是闭源的，但我们仍然可以从其论文中窥探到一些他的思路。</p>
+<p>根据vall-e 自己的表述：<br><img src="/pototaker_blog/images/originals/63847dc74bb341e19a0231e31e41bd67.webp" alt="enter image description here"></p>
+<p>他们充分借鉴了LLM 领域的一些架构（Vall-e使用了Transformer结构）和训练集组织方式。同时他们的训练集达到了之前的研究从未达到过的6 万小时音频数据。作为对比，可以看下之前大部分的音频处理领域使用的pretrained 数据集如<a target="_blank" rel="noopener" href="https://keithito.com/LJ-Speech-Dataset/">LJ Speech Dataset</a>一共是 24H 的高质量音频数据。不过这其实也是以往模型的一个缺陷之一，对训练数据的纯度和质量都有较高的要求。</p>
+<p>在vall-e 的论文中：</p>
+<blockquote>
+<p>our data contain more noisy speech and inaccurate transcriptions but<br>provide diverse speakers and prosodies. We believe the proposed approach is robust to the noise and generalize well by leveraging large data.</p>
+</blockquote>
+<p>在保证一定质量的情况下，其对噪声，多人声等训练数据的兼容度都高于其他模型，这使得们对训练集进行了数量可以进行极大扩充，这个方法是不是非常熟悉，就是GPT对训练集的处理思路。</p>
+<p>虽然vall-e 的模型和代码是闭源的，不过已经有大神根据论文“复现”了代码和pretrained 模型：<a target="_blank" rel="noopener" href="https://plachtaa.github.io/">https://plachtaa.github.io/</a></p>
+<p>代码可以根据论文描述重写，但是预训练模型的数据集才是真正难以复现的，复现提供了复现训练数据集和微软数据集的对比：<br><img src="/pototaker_blog/images/originals/4be843e65f59490da5dabab3ce5932e9.webp" alt="enter image description here"></p>
+<p>可以看到训练集语音时长上仍然有较大差距，感兴趣的同学可以直接在<a target="_blank" rel="noopener" href="https://plachtaa.github.io/">这个网站</a>上听听复现结果和微软结果的对比，感受下训练集差距造成的效果差距。</p>
+<p>其实感觉openAI 的这里使用的语音合成技术，应该也会使用类似的思路。</p>
+<h3 id="行业内落地情况"><a href="#行业内落地情况" class="headerlink" title="行业内落地情况"></a>行业内落地情况</h3><h5 id="1-微软Azure"><a href="#1-微软Azure" class="headerlink" title="1. 微软Azure"></a>1. 微软Azure</h5><p>这应该是目前落地使用最广泛的TTS服务，短视频里听到的小帅小美都来源于此。体验链接：<br><a target="_blank" rel="noopener" href="https://speech.microsoft.com/portal/voicegallery">https://speech.microsoft.com/portal/voicegallery</a></p>
+<p>他们最近的成果是前面提到的<a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/project/vall-e-x/vall-e-x/">vall-e</a><br>其声称的3s 高质量克隆的在比如视频音频语言翻译方面是一个目前已经有应用的落地方向，像这样：</p>
+<p>[原视频待补：copy_20730A7A-1FC3-4F09-88A5-0894D209FC37.MP4]</p>
+<p>其实比如spotify等公司已经将这种音频翻译技术用到了他们的播客功能中。<br>除了微软成熟的通用语音方案，最近也有一批和语音相关的创业公司：</p>
+<h5 id="2-Halo有戏（格子互动天使轮）"><a href="#2-Halo有戏（格子互动天使轮）" class="headerlink" title="2. Halo有戏（格子互动天使轮）"></a>2. Halo有戏（格子互动天使轮）</h5><p><img src="/pototaker_blog/images/originals/8e33a90c913346d39f19ff62265bf2de.webp" alt="enter image description here"><br><a target="_blank" rel="noopener" href="https://b23.tv/MM6pE6g">我把自己做成了AI声库，以后不用张嘴说话了？_哔哩哔哩_bilibili</a></p>
+<p>这个视频里介绍的声音克隆和我们的需要的流程非常接近，视频中这位up主在专业的录音棚进行的声音录制，up 主声称他在格子互动做他这一个声库需要好几万。目前视频中看到的能力仅限于音色迁移。</p>
+<h5 id="3-特看科技（天使轮）"><a href="#3-特看科技（天使轮）" class="headerlink" title="3. 特看科技（天使轮）"></a>3. 特看科技（天使轮）</h5><p>[原视频待补：copy_0F90C65C-A7E1-402C-883C-DECCF449EB83.MOV]<br>这个特看科技从其他一些体验视频来看是有定制真人和语音功能的，但他们主推的是lipsync，语音合成能力也只是刚推出不久，视频中的表现属于公司 PR向截选。</p>
+<h5 id="4-voice-ai"><a href="#4-voice-ai" class="headerlink" title="4. voice.ai"></a>4. voice.ai</h5><p>[原视频待补：copy_C396499D-1327-4CE7-AAC3-242F5FB83DB3.MP4]</p>
+<h5 id="5-xeva"><a href="#5-xeva" class="headerlink" title="5. xeva"></a>5. xeva</h5><p>微软前小冰团队成员创业项目，没有实际体验过泛化性，但从其已经能体验到的音频效果来看，自然度模拟程度非常高：<br>[原视频待补：RPReplay_Final1695292634.MP4]</p>
+<p>总结：Halo 是落地效果比较明确的一个，但同时会看到其训练成本要求仍然比较高，需要专业度较高的录音棚和录音设备，同时其目前只提供音色迁移。在开源社区中，优质训练集仍然是一个重要的音素，很多主要通过比如游戏角色现成的高质量音频数据作为训练集来产出高质量的模型。</p>
+<h3 id="自己动手"><a href="#自己动手" class="headerlink" title="自己动手"></a>自己动手</h3><p>如果要定制语音声线，目前使用最广泛的仍然是vits和sovits，其中后者是专门针对歌声的训练和推理方案，两者要发挥最大效果一般并不互相兼容。</p>
+<p>vits git 举出的训练集例子是LJSpeech Dataset，因为这个训练集很多情况下也作为测评集，数据比较规范，每个音频长度都在 1-10s无杂音。</p>
+<p>不过vits训练在开源社区也有许多其他训练脚本如：</p>
+<h4 id="1-VITS-fast-fine-tuning"><a href="#1-VITS-fast-fine-tuning" class="headerlink" title="1.VITS-fast-fine-tuning"></a>1.VITS-fast-fine-tuning</h4><p>训练集的准备可以提供各种音频甚至视频，需要将它们妥善分类，用不同的脚本去进行训练集的预处理来生成最终的音频和文本训练集，该项目也是目前使用最多的开源训练项目之一，项目内置了语音识别，分割，去噪等工具，整体训练流程十分方便。<br><a target="_blank" rel="noopener" href="https://b23.tv/wJ1uGIh">AI声音克隆又进化了，10分钟学会声音克隆！一键启动包发布！_哔哩哔哩_bilibili</a></p>
+<h4 id="2-CjangCjengh版："><a href="#2-CjangCjengh版：" class="headerlink" title="2.CjangCjengh版："></a>2.CjangCjengh版：</h4><p>脚本同样提供了音频分割，文字提取等工具。脚本帮忙组织配置文件如图,许多其他脚本都有类似的训练集语音+文本的训练格式</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/originals/0d89cd6d107b425a8cae5408fd4fb657.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/originals/0d89cd6d107b425a8cae5408fd4fb657.webp" alt="enter image description here"></a></p>
+<h4 id="3-vits-chinese："><a href="#3-vits-chinese：" class="headerlink" title="3.vits_chinese："></a>3.vits_chinese：</h4><p>配置文件额外需要注音等针对中文专门做的配置，不过如语音识别，格式整理等需要使用提供的脚本处理，格式看起来更复杂：</p>
+<p>[原图待补：原图片尚未取回]</p>
+<p>官网上唯一一个模型的效果如下：（效果很接近微软，但具体自定义训练效果仍待考察）</p>
+<p>[原视频待补：Screen-2023-09-22-185422.mp4]</p>
+<p>除了脚本的选择，还有预训练模型的选择，目前许多预训练模型都支持多语言，当然包括中文，不过也可以发现很多开源实现的官方模型在中文推理时会带口音，这可能与预训练模型有关，也可能和训练集本身的质量有关。<br>这里所有训练脚本都提到的一点就是训练集质量，这里也可以说是待训练音频数据的质量，在开源社区中训练效果较好的模型都有比较清晰的训练音频数据来源，比如<a target="_blank" rel="noopener" href="https://www.zywvvd.com/notes/study/audio/speech-classification/classify-audio-ys/">原神——提瓦特大陆语音分类识别 - 又见苍岚</a>等类似的已经预置的动漫&#x2F;游戏作品语音数据，这类数据往往原本就有比较清晰的数据源和有数据原本的一致性。</p>
+<h4 id="开始训练"><a href="#开始训练" class="headerlink" title="开始训练"></a>开始训练</h4><p>这里我们使用训练脚本为VITS-fast-fine-tuning</p>
+<p>预训练模型为：<a target="_blank" rel="noopener" href="https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/G_0.pth">https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/G_0.pth</a> -O .&#x2F;pretrained_models&#x2F;G_0.pth 和 <a target="_blank" rel="noopener" href="https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/D_0.pth">https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/D_0.pth</a> -O .&#x2F;pretrained_models&#x2F;D_0.pth</p>
+<p>音频数据为：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1et4y1z7JG/?spm_id_from=333.337.search-card.all.click&vd_source=e3736e9f787a4990e30f11e30bb0c82f">https://www.bilibili.com/video/BV1et4y1z7JG/?spm_id_from=333.337.search-card.all.click&amp;vd_source=e3736e9f787a4990e30f11e30bb0c82f</a> （一个人讲了90分钟纯净版，，小龙你就是完美的训练素材。。）</p>
+<p>训练机器为：腾讯云T4</p>
+<p>训练过程只需要跟随：<a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1pn1xnFfdLK63gVXDwV4zCXfVeo8c-I-0?usp=sharing#scrollTo=2tzsb5mR6-d9%E5%8D%B3%E5%8F%AF">https://colab.research.google.com/drive/1pn1xnFfdLK63gVXDwV4zCXfVeo8c-I-0?usp=sharing#scrollTo=2tzsb5mR6-d9即可</a></p>
+<p>大概 90 分钟的训练数据，训练了 2 个多小时，效果如下：</p>
+<p>[原视频待补：allen_caixukun.mp4]</p>
+<p>（不保证时效的体验链接：<a target="_blank" rel="noopener" href="https://1834891395f584621c.gradio.live)/">https://1834891395f584621c.gradio.live）</a></p>
+<p>看了一下从其他如<a target="_blank" rel="noopener" href="https://huggingface.co/spaces/zomehwh/vits-models-genshin-bh3">https://huggingface.co/spaces/zomehwh/vits-models-genshin-bh3</a> vits 训练结果来看，对比目前业界最优效果，开源vits 训练出来的结果目前存在的最大问题还是某些音节会出现一听就不是真人发音的错误，只要有一个音漏出马脚，这对整体合成结果的效果影响是十分明显的。</p>
+<p>vits 的结果其实已经相当优秀，比如它已经学到了一些抑扬顿挫，口音等，但是如果要进一步模拟真人，自然度和泛化性上的提升，也许可能需要真的从预训练模型训练集的角度入手，保证数据兼容性和容量来实现更加泛化的预训练模型。</p>
+<p>不过基本上，大家已经可以以极低的成本玩质量已经相当不错的自训练音频模型了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在一开始了解这个领域的时候，看到语音合成经常会被分成通用类和定制类，但实际上究竟什么是好的语音合成，完全是用户自己感知的，就像大模型在toC领域用户感知到的好坏，已经不完全是某个学术领域的定性定量指标了，用户感知虽然不是定性定量，但似乎又可以得出一个大概统一的标准。从chatGPT到AI孙燕姿到GPT语音，</p>
+<p>用户终于成为了那个难以琢磨但又结果明确的学术&#x2F;技术评判指标。</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/publication/speak-foreign-languages-with-your-own-voice-cross-lingual-neural-codec-language-modeling/">https://www.microsoft.com/en-us/research/publication/speak-foreign-languages-with-your-own-voice-cross-lingual-neural-codec-language-modeling/</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2106.06103.pdf">https://arxiv.org/pdf/2106.06103.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.legalhub.cn/2022/03/15/AI-%E6%8A%80%E6%9C%AF%E6%B5%8B%E8%AF%84-%C2%B7-TTS%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3/">https://blog.legalhub.cn/2022/03/15/AI-%E6%8A%80%E6%9C%AF%E6%B5%8B%E8%AF%84-%C2%B7-TTS%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3/</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.00359.pdf">https://arxiv.org/pdf/2305.00359.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2303815">https://cloud.tencent.com/developer/article/2303815</a></p>
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2024/06/23/digital-humans/"><span class="kicker">← 较新的记录</span><span>数字人拆解：形象、声音与交互是三件事</span></a>
-  <a href="/pototaker_blog/2024/02/20/pre-sora-video/"><span class="kicker">更早的记录 →</span><span>前 Sora 时代的视频生成：一次工作流实验</span></a>
+  <a href="/pototaker_blog/2024/06/23/digital-humans/"><span class="kicker">← 较新的记录</span><span>数字人走马观花</span></a>
+  <a href="/pototaker_blog/2024/02/20/pre-sora-video/"><span class="kicker">更早的记录 →</span><span>前SORA时代视频生成浅尝</span></a>
 </nav>
 </main>
     <footer class="site-footer">
