@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>Flutter 外接纹理 2 · potatoker&#39;s blog</title>
+  <meta name="description" content="一、外接纹理框架Flutter 外接纹理一文阐述了Flutter外接纹理的工作方式。 在这篇文章中提到的两个使用场景是Flutter播放视频和Flutter播放webp。 只要是能塞给Flutter中注册过的的SurfaceTexture的，都可以展示在Flutter的Canva…">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2026/10/18/flutter-external-textures-2/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="一、外接纹理框架Flutter 外接纹理一文阐述了Flutter外接纹理的工作方式。 在这篇文章中提到的两个使用场景是Flutter播放视频和Flutter播放webp。  只要是能塞给Flutter中注册过的的SurfaceTexture的，都可以展示在Flutter的Canvas上。 Pag同理,提供了接口可以把数据渲染到pagSurface在这样的结构下，动态外接纹理的类框架如图所示。 其中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 外接纹理 2">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2026/10/18/flutter-external-textures-2/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="一、外接纹理框架Flutter 外接纹理一文阐述了Flutter外接纹理的工作方式。 在这篇文章中提到的两个使用场景是Flutter播放视频和Flutter播放webp。  只要是能塞给Flutter中注册过的的SurfaceTexture的，都可以展示在Flutter的Canvas上。 Pag同理,提供了接口可以把数据渲染到pagSurface在这样的结构下，动态外接纹理的类框架如图所示。 其中">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-01.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-02.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-03.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-04.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-05.png">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-06.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-07.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-08.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-09.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-10.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-11.webp">
+<meta property="article:published_time" content="2026-10-18T04:02:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T13:53:26.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="性能">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-01.webp">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 8 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/%E6%80%A7%E8%83%BD/">性能</a><a href="/pototaker_blog/tags/Flutter/">Flutter</a></div></div>
+    <h1>Flutter 外接纹理 2</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2026-10-18T04:02:00.000Z">2026.10.18</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%A4%96%E6%8E%A5%E7%BA%B9%E7%90%86%E6%A1%86%E6%9E%B6"><span class="toc-text">一、外接纹理框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%A4%96%E6%8E%A5%E7%BA%B9%E7%90%86%E6%A1%86%E6%9E%B6"><span class="toc-text">二、外接纹理框架</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1%E8%A7%A3%E7%A0%81%E7%BA%BF%E7%A8%8B"><span class="toc-text">2.1解码线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1%E5%B0%8F%E5%B0%8Ftips"><span class="toc-text">2.1.1小小tips</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-Flutter%E5%A4%96%E6%8E%A5%E7%BA%B9%E7%90%86%E5%A4%84%E7%90%86%E7%BA%BF%E7%A8%8B"><span class="toc-text">2.2 Flutter外接纹理处理线程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PAG%E7%9A%84%E6%8E%A5%E5%85%A5%E4%B8%8E%E5%AF%B9%E6%AF%94"><span class="toc-text">PAG的接入与对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></nav></details>
+  
+  <div class="prose"><h3 id="一、外接纹理框架"><a href="#一、外接纹理框架" class="headerlink" title="一、外接纹理框架"></a>一、外接纹理框架</h3><p><a href="/pototaker_blog/2026/10/18/flutter-external-textures/">Flutter 外接纹理</a>一文阐述了Flutter外接纹理的工作方式。</p>
+<p>在这篇文章中提到的两个使用场景是Flutter播放视频和Flutter播放webp。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-01.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-01.webp" alt="SurfaceTexture 的生产者与消费者"></a></p>
+<p>只要是能塞给Flutter中注册过的的SurfaceTexture的，都可以展示在Flutter的Canvas上。</p>
+<p>Pag同理,提供了接口可以把数据渲染到pagSurface<br>在这样的结构下，动态外接纹理的类框架如图所示。<br><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-02.webp" alt="外接纹理动态图片类结构"></p>
+<p>其中RenderWorker是动态图片展示的基类：<br>主要包括的方法为控制动图显示的逻辑如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">start();//开始加载资源及播放</span><br><span class="line">stop(); //停止播放</span><br><span class="line">dispose(); //销毁资源</span><br><span class="line">replay(); //重播</span><br><span class="line">play(); // 播放</span><br></pre></td></tr></table></figure>
+
+<p>那么只要接入了对应资源的解码逻辑，播放逻辑等就可以创建新的RenderWorker进行Flutter上的动画展示。</p>
+<h3 id="二、外接纹理框架"><a href="#二、外接纹理框架" class="headerlink" title="二、外接纹理框架"></a>二、外接纹理框架</h3><p>用法是清晰了，那么是否真的随便一个native能跑的动画逻辑就能丢到Flutter上跑呢，我们对比了webp格式下，Flutter原生组件与外界纹理组件的CPU消耗和内存占用。demo场景是同时在一个页面跑7张webp图片，</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-03.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-03.webp" alt="WebP 播放性能分析"></a></p>
+<p>我们把图片从资源加载到展示到Flutter上的逻辑进行时间分析：</p>
+<p><em>实验前置条件</em><br><em>1. 中端机型vivoz5 运存6G, 8核 2.3GHz</em><br><em>2. 帧缓存只缓存前2M的图片帧数据</em></p>
+<p><em>以下实验内容都是基于一个展示7张不同webp的页面，在展示过程中截取10s左右分析这段时间中各个线程对cpu的占用情况</em></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-04.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-04.webp" alt="WebP 帧解码与渲染流程"></a></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-05.png" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-05.png" alt="各线程 CPU 耗时分布"></a></p>
+<p>其中和外接纹理的cpu占用只有解码过程的1&#x2F;2不到，</p>
+<h4 id="2-1解码线程"><a href="#2-1解码线程" class="headerlink" title="2.1解码线程"></a>2.1解码线程</h4><p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-06.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-06.webp" alt="解码线程函数耗时"></a></p>
+<p>占用cpu最多的就是解码逻辑。<br>这里想到的优化方案是把解码过的帧都缓存起来。这样避免了重复解码。应该可以比较明显的降低cpu占用。</p>
+<p>但是因为全缓存帧会有内存的增长，这里需要使用一个全局的manager来记录正在播放的屏幕上的webp，对缓存的帧数据进行管理，包括存储和释放。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-07.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-07.webp" alt="WebP 帧缓存性能对比"></a></p>
+<p>当然，这里究竟该缓存的阈值应该设为多少比较合理可以进一步的根据设备等因素进行动态调整。</p>
+<h4 id="2-1-1小小tips"><a href="#2-1-1小小tips" class="headerlink" title="2.1.1小小tips"></a>2.1.1小小tips</h4><p>webp的帧缓存改造过程中遇到了一个问题，就是是否对于达到了帧缓存上限的webp就可以完全不缓存帧数据呢？</p>
+<p>在阅读webp解码逻辑中发现了一个问题就是webp对帧数据竟然使用了LRUCache，而LRUCache的大小要么为5要么为全部帧数。</p>
+<p>这里有个问题，如果LRUCache大小为5而帧总数大于5，这个Cache岂不是百分百不命中。这里的cache完全没有作用。</p>
+<p>然而事实上，这个cache的作用在我当前使用的fresco的decoder逻辑中，并不完全是为了缓存帧数据方便重复解码时性能优化，而是为了在渲染当前帧时方便绘制前一非关键帧。</p>
+<p>在webp中，非关键帧的信息是基于关键帧编码的diff值，也就是说如果我当前绘制一个非关键帧，必须要在前一帧的基础上再叠加我当前帧的信息才可以完整绘制出当前需要展示的真正画面。</p>
+<p>帧信息中的disposeBackgroundColor属性就是决定渲染当前非关键帧时，是否要clear掉之前的非关键帧，如果不需要clear，这时候就可以直接基于它的前一帧（非关键帧）来渲染，这时候LRUCache的作用就体现出来了。</p>
+<p>因此，即使是帧数据缓存已经达到了我们的阈值上限，我们也不应该把把帧缓冲直接清0，否则性能消耗反而更大。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private int prepareCanvasWithBlending(int previousFrameNumber, Canvas canvas) &#123;</span><br><span class="line">    for (int index = previousFrameNumber; index &gt;= 0; index--) &#123;</span><br><span class="line">        WebpFrameInfo frameInfo = mFrameInfos[index];</span><br><span class="line">        if (!frameInfo.disposeBackgroundColor || !isFullFrame(frameInfo)) &#123;</span><br><span class="line">            // need to draw this frame</span><br><span class="line">            Bitmap bitmap = mFrameBitmapCache.get(index);</span><br><span class="line">            if (bitmap != null &amp;&amp; !bitmap.isRecycled()) &#123;</span><br><span class="line"></span><br><span class="line">                canvas.drawBitmap(bitmap, 0, 0, null);</span><br><span class="line">                if (frameInfo.disposeBackgroundColor) &#123;</span><br><span class="line">                    disposeToBackground(canvas, frameInfo);</span><br><span class="line">                &#125;</span><br><span class="line">                return index + 1;</span><br><span class="line">            &#125; else if (isKeyFrame(index)) &#123;</span><br><span class="line">                return index;</span><br><span class="line">            &#125; /* else keep going */</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return index + 1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>对这一部分感兴趣的小伙伴可以直接查看我这里使用的第三方开源webp解码库：<br><a target="_blank" rel="noopener" href="https://github.com/zjupure/GlideWebpDecoder/blob/master/webp_decoder/src/main/java/com/bumptech/glide/integration/webp/decoder/WebpDecoder.java">https://github.com/zjupure/GlideWebpDecoder/blob/master/webp_decoder/src/main/java/com/bumptech/glide/integration/webp/decoder/WebpDecoder.java</a></p>
+<h4 id="2-2-Flutter外接纹理处理线程"><a href="#2-2-Flutter外接纹理处理线程" class="headerlink" title="2.2 Flutter外接纹理处理线程"></a>2.2 Flutter外接纹理处理线程</h4><p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-08.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-08.webp" alt="外接纹理更新线程耗时"></a></p>
+<p>在Flutter引擎层，Flutter主要是对SurfaceTexture的数据进行获取，主要的性能消耗在对surfaceTexture的updateTextImage操作。整个过程的cpu占用率为17%，与解码过程相比不算多。不过这里是外界纹理的核心，如果外界纹理的性能对比其他Flutter绘制native图形的方案，关键的因素会在这一步。</p>
+<p>如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">修改引擎，共享GL环境和共享纹理。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用ffi，共享native pixel数据</span><br></pre></td></tr></table></figure>
+
+<p>对比其他方案，目前外接纹理的方案更方便于扩展，逻辑更清晰，不需要修改和维护引擎，动图逻辑的展示更加直接。</p>
+<p><strong>渲染线程</strong></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-09.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-09.webp" alt="渲染线程函数耗时"></a></p>
+<p>一些常规的操作，性能消耗并不大，因为瓶颈并不在渲染的原因，基本上都是在等待下一帧数字居。</p>
+<h3 id="PAG的接入与对比"><a href="#PAG的接入与对比" class="headerlink" title="PAG的接入与对比"></a>PAG的接入与对比</h3><p>PAG提供了PagSurface这样的接口供使用者自行接管解码后的图像数据的展示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">surface = new Surface(surfaceTexture);</span><br><span class="line">pagSurface = PAGSurface.FromSurface(surface);</span><br><span class="line">pagPlayer.setSurface(pagSurface);</span><br></pre></td></tr></table></figure>
+
+<p>那么外界纹理中Flutter注册过的surfaceTexutre交给pagSurface就可以了。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-10.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-10.webp" alt="PAG 播放函数耗时"></a></p>
+<p>pag的主要性能消耗逻辑如上表，可以看到比webp的消耗有小了很多</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-11.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-external-textures-2/image-11.webp" alt="WebP 与 PAG 性能对比"></a></p>
+<p>关于pag可以详细参考PAG的相关文档,如果是矢量动画，Pag需要的帧数更少，如果是序列帧动画，序列帧方式的压缩比更高，还可以在设备上使用硬解码，webp则不行。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li><p>无论是什么源数据，只要是能塞给Flutter注册过的surfaceTexuture，都能轻松愉快的使用外接纹理。比如：<br>塞的是安卓native绘制的display数据，那就是安卓platfromView。<br>塞的是视频数据,那就是插件<a target="_blank" rel="noopener" href="https://pub.dev/packages/video_player">video_palyer</a><br>塞得是各种解码库，那就是各种格式的图片或者动图的渲染</p>
+</li>
+<li><p>动图在flutter的展示，目前原生组件支持的类型有限，性能优化有限，外接纹理的方式可以基本无缝把各种图片类型直接接入flutter进行展示。</p>
+</li>
+<li><p>对于动图来讲，外界纹理的性能瓶颈大头还是在解码过程。surfaceTexuture本身的取数据机制会导致一定的性能消耗，但也应该放到根据实际应用中各个方面进行衡量比较。如果是静态图片，目前有ffi的方案可能会在性能上更加优化。</p>
+</li>
+</ol>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2026/10/18/markov-power-method-convergence/"><span class="kicker">← 较新的记录</span><span>如何得到幂法收敛的马尔可夫矩阵</span></a>
+  <a href="/pototaker_blog/2026/10/18/flutter-external-textures/"><span class="kicker">更早的记录 →</span><span>Flutter 外接纹理</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

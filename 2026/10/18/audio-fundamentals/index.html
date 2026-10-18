@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>音频基础知识总结 · potatoker&#39;s blog</title>
+  <meta name="description" content="1. 音频基本参数描述一个音频数据呢，声音即是波： 基本使用了以下参数： 1. 采样率采样率是即其字面意思，采集数据的频率，声音数据其实是波，当采样率越高，音频数据就越接近声音实际的波形。 2. 位宽（位深度）可以理解为每次采样的单个数据的精度，常见的位宽为8bit或者16bit…">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2026/10/18/audio-fundamentals/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="1. 音频基本参数描述一个音频数据呢，声音即是波：  基本使用了以下参数： 1. 采样率采样率是即其字面意思，采集数据的频率，声音数据其实是波，当采样率越高，音频数据就越接近声音实际的波形。 2. 位宽（位深度）可以理解为每次采样的单个数据的精度，常见的位宽为8bit或者16bit 3. 声道数声道数，大家平时接触的也比较多了，分为单声道（Mono）和双声道（Stereo） 4. 比特率每秒传送的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音频基础知识总结">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2026/10/18/audio-fundamentals/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="1. 音频基本参数描述一个音频数据呢，声音即是波：  基本使用了以下参数： 1. 采样率采样率是即其字面意思，采集数据的频率，声音数据其实是波，当采样率越高，音频数据就越接近声音实际的波形。 2. 位宽（位深度）可以理解为每次采样的单个数据的精度，常见的位宽为8bit或者16bit 3. 声道数声道数，大家平时接触的也比较多了，分为单声道（Mono）和双声道（Stereo） 4. 比特率每秒传送的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-01.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-02.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-03.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-04.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-05.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-06.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-07.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-08.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-09.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-10.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-11.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-12.webp">
+<meta property="article:published_time" content="2026-10-18T04:04:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T13:53:26.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="音频">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-01.webp">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 11 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/%E9%9F%B3%E9%A2%91/">音频</a></div></div>
+    <h1>音频基础知识总结</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2026-10-18T04:04:00.000Z">2026.10.18</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%9F%B3%E9%A2%91%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0"><span class="toc-text">1. 音频基本参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%87%87%E6%A0%B7%E7%8E%87"><span class="toc-text">1. 采样率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%8D%E5%AE%BD%EF%BC%88%E4%BD%8D%E6%B7%B1%E5%BA%A6%EF%BC%89"><span class="toc-text">2. 位宽（位深度）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%A3%B0%E9%81%93%E6%95%B0"><span class="toc-text">3. 声道数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%AF%94%E7%89%B9%E7%8E%87"><span class="toc-text">4. 比特率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E9%9F%B3%E9%A2%91%E5%B8%A7"><span class="toc-text">5. 音频帧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%9F%B3%E9%A2%91%E5%BC%80%E5%8F%91%E7%9A%84%E5%85%B7%E4%BD%93%E5%86%85%E5%AE%B9"><span class="toc-text">2.音频开发的具体内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%9F%B3%E9%A2%91%E6%95%B0%E6%8D%AE%E7%9A%84%E9%87%87%E9%9B%86"><span class="toc-text">3. 音频数据的采集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%9F%B3%E9%A2%91%E6%95%B0%E6%8D%AE%E7%9A%84%E6%92%AD%E6%94%BE"><span class="toc-text">4. 音频数据的播放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="toc-text">音频的数据处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9F%B3%E9%87%8F%E8%B0%83%E6%8E%A7"><span class="toc-text">1. 音量调控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%B7%B7%E9%9F%B3"><span class="toc-text">2. 混音</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%9F%B3%E8%89%B2%E7%9A%84%E5%88%86%E6%9E%90"><span class="toc-text">3. 音色的分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E9%99%8D%E5%99%AA"><span class="toc-text">4. 降噪</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></nav></details>
+  
+  <div class="prose"><h3 id="1-音频基本参数"><a href="#1-音频基本参数" class="headerlink" title="1. 音频基本参数"></a>1. 音频基本参数</h3><p>描述一个音频数据呢，声音即是波：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-01.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-01.webp" alt="声音数据反映的是波形"></a></p>
+<p>基本使用了以下参数：</p>
+<h4 id="1-采样率"><a href="#1-采样率" class="headerlink" title="1. 采样率"></a>1. 采样率</h4><p>采样率是即其字面意思，采集数据的频率，声音数据其实是波，当采样率越高，音频数据就越接近声音实际的波形。</p>
+<h4 id="2-位宽（位深度）"><a href="#2-位宽（位深度）" class="headerlink" title="2. 位宽（位深度）"></a>2. 位宽（位深度）</h4><p>可以理解为每次采样的单个数据的精度，常见的位宽为8bit或者16bit</p>
+<h4 id="3-声道数"><a href="#3-声道数" class="headerlink" title="3. 声道数"></a>3. 声道数</h4><p>声道数，大家平时接触的也比较多了，分为单声道（Mono）和双声道（Stereo）</p>
+<h4 id="4-比特率"><a href="#4-比特率" class="headerlink" title="4. 比特率"></a>4. 比特率</h4><p>每秒传送的比特数。<br>结合前面的几个参数，有：</p>
+<p>采样率× 深度× 声道数 &#x3D; 比特率</p>
+<p>当然，比特率越高，表示数据每秒含有的信息量越大，声音数据也就越还原。但是需要注意的是，也有很多时候谈比特率是基于压缩之后的数据，不同压缩算法的效果不同，单纯的比较比特率并不能得出谁的质量最好的比较。</p>
+<h4 id="5-音频帧"><a href="#5-音频帧" class="headerlink" title="5. 音频帧"></a>5. 音频帧</h4><p>视频的帧比较好理解，就是单个的画面，但对于音频帧其长度没有特别的标准，它是根据编解码器和具体应用的需求来决定的。</p>
+<h3 id="2-音频开发的具体内容"><a href="#2-音频开发的具体内容" class="headerlink" title="2.音频开发的具体内容"></a>2.音频开发的具体内容</h3><p>一般音频涉及的开发领域大概有：</p>
+<p>（1）音频采集&#x2F;播放<br>（2）音频算法处理（去噪、静音检测、回声消除、音效处理、功放&#x2F;增强、混音&#x2F;分离，等等）<br>（3）音频的编解码和格式转换<br>（4）音频传输协议的开发（SIP，A2DP、AVRCP，等等）</p>
+<p>在深入了解这些领域之前，音频的编码格式相关内容也是十分重要。</p>
+<p>常见的音频编解码格式有：</p>
+<ol>
+<li>无损格式有：PCM, WAV</li>
+<li>带压缩的格式有： MP3，AAC，OGG，WMA，Opus，FLAC，APE，m4a，AMR，Silk。</li>
+</ol>
+<p>比较常见的有MP3是最普遍的有损压缩格式之一，AAC被许多音乐播放器作为首选的高质量压缩格式，silk早期被运用在skype的语音数据压缩格式，后面结合silk和celt产生了同时适用于语音和音乐的压缩格式Opus被如Whatsapp等软件使用。</p>
+<p>更加具体的压缩格式对比可以参考<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%9F%B3%E9%A2%91%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83">音频编码格式的比较</a>.</p>
+<h3 id="3-音频数据的采集"><a href="#3-音频数据的采集" class="headerlink" title="3. 音频数据的采集"></a>3. 音频数据的采集</h3><p>在安卓系统中，最上层的音频录制类是MediaRecorder,其使用方式最简单直接：<br><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-02.webp" alt="MediaRecorder的基本使用"><br>这样就开始了录制，数据将被以AMR的格式存储在指定的文件路径中。</p>
+<p>MediaRecorder使用的其实是AudioRecord类，这其实是开发声音相关软件更加常用的录音类。其初始化需要填入上文提到的音频参数，然后音频数据将被放入麦克风数据缓存中，由开发者自行读取数据进行操作。有更强的灵活性。</p>
+<p><strong>初始化AudioRecord</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mAudioRecord = new AudioRecord(audioSource, sampleRateInHz, channelConfig, audioFormat, mRecBufSize);</span><br><span class="line">mAudioRecord.startRecording();</span><br></pre></td></tr></table></figure>
+
+<p><strong>从麦克风数据缓存中读取数据</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">readResult = mAudioRecord.read(mRecBuffer, 0, mRecBufSize);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>总结下来使用AudioRecord采集麦克风音频数据的步骤如下：<br>配置参数，初始化内部的音频缓冲区</p>
+<ol>
+<li>开始采集</li>
+<li>需要一个线程，不断地从 AudioRecord 的缓冲区将音频数据“读”出来。</li>
+<li>停止采集，释放资源</li>
+</ol>
+<p>当然，采集到的是原始的音频数据，这时候每次采集可以称为一个音频帧，这时一般可以考虑对一个或多个音频帧进行上述的音频数据处理如降噪，增益，编码等等。当然除了编码以外的许多音频操作既可以放在音频录制阶段也可以放在播放阶段，视情况而定。</p>
+<p>一个完整的音频录制过程可以如图所示：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-03.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-03.webp" alt="使用AudioRecord的录制流程"></a></p>
+<h3 id="4-音频数据的播放"><a href="#4-音频数据的播放" class="headerlink" title="4. 音频数据的播放"></a>4. 音频数据的播放</h3><p>安卓提供了最上层的播放类是MediaPlayer，使用也非常直观：<br><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-04.webp" alt="MediaPlayer的使用"></p>
+<p>安卓还为一些需要播放很多极短音效的场景提供了SoundPool类，用来更加高效的管理和使用播放器.</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-05.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-05.webp" alt="SoundPool使用"></a></p>
+<p>关于SoundPool的使用场景有以下几个特点：</p>
+<ol>
+<li>SoundPool适合 短且对反应速度比较高 的情况（游戏音效或按键声等），文件大小一般控制在几十K到几百K，最好不超过1M</li>
+<li>SoundPool 可以与MediaPlayer同时播放，SoundPool也可以同时播放多个声音；</li>
+<li>SoundPool 最终编解码实现与MediaPlayer相同；</li>
+<li>MediaPlayer只能同时播放一个声音，加载文件有一定的时间，适合文件比较大，响应时间要是那种不是非常高的场景</li>
+</ol>
+<p>一般最常见的如游戏音效场景使用SoundPool是一个不错的选择。</p>
+<p>但是最重要的播放相关的类还是AudioTrack, 可以看作是和AudioRecord对应的一个类。从编码音频文件中读取数据进行解码后送到AudioTrack的缓冲区进行播放。</p>
+<p>一般AudioTrack的工作流程如下，可以看做是AudioRecord的对应：</p>
+<ol>
+<li><p>配置参数，初始化内部的音频播放缓冲区</p>
+</li>
+<li><p>开始播放</p>
+</li>
+<li><p>需要一个线程，不断地向 AudioTrack 的缓冲区“写入”音频数据。</p>
+</li>
+<li><p>停止播放，释放资源</p>
+</li>
+</ol>
+<h3 id="音频的数据处理"><a href="#音频的数据处理" class="headerlink" title="音频的数据处理"></a>音频的数据处理</h3><p>声音的三要素是：响度、音调、音色</p>
+<p>一般的音频数据处理也是针对数据进行变换最终为了达到上面三个要素的变化。</p>
+<h4 id="1-音量调控"><a href="#1-音量调控" class="headerlink" title="1. 音量调控"></a>1. 音量调控</h4><p>音量就是振幅，我们队音频数据的采集，其实最直观的每一次采集的数据可以看做就是振幅</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-06.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-06.webp" alt="振幅的变化"></a></p>
+<p>如图所示，如果想要使得音量增大，只需要对原始的音频数据进行scale即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">while (i &lt; buffer.length) &#123;</span><br><span class="line">    float sample = (float) (buffer[i] &amp; 0xFF | buffer[i+1] &lt;&lt; 8);</span><br><span class="line"></span><br><span class="line">    sample *= gainFactor;</span><br><span class="line"></span><br><span class="line">    if ( sample &gt;= 32767f ) &#123;</span><br><span class="line">        buffer[i] = (byte)0xFF;</span><br><span class="line">        buffer[i+1] =       0x7F;</span><br><span class="line">    &#125; else if ( sample &lt;= -32768f ) &#123;</span><br><span class="line">        buffer[i] =       0x00;</span><br><span class="line">        buffer[i+1] = (byte)0x80;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        int s = (int)( 0.5f + sample );</span><br><span class="line">        buffer[i] = (byte)(s &amp; 0xFF);</span><br><span class="line">        buffer[i+1] = (byte)(s &gt;&gt; 8 &amp; 0xFF);</span><br><span class="line">    &#125;</span><br><span class="line">    i += 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其逻辑就是循环的对声音数组的每个数据进行乘法增大&#x2F;减小。</p>
+<p>当然上面这段代码的最主要部分只是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sample *= gainFactor;</span><br></pre></td></tr></table></figure>
+<p>后面的逻辑都是因为这里我们是把声音byte数据转换为了float数据，这里要对float数据的越界进行保护。</p>
+<h4 id="2-混音"><a href="#2-混音" class="headerlink" title="2. 混音"></a>2. 混音</h4><p>混音也是比较常见的操作之一。混音的基本原理也非常简单，可以理解为如何让两个声音波数据融合在一起呢？最简单就是线性叠加即可，而且效果也不错。</p>
+<p>当然这里还可以对每个音轨数据加上权重以适应不同的场景。</p>
+<p>线性叠加的代码逻辑也非常简单清晰：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; size / <span class="number">2</span>; i++) &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mixVal</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> ( offset &lt; i &amp;&amp; i &lt; offset + sMultiAudioes[<span class="number">1</span>].length)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; trackSize; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (sMultiAudioes[j].length &gt; i)&#123;</span><br><span class="line">                mixVal += sMultiAudioes[j][j == <span class="number">0</span> ? i : i - offset];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">        mixVal +=  sMultiAudioes[<span class="number">0</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mixVal &gt; <span class="number">32767</span>)&#123;</span><br><span class="line">        mixVal = <span class="number">32767</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (mixVal &lt; -<span class="number">32767</span>)&#123;</span><br><span class="line">        mixVal = -<span class="number">32767</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    sMixAudio[i] = (<span class="type">short</span>) mixVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>循环的将所有的音轨数据相加。后面同样是避免数据溢出的逻辑。</p>
+<h4 id="3-音色的分析"><a href="#3-音色的分析" class="headerlink" title="3. 音色的分析"></a>3. 音色的分析</h4><p>音频处理领域有个很有意思的方向即变声。变声的背景是每种声音都有其特有的音色，或者说起特征。为什么有的人说话声音低沉，有的声音高亢，这些都是由什么音频数据决定的呢？</p>
+<p>基本的解释是：<br>除了发音体整体振动产生的音是基音，以基音为标准，物体的各部分（二分之一，三分之一，四分之一等）也在震动，是泛音。泛音的组合决定了特定的音色，并能使人明确地感到基音的响度</p>
+<p>可以说泛音是决定音色的关键。<br>可以这样理解，所有的声音其实不是单纯的有固定频率固定振幅的波形，是由许许多多的泛音合成的。单一音源的波形纯粹，但是往往发声物体的音源并不单一，拿人的声带来讲，其发声原本就是多个音源立体音源，可以参考该文中的<a target="_blank" rel="noopener" href="https://bideyuanli.com/p/3238">动图</a>。</p>
+<p>所以声音看起来的波形是最后多个泛音和基音合成的这样：<br><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-07.webp" alt="自然界声音是多个波形的合成"></p>
+<p>同样是在上面这篇提到的文章中，博主使用了音频分析软件图谱化了两位不同音色的歌手的声音中的泛音：<br><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-08.webp" alt="张惠妹声音泛音图谱"></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-09.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-09.webp" alt="张雨生声音泛音图谱"></a></p>
+<p>可以通过分离出来的泛音看到，张惠妹的泛音少且频率不高，因此音色显得低沉。而张雨生的泛音极多且频率高，显得高亢。</p>
+<p>因此可以看出对音色的分析可能可以通过提取泛音数据来对具体的泛音数据进行频率等分析来得出最终的声音特点。这方面具体的知识推荐参考上述博客。</p>
+<h4 id="4-降噪"><a href="#4-降噪" class="headerlink" title="4. 降噪"></a>4. 降噪</h4><p>降噪的最基本一步当然是提取噪声数据，因而才能去掉噪声数据。</p>
+<p>基础的模型可以看做最终的信号数据由语音和噪声组合而成。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-10.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-10.webp" alt="x和n分别表示语音和噪声，而y表示采集到的信号"></a></p>
+<p>而我们认为噪声数据和语音数据是不相关的，表示为：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-11.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-11.webp" alt="噪声与声音数据不相关"></a></p>
+<p>因此从Y中估计出噪声D，然后抑制D即可得到语音数据</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/audio-fundamentals/image-12.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/audio-fundamentals/image-12.webp" alt="抑制噪声数据得到语音数据"></a></p>
+<p>所以关键点就在于，如何估计噪声数据呢？<br>基本的方法有：</p>
+<ol>
+<li>基于VAD（语音端点检测）检测的噪声估计，VAD对Y进行检测，如果检测没有语音，则认为噪声，这是对噪声的一种估计方法。</li>
+<li>基于全局幅度谱最小原理，该估计认为幅度谱最小的情况必然对应没有语音的时候。</li>
+<li>基于矩阵奇异值分解原理估计噪声的。(这里可以演变为通过机器学习算法那学习)</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>理清了基本脉络之后可以看到在如降噪变声等领域有很大的应用场景和研究前景，可以以此为出发点来进行进一步的研究，可能会有许多更有趣的发现。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/ticktick/1748506">Android音频开发（1）：基础知识</a></p>
+<p><a target="_blank" rel="noopener" href="https://my.oschina.net/daxia/blog/1648281">Android 实现边听边录音探究</a></p>
+<p><a target="_blank" rel="noopener" href="https://bideyuanli.com/p/3238">图解泛音及形成原理</a></p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%9F%B3%E9%A2%91%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83">音频编码格式的比较</a></p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2026/10/18/prototype-delivery-contract/"><span class="kicker">← 较新的记录</span><span>Vibe Coding 之后，我把代码“反编译”成了一份规范</span></a>
+  <a href="/pototaker_blog/2026/10/18/markov-power-method-convergence/"><span class="kicker">更早的记录 →</span><span>如何得到幂法收敛的马尔可夫矩阵</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

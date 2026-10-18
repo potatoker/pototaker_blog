@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e4e6e9">
+  <title>Flutter 初始化过程及其在混合项目中的优化 · potatoker&#39;s blog</title>
+  <meta name="description" content="项目中使用了Flutter混合栈方案来实现Flutter Native混合工程开发，最近做需求遇到了一个问题就是在混合APP中打开第一个Flutter页面的时间耗时很长，即使这个Flutter页面是一个非常简单的页面，打开第二个页面则没有这个问题。 首先，关于Flutter混合项…">
+  <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2026/10/18/flutter-hybrid-initialization/index.html">
+  <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/pototaker_blog/css/index.css">
+  <meta name="description" content="项目中使用了Flutter混合栈方案来实现Flutter Native混合工程开发，最近做需求遇到了一个问题就是在混合APP中打开第一个Flutter页面的时间耗时很长，即使这个Flutter页面是一个非常简单的页面，打开第二个页面则没有这个问题。 首先，关于Flutter混合项目中混合栈的讨论，是另一个可以有许多讨论的主题。大部分的生产环境的APP在尝试使用Flutter时都会考虑使用混合项目的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 初始化过程及其在混合项目中的优化">
+<meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2026/10/18/flutter-hybrid-initialization/index.html">
+<meta property="og:site_name" content="potatoker&#39;s blog">
+<meta property="og:description" content="项目中使用了Flutter混合栈方案来实现Flutter Native混合工程开发，最近做需求遇到了一个问题就是在混合APP中打开第一个Flutter页面的时间耗时很长，即使这个Flutter页面是一个非常简单的页面，打开第二个页面则没有这个问题。 首先，关于Flutter混合项目中混合栈的讨论，是另一个可以有许多讨论的主题。大部分的生产环境的APP在尝试使用Flutter时都会考虑使用混合项目的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-02.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-03.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-04.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-05.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-06.webp">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-07.webp">
+<meta property="article:published_time" content="2026-10-18T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T13:53:26.000Z">
+<meta property="article:author" content="Raymond">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="性能">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-02.webp">
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body id="top" class="reading">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="wordmark" href="/pototaker_blog/" aria-label="potatoker 博客首页">POTATOKER<span class="wordmark-slash"> / </span><span class="wordmark-sub">JOURNAL</span></a>
+      <nav aria-label="主导航">
+        <a href="/pototaker_blog/">文章</a>
+        <a href="/pototaker_blog/archives/">归档</a>
+        <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 12 MIN READ</span></div>
+<article class="article-paper">
+  <header class="article-header">
+    <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/%E6%80%A7%E8%83%BD/">性能</a><a href="/pototaker_blog/tags/Flutter/">Flutter</a></div></div>
+    <h1>Flutter 初始化过程及其在混合项目中的优化</h1>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2026-10-18T04:00:00.000Z">2026.10.18</time></p>
+  </header>
+  
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-FlutterMain%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">1. FlutterMain初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-FlutterNativeView-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">2. FlutterNativeView 初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-FlutterView-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">3. FlutterView 初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Flutter-Bundle%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">4.Flutter Bundle初始化</span></a></li></ol></nav></details>
+  
+  <div class="prose"><p>项目中使用了Flutter混合栈方案来实现Flutter Native混合工程开发，最近做需求遇到了一个问题就是在混合APP中打开第一个Flutter页面的时间耗时很长，即使这个Flutter页面是一个非常简单的页面，打开第二个页面则没有这个问题。</p>
+<p>首先，关于Flutter混合项目中混合栈的讨论，是另一个可以有许多讨论的主题。大部分的生产环境的APP在尝试使用Flutter时都会考虑使用混合项目的形式，那不可避免就会遇到混合栈问题，关于混合栈也有许多讨论，其中咸鱼对混合栈的实践比较早，具体可以参照其<a target="_blank" rel="noopener" href="https://www.yuque.com/xytech/flutter/hhnyho">官方博客</a>。</p>
+<p>我们的团队对混合栈选取了复用单引擎，复用FlutterView的方案。即在Flutter的一系列初始化流程完成以后，FlutterNativeView（负责初始化引擎），FlutterView将会交给外部容器，一直被复用与管理，因此初始化的重担就交给了第一个被展示的Flutter页面。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">if(viewFactory.isFirstLauch())&#123;</span><br><span class="line"></span><br><span class="line">    HybridStackManager.setCurFlutterFragment(this); //FlutterFragment是承载FlutterView的容器，这个容器是可能会一直变化的。</span><br><span class="line"></span><br><span class="line">    getFlutterDelegate().runFlutterBundle(); // runBundle初始化，主要加载了Flutter库以及执行入口方法，详见后文</span><br><span class="line">    GeneratedPluginRegistrant.registerWith(pluginRegistry); //注册本地Plugin Channel</span><br><span class="line">    HybridStackManager.registerWith(pluginRegistry.registrarFor(&quot;com.example.flutter.stackmanager.hybridstackmanager.HybridStackManager&quot;)); //注册混合栈Channel</span><br><span class="line">    FlutterAPIManifest.registerAPIs(flutterAPIModuleFactory,  viewFactory.getFlutterView(getContext())); // 注册各种业务Channel</span><br><span class="line">    viewFactory.setFirstLaunch(false);</span><br><span class="line">    </span><br><span class="line">&#125; else &#123;</span><br><span class="line">    openFlutterByBundle(getArguments()); //打开新路由</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是FlutterView的容器FlutterFragment的初始化方法的截取代码。<br>这里的逻辑是：</p>
+<ol>
+<li>定义FlutterFragment为FlutterView的容器，每有一个新的Flutter页面需要间隔native展示，会初始化新的FlutterFragment.</li>
+<li>初始化FlutterFragment需要判断是否为第一次初始化Flutter,如果是第一次，则进行Flutter相关的初始化：runFlutterBundle与注册channel.</li>
+<li>Flutter初始化需要做的当然不止第二步中的内容，前面还需要初始化FlutterVeiew&#x2F;FlutterNativeView这部分工作放到了FlutterFragment<code>onCreate</code>方法中.</li>
+<li>如果之前已经初始化过Flutter，则执行<code>openFlutterByBundle</code>,打开新的Flutter页面(根据路由选择Flutter内部Navigator或是Native创建新的FlutterActivity的方式).</li>
+</ol>
+<p>第一次打开Flutter承担了所有的Flutter初始化工作，会导致混合工程打开第一个Flutter页面很慢。</p>
+<p>关于Flutter初始化流程，仍然可以参考咸鱼：<a target="_blank" rel="noopener" href="https://www.yuque.com/xytech/flutter/cqhql4">关于Flutter初始化流程，我必须告诉你的是…</a></p>
+<p>整个初始化流程包括以下四个主要部分：</p>
+<h3 id="1-FlutterMain初始化"><a href="#1-FlutterMain初始化" class="headerlink" title="1. FlutterMain初始化"></a>1. FlutterMain初始化</h3><p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-02.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-02.webp" alt="FlutterMain 初始化"></a></p>
+<p>主要内容为：<br><strong>1. 初始化配置信息</strong><br><strong>2. 加载Flutter so</strong><br><strong>3. 初始化资源</strong></p>
+<p>初始化配置信息是获取如flutter资源<code>flutter_assets</code>，dart编译后的<code>vm_snapshot_data</code>等这些资源的地址.<br><img src="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-03.webp" alt="Flutter 资源路径配置"></p>
+<p>初始化资源则是加载这些资源到内存，听起来展示一个比较耗时的操作，不过这个过程对平台主线程来讲是异步的。在后面的初始化过程中会监听并且确保这个异步过程已经完成。<br><img src="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-04.webp" alt="Flutter 资源加载"></p>
+<h3 id="2-FlutterNativeView-初始化"><a href="#2-FlutterNativeView-初始化" class="headerlink" title="2. FlutterNativeView 初始化"></a>2. FlutterNativeView 初始化</h3><p>主要内容为：<br><strong>1. 初始化FlutterView用到的Surface</strong><br><strong>2. 初始化Engine</strong></p>
+<p><img src="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-05.webp" alt="FlutterNativeView 初始化"><br>FlutterNativeView正如它的名字暗示的一样，他其实就是FlutterView和引擎Native方法的一个桥梁。所以它做的两个关键的事情就是：</p>
+<pre><code>初始化engine、创建Surface
+</code></pre>
+<p>attach方法引发的一系列引擎中的初始化包括：AndroidShellHolder，PlatformViewAndroid等，引擎中许多需要平台上下文来创建的对象和设置逻辑都在这里。</p>
+<p>在这一步创建的FlutterJNI对象给FlutterView用于调用引擎的各种Native方法，同时Surface交给FlutterView，同时又是在引擎内部初始化的，引擎的Canvas可以画数据给这个Surface。FlutterNativeView就这样充当了桥梁的作用。</p>
+<p>另外，前文提到的FlutterMain初始化又异步的资源初始化过程，在FlutterNativeView初始化之前需要等待这部分完成。在<code>FlutterActivityDelegate</code>中可以看到有确保这一点的逻辑：</p>
+<p><img src="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-06.webp" alt="等待资源初始化完成"><br>这一部分涉及的内容既有平台又有引擎，详细内容可以直接查看源码。</p>
+<p>由于前面的资源初始话操作，以及FlutterNativeView本身需要的一系列JNI调用引起的引擎初始化和surface的初始化，要执行到这一步是整个flutter初始化的耗时的大头</p>
+<h3 id="3-FlutterView-初始化"><a href="#3-FlutterView-初始化" class="headerlink" title="3. FlutterView 初始化"></a>3. FlutterView 初始化</h3><p>主要内容为<br><strong>1. 注册SurfaceHolder监听</strong><br><strong>2. 初始化Flutter需要用到的一些系统Channel</strong></p>
+<p>这里就是平台层面的一些操作，比较清晰。</p>
+<h3 id="4-Flutter-Bundle初始化"><a href="#4-Flutter-Bundle初始化" class="headerlink" title="4.Flutter Bundle初始化"></a>4.Flutter Bundle初始化</h3><p>主要内容为<br><strong>1. 获取Flutter入口方法（例如main方法）的closure。</strong><br><strong>2. 获取FlutterLibrary。</strong><br><strong>3. 调用Flutter的入口方法。</strong></p>
+<p>最后的Flutter Bundle其实就是引擎初始化以后已经到dart层了，准备开始执行预编译完成的Flutter代码了，因此主要工作就是载入Flutter代码用到的库，以及执行Flutter入口方法。走到这一步Flutter的初始化就结束了。同时注意到每个Flutter Engine其实是跑在独立的线程的：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hZ5PUvPpMlEYBAJggGnJsw">深入理解Flutter引擎线程模式</a></p>
+<p>Mobile平台上面每一个Engine实例启动的时候会为UI，GPU，IO Runner各自创建一个新的线程。所有Engine实例共享同一个Platform Runner和线程。</p>
+</blockquote>
+<p>所以反映在Native UI线程上，这个过程是异步的。如果你的页面dart层面也有一些需要预先初始化的内容，那么预先Rundle也可以帮助节省一些时间，先把dart代码run起来再说，后面直接Push新的页面即可。</p>
+<p>缕清了这四个关键的初始化步骤以后，结合我们的混合栈实现方式，可以发现，FlutterMain初始化在Application初始化执行都可以，而FlutterNativeView和FlutterView初始化因为我们的混合栈只持有它们各自一个单例对象，也是可以在App初始化的早期就可以进行了，比如首屏页面。</p>
+<p>所以这三个初始化步骤在我们的混合栈方案的前提下，完全可以写到一起：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public  void initFlutterViewInHybirdStack(Activity activity, boolean needInitFlutterMain)&#123;</span><br><span class="line">    if (needInitFlutterMain) &#123; //FlutterMain初始化</span><br><span class="line">        FlutterMain.startInitialization(Global.getContext());</span><br><span class="line">    &#125;</span><br><span class="line">    viewFactory = XFlutterViewFactory.getInstance();</span><br><span class="line">    if(getFlutterDelegate() == null) &#123;</span><br><span class="line">        flutterDelegate = new XFlutterActivityDelegate(activity, viewFactory);</span><br><span class="line">    &#125;</span><br><span class="line">    if (flutterAPIModuleFactory == null) &#123;</span><br><span class="line">        flutterAPIModuleFactory = new FlutterAPIModuleFactory();</span><br><span class="line">    &#125;</span><br><span class="line">    pluginRegistry = getFlutterDelegate();</span><br><span class="line">    getFlutterDelegate().onCreate(); // FlutterNativeView与FlutterView初始化</span><br><span class="line"></span><br><span class="line">    getFlutterDelegate().runFlutterBundle();  // Flutter Bundle初始化</span><br><span class="line">    GeneratedPluginRegistrant.registerWith(pluginRegistry);</span><br><span class="line">    HybridStackManager.registerWith(pluginRegistry.registrarFor(&quot;com.example.flutter.stackmanager.hybridstackmanager.HybridStackManager&quot;));</span><br><span class="line">    FlutterAPIManifest.registerAPIs(flutterAPIModuleFactory, viewFactory.getFlutterView(activity));</span><br><span class="line">    viewFactory.setFirstLaunch(false);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最终在项目中，我将这些初始化流程逻辑抽取到一个Manger中进行管理，并在欢迎页执行这些初始化流程，这样就避免了第一次打开一个简单的Flutter页面也会出现loading或者黑屏的情况。</p>
+<p>粗略的对<code> FlutterMain初始化</code>、<code>FlutterNativeView 和 FlutterView 初始化</code>、<code>Flutter Bundle</code> 做了在native主线程耗的时统计：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-07.webp" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/oldblogs/flutter-hybrid-initialization/image-07.webp" alt="Flutter 初始化各阶段耗时"></a></p>
+<p>可以看到<code>FlutterNativeView 和 FlutterView 初始化</code>占用的时间最多，因为它需要进行一次与引擎初始化相关的JNI操作，同时需要监听前面的资源加载的回调来进行下一步操作。runbundle则对于平台线程来讲是一个异步操作计时几乎没有，但仍然是需要执行一些dart层面的逻辑(加载库，调用入口),可以提前执行。</p>
+<p>从这里的统计来看，将上述步骤全部提前可以至少节省快半秒的时间，runbundle中则还有一些时间没有统计到。</p>
+<p>在 debug 模式下，第一次打开 Flutter 页面的黑屏阶段，就是等待整个 Flutter 初始化到执行 FlutterMain 入口的时间。优化后这部分时间提前到闪屏页或者主页面，不过这是debug模式下，没有经过优化的启动过程，体验十分不好，release模式下初始化问题会有比较大的缓解，但是缕清初始化的过程也是一个理解Flutter工作原理的角度。</p>
+<p>整个初始化过程其实涉及的内容非常多，尤其是后面FluterNativeView与runBundle的初始化过程还有许多细节值得进一步研究，本文只是针对初始化的大步骤进行了梳理，用于应用层面初始化流程的优化。想要完全理清Flutter初始化过程还是要回到源码中去。</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://www.yuque.com/xytech/flutter/cqhql4">关于Flutter初始化流程，我必须告诉你的是…</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hZ5PUvPpMlEYBAJggGnJsw">深入理解Flutter引擎线程模式</a></p>
+<p><a target="_blank" rel="noopener" href="http://gityuan.com/2019/06/15/flutter_ui_draw/">Flutter渲染机制—UI线程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.yuque.com/xytech/flutter/xwskd4">Flutter新锐专家之路：混合开发篇</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.im/post/5c419c07f265da616f703aa1">微店的Flutter混合栈管理技术实践</a></p>
+</div>
+  <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
+</article>
+<nav class="post-navigation" aria-label="相邻文章">
+  <a href="/pototaker_blog/2026/10/18/flutter-external-textures/"><span class="kicker">← 较新的记录</span><span>Flutter 外接纹理</span></a>
+  <a href="/pototaker_blog/2025/11/20/realtime-voice-2025/"><span class="kicker">更早的记录 →</span><span>Her走到哪里了</span></a>
+</nav>
+</main>
+    <footer class="site-footer">
+      <span>© 2026 Raymond</span>
+      <span class="footer-note">WRITE &amp; CODE</span>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
+  </div>
+</body>
+</html>
