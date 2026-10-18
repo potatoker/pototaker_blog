@@ -42,7 +42,7 @@
   <line x1="94" y1="348" x2="470" y2="348" stroke="#EAECF0" stroke-width="2"/>
 
   <text class="cn label" x="94" y="389" fill="#B54708">工作</text>
-  <text class="cn body" x="164" y="389">人与 AI 快速尝试、运行、听感与调整</text>
+  <text class="cn body" x="164" y="389">人与 AI 快速尝试、运行、体验与调整</text>
   <text class="cn label" x="94" y="438" fill="#B54708">验收</text>
   <text class="cn body" x="164" y="438">负责人亲自确认“这一版效果成立”</text>
   <rect x="94" y="486" width="376" height="78" rx="20" fill="#FFF7ED" stroke="#FEDF89" stroke-width="2"/>
