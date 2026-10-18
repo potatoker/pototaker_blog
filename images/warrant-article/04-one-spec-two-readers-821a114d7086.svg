@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="788" viewBox="0 0 1400 788" role="img" aria-labelledby="title desc">
+  <title id="title">一份规范服务人、AI 和程序</title>
+  <desc id="desc">同一份结构化事实源可以渲染为面向人的技术文档、面向 AI 的生产资料包，并由确定性程序执行门禁。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F7FAFF"/><stop offset="1" stop-color="#F7F3FF"/></linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5B8FF9"/><stop offset="1" stop-color="#7A5AF8"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#344054" flood-opacity=".13"/></filter>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:43px;font-weight:700;fill:#101828}.sub{font-size:22px;fill:#667085}
+      .head{font-size:28px;font-weight:700;fill:#101828}.body{font-size:20px;fill:#475467}.core{font-size:28px;font-weight:700;fill:#FFFFFF}
+    </style>
+  </defs>
+  <rect width="1400" height="788" rx="32" fill="url(#bg)"/>
+  <text class="cn title" x="72" y="81">同一份规范，第一次有了三种读法</text>
+  <text class="cn sub" x="72" y="122">人看得懂、AI 能消费、程序能计算——不是维护三份互相漂移的文档</text>
+
+  <g filter="url(#shadow)">
+    <rect x="501" y="224" width="398" height="275" rx="34" fill="url(#core)"/>
+    <rect x="67" y="250" width="316" height="225" rx="28" fill="#FFFFFF"/>
+    <rect x="1017" y="250" width="316" height="225" rx="28" fill="#FFFFFF"/>
+    <rect x="542" y="585" width="316" height="135" rx="28" fill="#FFFFFF"/>
+  </g>
+  <text class="cn" x="700" y="286" text-anchor="middle" font-size="38">📦</text>
+  <text class="cn core" x="700" y="342" text-anchor="middle">代码配套规范</text>
+  <text class="cn" x="700" y="386" text-anchor="middle" font-size="20" fill="#E9D7FE">结构化事实 · 决策 · 证据 · 指纹</text>
+  <rect x="568" y="421" width="264" height="49" rx="24" fill="#FFFFFF" fill-opacity=".16"/>
+  <text class="cn" x="700" y="453" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">single source of truth</text>
+
+  <text class="cn" x="113" y="309" font-size="34">👤</text>
+  <text class="cn head" x="166" y="309">人</text>
+  <text class="cn body" x="113" y="359">读图、读解释</text>
+  <text class="cn body" x="113" y="398">讨论范围与取舍</text>
+  <text class="cn body" x="113" y="437">沿源码指针查证</text>
+
+  <text class="cn" x="1063" y="309" font-size="34">✦</text>
+  <text class="cn head" x="1116" y="309">AI</text>
+  <text class="cn body" x="1063" y="359">读取稳定 schema</text>
+  <text class="cn body" x="1063" y="398">迁移、同步、改代码</text>
+  <text class="cn body" x="1063" y="437">只处理本次变化</text>
+
+  <text class="cn" x="578" y="640" font-size="31">⚙</text>
+  <text class="cn head" x="628" y="640">程序</text>
+  <text class="cn body" x="578" y="684">跑用例 · 算覆盖 · 拦错误</text>
+
+  <g fill="none" stroke="#98A2B3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M485 351H407"/><path d="M423 336L407 351L423 366"/>
+    <path d="M915 351H993"/><path d="M977 336L993 351L977 366"/>
+    <path d="M700 515V561"/><path d="M685 545L700 561L715 545"/>
+  </g>
+
+  <rect x="348" y="156" width="704" height="48" rx="24" fill="#101828"/>
+  <text class="cn" x="700" y="188" text-anchor="middle" font-size="21" font-weight="700" fill="#FFFFFF">人用来理解 · AI 用来实现 · 程序用来验收</text>
+</svg>

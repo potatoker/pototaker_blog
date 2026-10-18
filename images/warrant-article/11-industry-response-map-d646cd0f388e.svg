@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">Vibe Coding 上下文缺口的四类业界回答</title>
+  <desc id="desc">面对 Vibe Coding 中意图、上下文和验收依据的丢失，SDD 尝试在实现前保存意图，Reverse Spec 从已有代码恢复事实，Conformance 方法证明跨实现一致，Harness Engineering 将上下文与反馈持续嵌入开发环境。四条路线最终汇向可追溯规约、参考实现、可执行证据和版本身份。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#F7F5FF"/>
+    </linearGradient>
+    <linearGradient id="result" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#EEF4FF"/>
+      <stop offset="1" stop-color="#F4F0FF"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#344054" flood-opacity=".10"/>
+    </filter>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:42px;font-weight:700;fill:#101828}
+      .sub{font-size:21px;fill:#667085}
+      .head{font-size:24px;font-weight:700;fill:#101828}
+      .body{font-size:17px;fill:#475467}
+      .tag{font-size:15px;font-weight:700}
+      .result{font-size:20px;font-weight:700;fill:#344054}
+    </style>
+  </defs>
+
+  <rect width="1400" height="820" rx="32" fill="url(#bg)"/>
+  <text class="cn title" x="72" y="78">上下文丢失以后，业界并不只有“多写文档”这一种回答</text>
+  <text class="cn sub" x="72" y="118">四条路线分别解决不同时间点的问题，最后汇向同一组可交付工件</text>
+
+  <rect x="72" y="158" width="1256" height="78" rx="24" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
+  <text class="cn head" x="112" y="192" fill="#B54708">共同起点</text>
+  <text class="cn body" x="112" y="218">效果已经跑通，但意图留在对话里；代码保留了实现，却没有自动说明正式范围、决策理由和验收标准。</text>
+
+  <g>
+    <rect x="72" y="286" width="284" height="292" rx="28" fill="#FFFFFF" filter="url(#shadow)"/>
+    <rect x="98" y="312" width="98" height="32" rx="16" fill="#F4F0FF"/>
+    <text class="cn tag" x="147" y="334" text-anchor="middle" fill="#6941C6">BEFORE</text>
+    <text class="cn head" x="98" y="389">SDD</text>
+    <text class="cn body" x="98" y="427">先把意图写进 spec</text>
+    <text class="cn body" x="98" y="457">再让 AI 计划和实现</text>
+    <rect x="98" y="490" width="232" height="62" rx="18" fill="#F9F5FF"/>
+    <text class="cn body" x="116" y="516" fill="#6941C6">解决：以后怎样</text>
+    <text class="cn body" x="116" y="541" fill="#6941C6">不再丢上下文</text>
+
+    <rect x="396" y="286" width="284" height="292" rx="28" fill="#FFFFFF" filter="url(#shadow)"/>
+    <rect x="422" y="312" width="98" height="32" rx="16" fill="#EEF4FF"/>
+    <text class="cn tag" x="471" y="334" text-anchor="middle" fill="#175CD3">AFTER</text>
+    <text class="cn head" x="422" y="389">Reverse Spec</text>
+    <text class="cn body" x="422" y="427">从入口、测试和 Git</text>
+    <text class="cn body" x="422" y="457">恢复当前事实与缺口</text>
+    <rect x="422" y="490" width="232" height="62" rx="18" fill="#EEF4FF"/>
+    <text class="cn body" x="440" y="516" fill="#175CD3">解决：过去已经丢的</text>
+    <text class="cn body" x="440" y="541" fill="#175CD3">怎样诚实找回来</text>
+
+    <rect x="720" y="286" width="284" height="292" rx="28" fill="#FFFFFF" filter="url(#shadow)"/>
+    <rect x="746" y="312" width="98" height="32" rx="16" fill="#ECFDF3"/>
+    <text class="cn tag" x="795" y="334" text-anchor="middle" fill="#027A48">VERIFY</text>
+    <text class="cn head" x="746" y="389">Conformance</text>
+    <text class="cn body" x="746" y="427">用 golden、contract</text>
+    <text class="cn body" x="746" y="457">和 parity 验证另一实现</text>
+    <rect x="746" y="490" width="232" height="62" rx="18" fill="#ECFDF3"/>
+    <text class="cn body" x="764" y="516" fill="#027A48">解决：做完以后</text>
+    <text class="cn body" x="764" y="541" fill="#027A48">怎样证明一致</text>
+
+    <rect x="1044" y="286" width="284" height="292" rx="28" fill="#FFFFFF" filter="url(#shadow)"/>
+    <rect x="1070" y="312" width="98" height="32" rx="16" fill="#FFF7ED"/>
+    <text class="cn tag" x="1119" y="334" text-anchor="middle" fill="#B54708">LOOP</text>
+    <text class="cn head" x="1070" y="389">Harness</text>
+    <text class="cn body" x="1070" y="427">把上下文、工具、gate</text>
+    <text class="cn body" x="1070" y="457">和反馈嵌入环境</text>
+    <rect x="1070" y="490" width="232" height="62" rx="18" fill="#FFF7ED"/>
+    <text class="cn body" x="1088" y="516" fill="#B54708">解决：后续变化中</text>
+    <text class="cn body" x="1088" y="541" fill="#B54708">怎样持续可信</text>
+  </g>
+
+  <g fill="none" stroke="#98A2B3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M214 590V626"/>
+    <path d="M538 590V626"/>
+    <path d="M862 590V626"/>
+    <path d="M1186 590V626"/>
+    <path d="M206 617L214 626L222 617"/>
+    <path d="M530 617L538 626L546 617"/>
+    <path d="M854 617L862 626L870 617"/>
+    <path d="M1178 617L1186 626L1194 617"/>
+  </g>
+
+  <rect x="164" y="634" width="1072" height="126" rx="30" fill="url(#result)" stroke="#B9A7F8" stroke-width="2"/>
+  <text class="cn head" x="700" y="676" text-anchor="middle" fill="#6941C6">共同汇合点：不是一篇更长的文档，而是一组可计算的交付物</text>
+  <text class="cn result" x="700" y="722" text-anchor="middle">可追溯规约　+　参考实现　+　可执行证据　+　版本身份</text>
+</svg>

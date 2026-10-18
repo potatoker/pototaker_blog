@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800" role="img" aria-labelledby="title desc">
+  <title id="title">正向 SDD 与反向规范恢复</title>
+  <desc id="desc">正向 SDD 从行为需求、技术设计和任务出发生成代码；已有原型从对话与试验抵达代码后，再沿代码、测试、Git 与问答恢复规范。右侧展示声明来源可信度分级。</desc>
+  <defs>
+    <linearGradient id="bg15" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#F9F5FF"/></linearGradient>
+    <filter id="shadow15" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#344054" flood-opacity=".09"/></filter>
+    <style>.cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}.title{font-size:42px;font-weight:700;fill:#101828}.sub{font-size:21px;fill:#667085}.head{font-size:21px;font-weight:700;fill:#101828}.body{font-size:17px;fill:#667085}.tag{font-size:16px;font-weight:700}</style>
+  </defs>
+  <rect width="1400" height="800" rx="32" fill="url(#bg15)"/>
+  <text class="cn title" x="72" y="78">SDD 解决正向路径，已有原型需要反向恢复</text>
+  <text class="cn sub" x="72" y="116">两条路线在代码处相遇；越靠近 WHY，越需要明确来源与人工确认</text>
+  <rect x="62" y="170" width="920" height="244" rx="28" fill="#FFFFFF" filter="url(#shadow15)"/>
+  <rect x="92" y="196" width="120" height="34" rx="17" fill="#F4F0FF"/><text class="cn tag" x="152" y="219" text-anchor="middle" fill="#6941C6">FORWARD SDD</text>
+  <g>
+    <rect x="100" y="272" width="160" height="74" rx="20" fill="#F4F0FF"/><text class="cn head" x="180" y="316" text-anchor="middle">行为需求</text>
+    <rect x="300" y="272" width="160" height="74" rx="20" fill="#F4F0FF"/><text class="cn head" x="380" y="316" text-anchor="middle">技术设计</text>
+    <rect x="500" y="272" width="160" height="74" rx="20" fill="#F4F0FF"/><text class="cn head" x="580" y="316" text-anchor="middle">任务拆分</text>
+    <rect x="700" y="260" width="220" height="98" rx="22" fill="#EEF4FF" stroke="#84ADFF" stroke-width="2"/><text class="cn body" x="810" y="290" text-anchor="middle" fill="#175CD3">AI IMPLEMENTS</text><text class="cn head" x="810" y="327" text-anchor="middle">代码</text>
+  </g>
+  <g stroke="#7A5AF8" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M270 309H286"/><path d="M276 299L287 309L276 319"/><path d="M470 309H486"/><path d="M476 299L487 309L476 319"/><path d="M670 309H686"/><path d="M676 299L687 309L676 319"/></g>
+
+  <rect x="62" y="450" width="920" height="244" rx="28" fill="#FFFFFF" filter="url(#shadow15)"/>
+  <rect x="92" y="476" width="136" height="34" rx="17" fill="#FFF7ED"/><text class="cn tag" x="160" y="499" text-anchor="middle" fill="#B54708">REVERSE PATH</text>
+  <rect x="100" y="552" width="160" height="74" rx="20" fill="#FFF7ED"/><text class="cn head" x="180" y="596" text-anchor="middle">对话</text>
+  <rect x="300" y="552" width="160" height="74" rx="20" fill="#FFF7ED"/><text class="cn head" x="380" y="596" text-anchor="middle">反复试验</text>
+  <rect x="500" y="540" width="160" height="98" rx="22" fill="#EEF4FF" stroke="#84ADFF" stroke-width="2"/><text class="cn body" x="580" y="570" text-anchor="middle" fill="#175CD3">REFERENCE</text><text class="cn head" x="580" y="607" text-anchor="middle">代码</text>
+  <rect x="700" y="540" width="220" height="98" rx="22" fill="#ECFDF3" stroke="#6CE9A6" stroke-width="2"/><text class="cn body" x="810" y="570" text-anchor="middle" fill="#027A48">RECOVER</text><text class="cn head" x="810" y="607" text-anchor="middle">可执行规约</text>
+  <g stroke="#F79009" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M270 589H286"/><path d="M276 579L287 589L276 599"/><path d="M470 589H486"/><path d="M476 579L487 589L476 599"/><path d="M670 589H686"/><path d="M676 579L687 589L676 599"/></g>
+
+  <rect x="1032" y="170" width="306" height="524" rx="28" fill="#FFFFFF" filter="url(#shadow15)"/>
+  <text class="cn tag" x="1064" y="210" fill="#344054">PROVENANCE</text>
+  <text class="cn head" x="1064" y="253">声明必须标出依据</text>
+  <rect x="1064" y="294" width="242" height="70" rx="18" fill="#ECFDF3"/><text class="cn head" x="1088" y="324" fill="#027A48">PROVEN</text><text class="cn body" x="1088" y="348">有运行证据</text>
+  <rect x="1064" y="386" width="242" height="70" rx="18" fill="#EEF4FF"/><text class="cn head" x="1088" y="416" fill="#175CD3">SOURCED</text><text class="cn body" x="1088" y="440">能指回代码或原话</text>
+  <rect x="1064" y="478" width="242" height="70" rx="18" fill="#FFF7ED"/><text class="cn head" x="1088" y="508" fill="#B54708">INFERRED</text><text class="cn body" x="1088" y="532">根据上下文推断</text>
+  <rect x="1064" y="570" width="242" height="70" rx="18" fill="#F2F4F7"/><text class="cn head" x="1088" y="600" fill="#475467">UNKNOWN</text><text class="cn body" x="1088" y="624">停止猜测，交还给人</text>
+  <text class="cn body" x="700" y="752" text-anchor="middle">反推不是把文档写满，而是诚实地区分：知道什么、依据什么、仍缺什么</text>
+</svg>

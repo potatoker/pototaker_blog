@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="788" viewBox="0 0 1400 788" role="img" aria-labelledby="title desc">
+  <title id="title">从代码反推规范的路径</title>
+  <desc id="desc">从正式入口沿真实执行路径追踪阶段、数据、路由、配置和外部调用，排除无法从正式入口抵达的实验代码，再通过规范化问答补齐原因。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#F9F5FF"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#344054" flood-opacity=".1"/></filter>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:43px;font-weight:700;fill:#101828}.sub{font-size:22px;fill:#667085}
+      .n{font-size:18px;font-weight:700;fill:#FFFFFF}.head{font-size:23px;font-weight:700;fill:#101828}.body{font-size:18px;fill:#667085}
+    </style>
+  </defs>
+  <rect width="1400" height="788" rx="32" fill="url(#bg)"/>
+  <text class="cn title" x="72" y="81">不是“总结仓库”，而是追踪正式执行路径</text>
+  <text class="cn sub" x="72" y="122">先从代码拿回 WHAT，再用规范化问答补回代码里没有的 WHY</text>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="228" width="216" height="210" rx="24" fill="#FFFFFF"/>
+    <rect x="326" y="228" width="216" height="210" rx="24" fill="#FFFFFF"/>
+    <rect x="594" y="228" width="216" height="210" rx="24" fill="#FFFFFF"/>
+    <rect x="862" y="228" width="216" height="210" rx="24" fill="#FFFFFF"/>
+    <rect x="1130" y="201" width="216" height="264" rx="24" fill="#101828"/>
+  </g>
+  <circle cx="101" cy="272" r="24" fill="#5B8FF9"/><text class="cn n" x="101" y="279" text-anchor="middle">1</text>
+  <text class="cn head" x="86" y="329">正式入口</text><text class="cn body" x="86" y="371">API / command</text><text class="cn body" x="86" y="402">本次真实入口</text>
+  <circle cx="369" cy="272" r="24" fill="#5B8FF9"/><text class="cn n" x="369" y="279" text-anchor="middle">2</text>
+  <text class="cn head" x="354" y="329">阶段与数据</text><text class="cn body" x="354" y="371">输入 / 输出</text><text class="cn body" x="354" y="402">handoff 字段</text>
+  <circle cx="637" cy="272" r="24" fill="#7A5AF8"/><text class="cn n" x="637" y="279" text-anchor="middle">3</text>
+  <text class="cn head" x="622" y="329">路由与配置</text><text class="cn body" x="622" y="371">条件 / 优先级</text><text class="cn body" x="622" y="402">默认值 / 部署值</text>
+  <circle cx="905" cy="272" r="24" fill="#7A5AF8"/><text class="cn n" x="905" y="279" text-anchor="middle">4</text>
+  <text class="cn head" x="890" y="329">外部依赖</text><text class="cn body" x="890" y="371">模型 / prompt</text><text class="cn body" x="890" y="402">安全 / 降级</text>
+  <circle cx="1173" cy="245" r="24" fill="#34D399"/><text class="cn n" x="1173" y="252" text-anchor="middle">5</text>
+  <text class="cn head" x="1158" y="302" fill="#FFFFFF">生产技术切片</text>
+  <text class="cn body" x="1158" y="347" fill="#D0D5DD">范围可读</text><text class="cn body" x="1158" y="383" fill="#D0D5DD">来源可查</text><text class="cn body" x="1158" y="419" fill="#D0D5DD">变化可算</text>
+
+  <g fill="none" stroke="#98A2B3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M284 333H310"/><path d="M300 322L312 333L300 344"/>
+    <path d="M552 333H578"/><path d="M568 322L580 333L568 344"/>
+    <path d="M820 333H846"/><path d="M836 322L848 333L836 344"/>
+    <path d="M1088 333H1114"/><path d="M1104 322L1116 333L1104 344"/>
+  </g>
+
+  <rect x="178" y="526" width="468" height="126" rx="24" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
+  <text class="cn head" x="214" y="568">灰色支线：不自动纳入</text>
+  <text class="cn body" x="214" y="608">旧版本、实验 prompt、测评入口、临时排查代码</text>
+  <path d="M413 526V475H702V449" fill="none" stroke="#F79009" stroke-width="4" stroke-dasharray="10 10"/>
+  <circle cx="702" cy="449" r="8" fill="#F79009"/>
+
+  <rect x="752" y="526" width="468" height="126" rx="24" fill="#F4F0FF" stroke="#B9A7F8" stroke-width="2"/>
+  <text class="cn head" x="788" y="568">规范化问答：只问代码答不了的事</text>
+  <text class="cn body" x="788" y="608">为什么偏离默认值？为什么延期？什么变化会推翻这个决定？</text>
+  <path d="M986 526V484H1238V465" fill="none" stroke="#7A5AF8" stroke-width="4"/>
+  <path d="M1225 480L1238 465L1251 480" fill="none" stroke="#7A5AF8" stroke-width="4" stroke-linecap="round"/>
+
+  <rect x="365" y="696" width="670" height="54" rx="27" fill="#EEF4FF"/>
+  <text class="cn" x="700" y="731" text-anchor="middle" font-size="21" font-weight="700" fill="#175CD3">代码给证据，人补意图；AI 不能替人编一个“为什么”</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="788" viewBox="0 0 1400 788" role="img" aria-labelledby="title desc">
+  <title id="title">产品、生产规约和实现的三层关系</title>
+  <desc id="desc">PRD 说明用户为什么需要，生产技术规约说明任何实现必须满足什么，代码说明当前效果怎样实现，但不自动标出项目的行为主线和权威边界。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#EEF4FF"/></linearGradient>
+    <linearGradient id="spec" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#EEF4FF"/><stop offset="1" stop-color="#F4F0FF"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#344054" flood-opacity=".12"/></filter>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:43px;font-weight:700;fill:#101828}.sub{font-size:22px;fill:#667085}
+      .label{font-size:20px;font-weight:700}.head{font-size:30px;font-weight:700;fill:#101828}.body{font-size:21px;fill:#475467}
+    </style>
+  </defs>
+  <rect width="1400" height="788" rx="32" fill="url(#bg)"/>
+  <text class="cn title" x="72" y="81">从产品意图到线上实现，中间还缺一层</text>
+  <text class="cn sub" x="72" y="122">一份可查证、可验收、能同时交给人和 AI 的生产技术规约</text>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="190" width="342" height="410" rx="28" fill="#FFFFFF"/>
+    <rect x="529" y="163" width="342" height="464" rx="28" fill="url(#spec)" stroke="#7A5AF8" stroke-width="4"/>
+    <rect x="968" y="190" width="342" height="410" rx="28" fill="#FFFFFF"/>
+  </g>
+
+  <rect x="126" y="225" width="94" height="38" rx="19" fill="#EAF2FF"/>
+  <text class="cn label" x="173" y="251" text-anchor="middle" fill="#175CD3">PRD</text>
+  <text class="cn head" x="126" y="311">用户为什么需要</text>
+  <text class="cn body" x="126" y="366">• 产品目标与体验</text>
+  <text class="cn body" x="126" y="411">• 用户流程与边界</text>
+  <text class="cn body" x="126" y="456">• 功能优先级</text>
+  <rect x="126" y="509" width="264" height="55" rx="16" fill="#F2F4F7"/>
+  <text class="cn" x="258" y="544" text-anchor="middle" font-size="19" fill="#667085">不负责展开所有技术细节</text>
+
+  <rect x="565" y="198" width="156" height="38" rx="19" fill="#7A5AF8"/>
+  <text class="cn label" x="643" y="224" text-anchor="middle" fill="#FFFFFF">生产技术规约</text>
+  <text class="cn head" x="565" y="286">任何实现必须满足什么</text>
+  <text class="cn body" x="565" y="341">• 正式范围与阶段</text>
+  <text class="cn body" x="565" y="386">• 数据 handoff 与路由</text>
+  <text class="cn body" x="565" y="431">• 配置、决策与例外</text>
+  <text class="cn body" x="565" y="476">• 行为用例与验收证据</text>
+  <rect x="565" y="531" width="270" height="60" rx="18" fill="#FFFFFF"/>
+  <text class="cn" x="700" y="568" text-anchor="middle" font-size="21" font-weight="700" fill="#6941C6">人和 AI 的共同协议</text>
+
+  <rect x="1004" y="225" width="94" height="38" rx="19" fill="#E8F8F1"/>
+  <text class="cn label" x="1051" y="251" text-anchor="middle" fill="#027A48">CODE</text>
+  <text class="cn head" x="1004" y="311">当前效果如何还原</text>
+  <text class="cn body" x="1004" y="366">• 函数与模块</text>
+  <text class="cn body" x="1004" y="411">• 具体语言与框架</text>
+  <text class="cn body" x="1004" y="456">• 正式代码 + 实验遗迹</text>
+  <rect x="1004" y="509" width="264" height="55" rx="16" fill="#F2F4F7"/>
+  <text class="cn" x="1136" y="544" text-anchor="middle" font-size="19" fill="#667085">信息最多，但没有权威层级</text>
+
+  <path d="M448 394H503" stroke="#98A2B3" stroke-width="7" stroke-linecap="round"/>
+  <path d="M485 377L504 394L485 411" fill="none" stroke="#98A2B3" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M887 394H942" stroke="#98A2B3" stroke-width="7" stroke-linecap="round"/>
+  <path d="M924 377L943 394L924 411" fill="none" stroke="#98A2B3" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="283" y="681" width="834" height="64" rx="32" fill="#101828"/>
+  <text class="cn" x="700" y="722" text-anchor="middle" font-size="23" font-weight="700" fill="#FFFFFF">代码是参考实现；规约才是跨语言、跨团队、跨 AI 的交付边界</text>
+</svg>

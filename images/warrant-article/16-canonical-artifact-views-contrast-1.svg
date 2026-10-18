@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="700" viewBox="0 0 1400 700" role="img" aria-labelledby="title desc">
+  <title id="title">Canonical artifact 生成三种消费视图</title>
+  <desc id="desc">代码、测试、Git 与规范化问答共同形成 canonical artifact，再分别生成供人阅读的技术文档、供 AI 使用的交接包和供程序执行的验收输入。</desc>
+  <defs>
+    <linearGradient id="bg16" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#EFF8FF"/></linearGradient>
+    <linearGradient id="core16" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5B8FF9"/><stop offset="1" stop-color="#7A5AF8"/></linearGradient>
+    <filter id="shadow16" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="9" stdDeviation="13" flood-color="#344054" flood-opacity=".1"/></filter>
+    <style>.cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}.title{font-size:42px;font-weight:700;fill:#101828}.sub{font-size:21px;fill:#667085}.head{font-size:22px;font-weight:700;fill:#101828}.body{font-size:17px;fill:#667085}.tag{font-size:16px;font-weight:700}</style>
+  </defs>
+  <rect width="1400" height="700" rx="32" fill="url(#bg16)"/>
+  <text class="cn title" x="72" y="78">技术文档只是同一事实源的一种视图</text>
+  <text class="cn sub" x="72" y="116">先形成可查证的 canonical artifact，再为人、AI 和程序生成不同消费形态</text>
+  <rect x="64" y="184" width="286" height="390" rx="28" fill="#FFFFFF" filter="url(#shadow16)"/>
+  <text class="cn tag" x="98" y="226" fill="#175CD3">EVIDENCE INPUTS</text>
+  <rect x="98" y="266" width="218" height="58" rx="17" fill="#EEF4FF"/><text class="cn body" x="207" y="301" text-anchor="middle">代码与配置</text>
+  <rect x="98" y="344" width="218" height="58" rx="17" fill="#EEF4FF"/><text class="cn body" x="207" y="379" text-anchor="middle">测试与运行结果</text>
+  <rect x="98" y="422" width="218" height="58" rx="17" fill="#EEF4FF"/><text class="cn body" x="207" y="457" text-anchor="middle">Git 历史</text>
+  <rect x="98" y="500" width="218" height="58" rx="17" fill="#FFF7ED"/><text class="cn body" x="207" y="535" text-anchor="middle">规范化问答</text>
+
+  <rect x="446" y="168" width="430" height="422" rx="32" fill="url(#core16)" filter="url(#shadow16)"/>
+  <text class="cn tag" x="661" y="218" text-anchor="middle" fill="#E9D7FE">SYSTEM OF RECORD</text>
+  <text class="cn" x="661" y="266" text-anchor="middle" font-size="29" font-weight="700" fill="#FFFFFF">Canonical artifact</text>
+  <rect x="490" y="312" width="342" height="74" rx="20" fill="#F8FAFC"/><text class="cn body" x="661" y="356" text-anchor="middle" fill="#344054">范围 · 图谱 · 约束 · 决策</text>
+  <rect x="490" y="408" width="342" height="74" rx="20" fill="#F8FAFC"/><text class="cn body" x="661" y="452" text-anchor="middle" fill="#344054">源码指针 · 版本 · Provenance</text>
+  <rect x="490" y="504" width="342" height="50" rx="20" fill="#EEF4FF" stroke="#B2CCFF" stroke-width="2"/><text class="cn body" x="661" y="535" text-anchor="middle" fill="#175CD3">唯一维护的事实源</text>
+
+  <rect x="972" y="184" width="364" height="390" rx="28" fill="#FFFFFF" filter="url(#shadow16)"/>
+  <text class="cn tag" x="1006" y="226" fill="#6941C6">GENERATED VIEWS</text>
+  <rect x="1006" y="268" width="296" height="78" rx="19" fill="#EEF4FF"/><text class="cn head" x="1030" y="301" fill="#175CD3">给人</text><text class="cn body" x="1030" y="329">技术文档、流程图、决策说明</text>
+  <rect x="1006" y="372" width="296" height="78" rx="19" fill="#F4F0FF"/><text class="cn head" x="1030" y="405" fill="#6941C6">给 AI</text><text class="cn body" x="1030" y="433">交接包、diff、源码指针</text>
+  <rect x="1006" y="476" width="296" height="78" rx="19" fill="#ECFDF3"/><text class="cn head" x="1030" y="509" fill="#027A48">给程序</text><text class="cn body" x="1030" y="537">golden、义务、验收 gate</text>
+  <g stroke="#7A5AF8" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M370 379H426"/><path d="M412 365L428 379L412 393"/><path d="M896 379H952"/><path d="M938 365L954 379L938 393"/></g>
+  <text class="cn body" x="700" y="650" text-anchor="middle">不是维护三份规范，而是从同一组结构化事实生成三种视图</text>
+</svg>

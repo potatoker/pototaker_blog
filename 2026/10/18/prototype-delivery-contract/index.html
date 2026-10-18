@@ -4,29 +4,47 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e4e6e9">
-  <title>warrant · 立据 · potatoker&#39;s blog</title>
-  <meta name="description" content="把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。 最短理解：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、生产对照还是增量同步」。日常操作以对 Agent 说话为主——不必在 Termi…">
+  <title>Vibe Coding 之后，我把代码“反编译”成了一份规范 · potatoker&#39;s blog</title>
+  <meta name="description" content="从「某 AI 音乐项目」的一次原型交接，到一套给人和 AI 共同使用的 production artifact Draft · 2026-07-30 Vibe Coding 最爽的一刻，是你用几句话让一个想法真的跑了起来。 最尴尬的一刻，是另一个人接过仓库，问： “所以，这套东西…">
   <link rel="canonical" href="https://potatoker.github.io/pototaker_blog/2026/10/18/prototype-delivery-contract/index.html">
   <link rel="icon" href="/pototaker_blog/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/pototaker_blog/css/index.css">
-  <meta name="description" content="把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。  最短理解：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、生产对照还是增量同步」。日常操作以对 Agent 说话为主——不必在 Terminal 和 Agent 之间来回切换。Agent 负责读代码、追问和编排；Warrant CLI 由 Agent 代跑">
+  <meta name="description" content="从「某 AI 音乐项目」的一次原型交接，到一套给人和 AI 共同使用的 production artifact Draft · 2026-07-30  Vibe Coding 最爽的一刻，是你用几句话让一个想法真的跑了起来。 最尴尬的一刻，是另一个人接过仓库，问： “所以，这套东西到底是怎么跑的？” 我们在把「某 AI 音乐项目」从原型推向正式上线时，正面撞上了这个问题。 musicProtot">
 <meta property="og:type" content="article">
-<meta property="og:title" content="warrant · 立据">
+<meta property="og:title" content="Vibe Coding 之后，我把代码“反编译”成了一份规范">
 <meta property="og:url" content="https://potatoker.github.io/pototaker_blog/2026/10/18/prototype-delivery-contract/index.html">
 <meta property="og:site_name" content="potatoker&#39;s blog">
-<meta property="og:description" content="把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。  最短理解：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、生产对照还是增量同步」。日常操作以对 Agent 说话为主——不必在 Terminal 和 Agent 之间来回切换。Agent 负责读代码、追问和编排；Warrant CLI 由 Agent 代跑">
+<meta property="og:description" content="从「某 AI 音乐项目」的一次原型交接，到一套给人和 AI 共同使用的 production artifact Draft · 2026-07-30  Vibe Coding 最爽的一刻，是你用几句话让一个想法真的跑了起来。 最尴尬的一刻，是另一个人接过仓库，问： “所以，这套东西到底是怎么跑的？” 我们在把「某 AI 音乐项目」从原型推向正式上线时，正面撞上了这个问题。 musicProtot">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-handoff.svg">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-fingerprint.svg">
-<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-scope.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/19-prototype-production-responsibility-8886339434bf.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/01-context-gap-bb3476b04bf4.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/12-spec-vibe-loop-d99ec1f09af2.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/02-missing-layer-8ee120638f92.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/13-context-and-rot-b3a534b3085e.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/14-release-artifact-b608a1be5417.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/03-code-to-spec-4c19273f2912.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/05-prototype-handoff-ecea76e0caee.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/04-one-spec-two-readers-821a114d7086.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/21-acceptance-ci-ed153c48ec39.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/06-self-invalidating-4e62d0b545a4.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/10-intent-to-implementation-29b1e748c59e.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/11-industry-response-map-d646cd0f388e.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/20-sdd-levels-martin-fowler-a7db78ee3c8a.png">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/15-forward-reverse-spec-ecbd9a84c42d.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/16-canonical-artifact-views-contrast-1.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/08-reproducible-source-59e413f3ff87.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/07-warrant-system-350c28596286.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/17-warrant-release-lifecycle-932f25cd0574.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/09-future-boundaries-contrast-2.svg">
+<meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/18-evidence-carrying-change-contrast-2.svg">
 <meta property="article:published_time" content="2026-10-18T08:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-18T13:29:38.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="工程实践">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="软件交付">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/diagrams/warrant-handoff.svg">
+<meta name="twitter:image" content="https://potatoker.github.io/pototaker_blog/images/warrant-article/19-prototype-production-responsibility-8886339434bf.svg">
 <meta name="generator" content="Hexo 7.1.1"></head>
 <body id="top" class="reading">
   <a class="skip-link" href="#main">跳到正文</a>
@@ -39,502 +57,1971 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 41 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 66 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a><a href="/pototaker_blog/tags/AI-Agent/">AI Agent</a><a href="/pototaker_blog/tags/%E8%BD%AF%E4%BB%B6%E4%BA%A4%E4%BB%98/">软件交付</a></div></div>
-    <h1>warrant · 立据</h1>
+    <h1>Vibe Coding 之后，我把代码“反编译”成了一份规范</h1>
     <p class="article-byline">Raymond<span> / </span><time datetime="2026-10-18T08:00:00.000Z">2026.10.18</time></p>
   </header>
   
-  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#30-%E7%A7%92%E5%BC%80%E5%A7%8B"><span class="toc-text">30 秒开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85-warrant"><span class="toc-text">1. 安装 warrant</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E9%97%AD%E7%8E%AF%EF%BC%9A%E4%B8%80%E5%8F%A5%E8%AF%9D-onboard"><span class="toc-text">最小闭环：一句话 onboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%84%B6%E5%90%8E%E5%91%8A%E8%AF%89-Agent-%E4%BD%A0%E5%9C%A8%E5%81%9A%E5%93%AA%E4%B8%80%E6%AD%A5"><span class="toc-text">2. 然后告诉 Agent 你在做哪一步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">这到底是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Warrant-%E4%BB%93%E5%BA%93-vs-%E5%AE%BF%E4%B8%BB%E4%BB%93%E5%BA%93"><span class="toc-text">Warrant 仓库 vs 宿主仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="toc-text">流程长什么样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%A7%84%E5%88%99%EF%BC%9A%E5%A3%B0%E6%98%8E%E9%9A%8F%E5%AF%B9%E8%B1%A1%E6%8C%87%E7%BA%B9%E5%A4%B1%E6%95%88"><span class="toc-text">核心规则：声明随对象指纹失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%81%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-text">谁做什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A71-%E5%AE%89%E8%A3%85%E3%80%81%E5%8D%87%E7%BA%A7%E4%B8%8E%E5%A4%9A%E5%AE%BF%E4%B8%BB"><span class="toc-text">§1 安装、升级与多宿主</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A71-1-%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85"><span class="toc-text">§1.1 首次安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A71-2-%E4%B8%80%E4%BB%BD%E5%AE%89%E8%A3%85%EF%BC%8C%E5%A4%9A%E4%B8%AA%E5%AE%BF%E4%B8%BB"><span class="toc-text">§1.2 一份安装，多个宿主</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A71-3-%E5%8D%87%E7%BA%A7%E5%88%B0%E6%96%B0%E7%89%88%E6%9C%AC"><span class="toc-text">§1.3 升级到新版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A72-%E5%8E%9F%E5%9E%8B%E4%BE%A7%EF%BC%9A%E7%AC%AC%E4%B8%80%E6%AC%A1-onboard"><span class="toc-text">§2 原型侧：第一次 onboard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A73-%E5%8E%9F%E5%9E%8B%E4%BE%A7%EF%BC%9A%E5%8F%91%E7%89%88"><span class="toc-text">§3 原型侧：发版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A74-%E9%83%A8%E7%BD%B2%E4%BE%A7%EF%BC%9A%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%AF%B9%E7%85%A7"><span class="toc-text">§4 部署侧：第一次对照</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A75-%E5%90%8E%E7%BB%AD%E7%89%88%E6%9C%AC%EF%BC%9A%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5"><span class="toc-text">§5 后续版本：增量同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%BE%A7%E5%8F%91%E6%96%B0%E7%89%88"><span class="toc-text">原型侧发新版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%BE%A7%E8%B7%9F%E6%96%B0%E7%89%88"><span class="toc-text">部署侧跟新版</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%C2%A76-%E6%89%BF%E8%AE%A4%E5%B7%AE%E5%BC%82%EF%BC%9A%E5%8F%AA%E5%90%8C%E6%AD%A5%E4%B8%80%E4%B8%AA%E5%8D%95%E5%85%83"><span class="toc-text">§6 承认差异：只同步一个单元</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%BE%A7%EF%BC%88%E4%B8%80%E6%AC%A1%E6%80%A7%EF%BC%89%EF%BC%9A%E6%8A%8A%E8%BF%99%E4%B8%AA%E9%80%BB%E8%BE%91%E5%A3%B0%E6%98%8E%E4%B8%BA-sync-unit"><span class="toc-text">原型侧（一次性）：把这个逻辑声明为 sync unit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%BE%A7%EF%BC%88%E4%B8%80%E6%AC%A1%E6%80%A7%EF%BC%8C%E4%BB%85%E6%9C%AA%E8%A3%85%E8%BF%87-warrant-%E6%97%B6%EF%BC%89%EF%BC%9A%E5%AE%89%E8%A3%85"><span class="toc-text">部署侧（一次性，仅未装过 warrant 时）：安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%BE%A7%EF%BC%88%E6%AF%8F%E6%AC%A1%E8%B7%9F%E9%9A%8F%E6%97%B6%EF%BC%89%EF%BC%9A%E5%8F%AA%E5%8F%96%E8%BF%99%E4%B8%AA%E5%8D%95%E5%85%83"><span class="toc-text">部署侧（每次跟随时）：只取这个单元</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E9%80%9F%E6%9F%A5"><span class="toc-text">常用操作速查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83"><span class="toc-text">附录：终端指令参考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-1-%E5%AE%89%E8%A3%85"><span class="toc-text">§A.1 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-2-%E5%8D%87%E7%BA%A7"><span class="toc-text">§A.2 升级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-3-onboard"><span class="toc-text">§A.3 onboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-4-%E5%8F%91%E7%89%88"><span class="toc-text">§A.4 发版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-5-audit"><span class="toc-text">§A.5 audit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%C2%A7A-6-sync"><span class="toc-text">§A.6 sync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%8F%E7%A7%8D%E4%BA%A7%E7%89%A9%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-text">每种产物是什么意思？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA-Python-%E5%BA%93%E6%8E%A5%E5%85%A5"><span class="toc-text">作为 Python 库接入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Warrant-%E4%B8%8D%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-text">Warrant 不做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8A%B6%E6%80%81"><span class="toc-text">状态</span></a></li></ol></nav></details>
+  <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#01%EF%BD%9C%E9%97%AE%E9%A2%98%EF%BC%9A%E4%BB%A3%E7%A0%81%E7%95%99%E4%B8%8B%E6%9D%A5%E4%BA%86%EF%BC%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%BB%E5%93%AA%E4%BA%86%EF%BC%9F"><span class="toc-text">01｜问题：代码留下来了，上下文去哪了？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E8%87%AA%E7%84%B6%E7%9A%84%E8%A7%A3%E6%B3%95%EF%BC%9A%E8%AE%A9%E6%89%80%E6%9C%89%E4%BA%BA%E5%8F%AA%E6%94%B9%E5%90%8C%E4%B8%80%E4%BB%BD-spec"><span class="toc-text">一个自然的解法：让所有人只改同一份 spec</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%86%E4%B8%A4%E5%8F%A5%E8%AF%9D%E5%B0%B1%E8%83%BD%E8%AF%95%E5%87%BA%E6%9D%A5%EF%BC%8C%E8%B0%81%E8%BF%98%E4%BC%9A%E5%85%88%E6%94%B9%E6%96%87%E6%A1%A3%EF%BC%9F"><span class="toc-text">但两句话就能试出来，谁还会先改文档？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%BA%A4%E7%BB%99%E7%BA%BF%E4%B8%8A%E6%97%B6%EF%BC%8C%E7%A9%B6%E7%AB%9F%E8%A6%81%E8%BF%98%E5%8E%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">原型交给线上时，究竟要还原什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A3%85%E4%B8%8B%E4%BA%86%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82%EF%BC%8C%E5%8D%B4%E4%B8%8D%E6%98%AF%E6%9C%80%E9%AB%98%E5%B1%82%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-text">代码装下了实现细节，却不是最高层上下文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%86%E4%B8%80%E4%BB%BD%E4%B8%8D%E5%8F%82%E4%B8%8E%E4%BA%A4%E4%BB%98%E7%9A%84%E8%A7%84%E7%BA%A6%EF%BC%8C%E4%B9%9F%E5%8F%AA%E6%98%AF%E4%B8%80%E7%AF%87%E6%BC%82%E4%BA%AE%E6%96%87%E6%A1%A3"><span class="toc-text">但一份不参与交付的规约，也只是一篇漂亮文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E7%BA%A6%E6%80%8E%E6%A0%B7%E8%BF%9B%E5%85%A5%E6%B5%81%E7%A8%8B%EF%BC%9F%E6%8A%8A%E2%80%9C%E5%8F%91%E7%89%88%E2%80%9D%E5%AE%9A%E4%B9%89%E6%88%90%E4%BA%A4%E4%BB%98"><span class="toc-text">规约怎样进入流程？把“发版”定义成交付</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02%EF%BD%9C%E5%AE%9E%E8%B7%B5%EF%BC%9A%E6%80%8E%E6%A0%B7%E4%BB%8E%E4%BB%A3%E7%A0%81%E6%81%A2%E5%A4%8D%E4%B8%80%E4%BB%BD%E5%8F%AF%E9%AA%8C%E6%94%B6%E7%9A%84%E8%A7%84%E7%BA%A6%EF%BC%9F"><span class="toc-text">02｜实践：怎样从代码恢复一份可验收的规约？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E6%8A%8A%E6%95%B4%E4%B8%AA%E4%BB%93%E5%BA%93%E4%BA%A4%E7%BB%99-AI%EF%BC%8C%E4%B8%8D%E8%A1%8C%E5%90%97%EF%BC%9F"><span class="toc-text">直接把整个仓库交给 AI，不行吗？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BD%AC%E6%8A%98%EF%BC%9A%E4%BB%8E%E2%80%9C%E6%80%BB%E7%BB%93%E4%BB%93%E5%BA%93%E2%80%9D%E5%8F%98%E6%88%90%E2%80%9C%E8%BF%BD%E8%B8%AA%E5%85%A5%E5%8F%A3%E2%80%9D"><span class="toc-text">第一次转折：从“总结仓库”变成“追踪入口”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%86%E4%BB%A3%E7%A0%81%E5%8F%AA%E8%83%BD%E5%9B%9E%E7%AD%94-WHAT%EF%BC%8C%E4%B8%8D%E8%83%BD%E5%9B%9E%E7%AD%94-WHY"><span class="toc-text">但代码只能回答 WHAT，不能回答 WHY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%BD%AC%E6%8A%98%EF%BC%9A%E8%BF%99%E4%BB%BD%E8%A7%84%E8%8C%83%E4%B8%8D%E5%8F%AA%E6%98%AF%E7%BB%99%E4%BA%BA%E7%9C%8B%E7%9A%84"><span class="toc-text">第二次转折：这份规范不只是给人看的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AA%E6%9C%89%E8%AF%B4%E6%98%8E%E8%BF%98%E4%B8%8D%E5%A4%9F%EF%BC%9A%E8%BF%98%E8%A6%81%E6%9C%89%E4%B8%80%E5%A5%97%E9%AA%8C%E6%94%B6-CI"><span class="toc-text">只有说明还不够：还要有一套验收 CI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E7%BA%A6%E7%9C%9F%E6%AD%A3%E8%BF%9B%E5%85%A5%E4%BA%A4%E4%BB%98%EF%BC%9A%E8%BF%87%E6%9C%9F%E6%97%B6%E5%BF%85%E9%A1%BB%E4%B8%BB%E5%8A%A8%E5%A4%B1%E6%95%88"><span class="toc-text">规约真正进入交付：过期时必须主动失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03%EF%BD%9C%E4%B8%9A%E7%95%8C%EF%BC%9AVibe-Coding-%E4%B9%8B%E5%90%8E%EF%BC%8C%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%9C%A8%E5%BE%80%E5%93%AA%E9%87%8C%E8%B5%B0%EF%BC%9F"><span class="toc-text">03｜业界：Vibe Coding 之后，软件开发在往哪里走？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Vibe-Coding-%E6%94%B9%E5%8F%98%E7%9A%84%EF%BC%8C%E4%B8%8D%E5%8F%AA%E6%98%AF%E5%86%99%E4%BB%A3%E7%A0%81%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-text">Vibe Coding 改变的，不只是写代码的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E8%8C%83%E5%BC%8F%E9%87%8C%EF%BC%8C%E7%9C%9F%E6%AD%A3%E8%A2%AB%E9%AA%8C%E6%94%B6%E7%9A%84%E4%BA%A4%E4%BB%98%E7%89%A9%E6%98%AF%E2%80%9C%E6%95%88%E6%9E%9C%E2%80%9D"><span class="toc-text">新范式里，真正被验收的交付物是“效果”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E5%88%B0%E5%89%8D%E9%9D%A2%E7%9A%84-SDD%EF%BC%9A%E4%B8%9A%E7%95%8C%E6%8A%8A-spec-%E6%8E%A8%E5%88%B0%E4%BA%86%E5%A4%9A%E8%BF%9C%EF%BC%9F"><span class="toc-text">回到前面的 SDD：业界把 spec 推到了多远？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SDD-%E8%A7%A3%E5%86%B3%E6%AD%A3%E5%90%91%E8%B7%AF%E5%BE%84%EF%BC%8C%E5%B7%B2%E6%9C%89%E5%8E%9F%E5%9E%8B%E9%9C%80%E8%A6%81%E5%8F%8D%E5%90%91%E8%B7%AF%E5%BE%84"><span class="toc-text">SDD 解决正向路径，已有原型需要反向路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E6%8E%A8%E5%87%BA%E6%9D%A5%E7%9A%84%EF%BC%8C%E4%B8%8D%E8%83%BD%E5%8F%AA%E6%98%AF%E4%B8%80%E7%AF%87%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3"><span class="toc-text">反推出来的，不能只是一篇技术文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Coding-%E5%8F%98%E4%BE%BF%E5%AE%9C%E4%BB%A5%E5%90%8E%EF%BC%8C%E4%BB%80%E4%B9%88%E6%89%8D%E6%98%AF%E9%A1%B9%E7%9B%AE%E7%9C%9F%E6%AD%A3%E7%9A%84%E2%80%9C%E6%BA%90%E7%A0%81%E2%80%9D%EF%BC%9F"><span class="toc-text">Coding 变便宜以后，什么才是项目真正的“源码”？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E7%95%8C%E5%AF%B9%E5%B7%B2%E6%9C%89%E5%8E%9F%E5%9E%8B%E7%9A%84%E5%85%B1%E5%90%8C%E5%BB%BA%E8%AE%AE%EF%BC%9A%E4%B8%8D%E8%A6%81%E6%80%A5%E7%9D%80%E9%87%8D%E5%86%99"><span class="toc-text">业界对已有原型的共同建议：不要急着重写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%8D%E5%BE%80%E7%94%9F%E4%BA%A7%E8%B5%B0%EF%BC%8C%E6%97%A7%E5%B7%A5%E7%A8%8B%E4%B8%96%E7%95%8C%E5%85%B6%E5%AE%9E%E6%97%A9%E5%B0%B1%E5%87%86%E5%A4%87%E4%BA%86%E4%B8%80%E9%83%A8%E5%88%86%E7%AD%94%E6%A1%88"><span class="toc-text">再往生产走，旧工程世界其实早就准备了一部分答案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Harness-Engineering%EF%BC%9Aproduction-artifact-%E6%80%8E%E6%A0%B7%E7%9C%9F%E6%AD%A3%E8%A2%AB-AI-%E4%BD%BF%E7%94%A8"><span class="toc-text">Harness Engineering：production artifact 怎样真正被 AI 使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BE%E5%8C%BA%E7%8E%B0%E5%9C%A8%E4%BA%89%E8%AE%BA%E7%9A%84%EF%BC%8C%E4%B9%9F%E6%AD%A3%E6%98%AF%E8%BF%99%E4%BA%9B%E5%9C%B0%E6%96%B9"><span class="toc-text">社区现在争论的，也正是这些地方</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%80%E4%BB%A5%EF%BC%8C%E4%B8%9A%E7%95%8C%E8%B6%8B%E5%8A%BF%E4%B8%8D%E6%98%AF%E2%80%9C%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E5%86%99%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3%E2%80%9D"><span class="toc-text">所以，业界趋势不是“重新开始写更多文档”</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04%EF%BD%9C%E5%AE%9E%E8%B7%B5%EF%BC%9A%E6%88%91%E4%BB%AC%E6%AD%A3%E5%9C%A8%E7%94%A8-Warrant-%E9%AA%8C%E8%AF%81%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">04｜实践：我们正在用 Warrant 验证什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E9%A1%B9%E7%9B%AE%E5%80%BC%E5%BE%97%E5%81%9A%E8%BF%99%E5%A5%97"><span class="toc-text">什么项目值得做这套</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%9F%E8%A6%81%E5%85%88%E6%89%BF%E8%AE%A4%E5%AE%83%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="toc-text">也要先承认它的边界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B0%E8%BF%99%E9%87%8C%EF%BC%8C%E6%89%8D%E8%BD%AE%E5%88%B0-Warrant-%E5%87%BA%E5%9C%BA"><span class="toc-text">到这里，才轮到 Warrant 出场</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AI-%E8%B4%9F%E8%B4%A3%E8%B5%B7%E8%8D%89%E5%92%8C%E6%8F%90%E9%97%AE%EF%BC%8C%E4%BA%BA%E8%B4%9F%E8%B4%A3%E5%AE%9A%E5%A4%BA%EF%BC%8C%E4%BB%A3%E7%A0%81%E8%B4%9F%E8%B4%A3%E8%A3%81%E5%88%A4"><span class="toc-text">AI 负责起草和提问，人负责定夺，代码负责裁判</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#warrant-%E7%8E%B0%E5%9C%A8%E8%AE%B0%E5%BD%95%E7%9A%84%E6%98%AF%E4%B8%80%E4%BB%BD%E5%8F%AF%E5%A4%B1%E6%95%88%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">.warrant&#x2F; 现在记录的是一份可失效的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Warrant-%E5%9C%A8%E8%BF%99%E4%B8%AA%E5%9D%90%E6%A0%87%E7%B3%BB%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="toc-text">Warrant 在这个坐标系里的位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E5%9C%A8%E6%80%8E%E6%A0%B7%E8%AF%95%E7%94%A8-Warrant%EF%BC%9A%E5%85%88%E5%88%86%E6%B8%85%E5%B7%A5%E5%85%B7%E4%BB%93%E5%BA%93%E5%92%8C%E5%AE%BF%E4%B8%BB%E4%BB%93%E5%BA%93"><span class="toc-text">现在怎样试用 Warrant：先分清工具仓库和宿主仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%B3%95%E4%B8%8D%E6%98%AF%E8%AE%B0%E5%91%BD%E4%BB%A4%EF%BC%8C%E8%80%8C%E6%98%AF%E5%85%88%E8%AE%A4%E6%B8%85%E8%87%AA%E5%B7%B1%E5%9C%A8%E5%93%AA%E4%B8%80%E4%BE%A7"><span class="toc-text">用法不是记命令，而是先认清自己在哪一侧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#05%EF%BD%9C%E5%BB%B6%E4%BC%B8%E6%80%9D%E8%80%83%EF%BC%9A%E5%8E%9F%E5%9E%8B%E4%B8%8E%E7%BA%BF%E4%B8%8A%EF%BC%8C%E5%8F%AF%E8%83%BD%E5%8F%AA%E6%98%AF%E4%B8%80%E4%B8%AA%E6%9A%82%E6%97%B6%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="toc-text">05｜延伸思考：原型与线上，可能只是一个暂时的边界</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E6%8A%8A%E5%B7%B2%E7%BB%8F%E5%8F%91%E7%94%9F%E7%9A%84%E5%8F%98%E5%8C%96%EF%BC%8C%E4%B8%8E%E6%88%91%E4%BB%AC%E7%9A%84%E6%83%B3%E8%B1%A1%E5%88%86%E5%BC%80"><span class="toc-text">先把已经发生的变化，与我们的想象分开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B0%E5%BA%95%E4%BB%80%E4%B9%88%E5%9C%A8%E5%86%B3%E5%AE%9A%E4%B8%80%E7%A7%8D%E5%BC%80%E5%8F%91%E8%8C%83%E5%BC%8F%EF%BC%9F"><span class="toc-text">到底什么在决定一种开发范式？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E5%8E%9F%E5%9E%8B%E5%8D%B3%E7%BA%BF%E4%B8%8A%E2%80%9D%EF%BC%8C%E5%85%B6%E5%AE%9E%E6%9C%89%E4%B8%A4%E7%A7%8D%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E6%84%8F%E6%80%9D"><span class="toc-text">“原型即线上”，其实有两种完全不同的意思</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E4%B8%80%E4%BB%A3%E4%BA%A4%E4%BB%98%E7%89%A9%EF%BC%8C%E5%8F%AF%E8%83%BD%E6%98%AF%E4%B8%80%E9%A1%B9%E2%80%9C%E5%B8%A6%E8%AF%81%E6%8D%AE%E7%9A%84%E5%8F%98%E5%8C%96%E2%80%9D"><span class="toc-text">下一代交付物，可能是一项“带证据的变化”</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB"><span class="toc-text">延伸阅读</span></a></li></ol></nav></details>
   
-  <div class="prose"><p>把快速迭代的原型，交付成一份<strong>能检查、能同步、能验收、会随代码变化而失效</strong>的生产契约。</p>
-<blockquote>
-<p><strong>最短理解</strong>：把 Warrant skills 装给 AI Coding Agent，然后告诉它你在做「首次梳理、发版、<br>生产对照还是增量同步」。<br><br><strong>日常操作以对 Agent 说话为主</strong>——不必在 Terminal 和 Agent 之间来回切换。<br><br>Agent 负责读代码、追问和编排；Warrant CLI 由 Agent 代跑，只在你想自己核对参数时才需要看<br><a href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83">终端指令参考</a>。</p>
+  <div class="prose"><blockquote>
+<p>从「某 AI 音乐项目」的一次原型交接，到一套给人和 AI 共同使用的 production artifact</p>
+<p>Draft · 2026-07-30</p>
 </blockquote>
-<hr>
-<h2 id="30-秒开始"><a href="#30-秒开始" class="headerlink" title="30 秒开始"></a>30 秒开始</h2><h3 id="1-安装-warrant"><a href="#1-安装-warrant" class="headerlink" title="1. 安装 warrant"></a>1. 安装 warrant</h3><p><strong>人唯一要做的是把下面这段贴给 Agent，不需要自己开终端。</strong> 在<strong>即将作为宿主的业务项目<br>根目录</strong>打开 Agent，整段复制：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请帮我安装 warrant，命令全部由你执行：先执行</span><br><span class="line">&lt;SKILL_INSTALL_COMMAND&gt;</span><br><span class="line">装上 warrant-install skill，然后阅读 .agents/skills/warrant-install/SKILL.md，</span><br><span class="line">按里面的 Scenario A 完成安装。</span><br></pre></td></tr></table></figure>
-
-<p><strong>如果本机没有 技能安装工具（或访问不到 技能市场）</strong>，改用这段——skill 改从克隆下来的仓库里<br>直接读，skills 用本地拷贝兜底：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">请帮我安装 warrant，命令全部由你执行（本机没有 技能安装工具，不要用 技能市场）：</span><br><span class="line">1. 先问我把工具装到哪个目录（必须在本仓库之外），记作 $WARRANT_HOME。</span><br><span class="line">2. 执行 git clone &lt;WARRANT_REPOSITORY_URL&gt; &quot;$WARRANT_HOME&quot;。</span><br><span class="line">3. 阅读 &quot;$WARRANT_HOME&quot;/skills/warrant-install/SKILL.md，按里面的 Scenario A 完成安装；</span><br><span class="line">   其中装 skills 一步走它的本地拷贝兜底（cp -R &quot;$WARRANT_HOME&quot;/skills/warrant-* .agents/skills/）。</span><br></pre></td></tr></table></figure>
-
-<h3 id="最小闭环：一句话-onboard"><a href="#最小闭环：一句话-onboard" class="headerlink" title="最小闭环：一句话 onboard"></a>最小闭环：一句话 onboard</h3><p>安装完成后，用户不需要复述 Warrant 的内部工作流，只要说：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请用 warrant-onboard skill onboard 当前项目。</span><br></pre></td></tr></table></figure>
-
-<p>草稿模式、不隐式发版、<code>.warrant/</code> 与网页同步、自动调用 <code>warrant-tech-doc</code>、禁止<br>Markdown 投射、中文说明、代码取材、按决策切章和真实浏览器证据，都是 skill 的内部契约，<br>不应要求用户复制粘贴。</p>
-<p>Agent 会先追问链路入口和输入输出，读代码后动态追问关键决策；然后技术方案 skill 会基于<br><code>.warrant/</code> 产物和代码做推导、分层、引用指纹化，最后产出：</p>
-<ul>
-<li><code>.warrant/</code> —— 发版链、节点、条件分支、依赖、开关、关键配置资产；</li>
-<li>图解技术方案站点 —— Agent 先从代码完成取材笔记与章节设计卡，再按每节内容选择<br>HTML&#x2F;CSS&#x2F;JS&#x2F;SVG 表达；完整 prompt、配置和词表进入折叠附录。</li>
-</ul>
-<p>注意：网页生成后只是 <code>docs/architecture/tech/site/</code> 下的静态文件，Agent 应帮你部署到<br>项目已有的静态服务路径（如 <code>public/</code>、<code>static/</code>、静态代理服务、GitLab Pages 等），<br>用 <code>warrant check-site</code> 验证取材&#x2F;章节 brief 没有漂移、章节与小节落点、事实来源覆盖、<br>桌面&#x2F;窄屏截图证据、最终可见性、封闭链接、HTML Content-Type、<code>content_hash</code> 与绑定渲染检查的<br><code>site_hash</code> 后，再返回可访问的 URL。<br>如果项目还没有静态发布位置，Agent 会问你平时怎么发布页面。</p>
-<p>你不需要自己写文档，只需要回答 Agent 在读代码时提出的疑问。</p>
-<h3 id="2-然后告诉-Agent-你在做哪一步"><a href="#2-然后告诉-Agent-你在做哪一步" class="headerlink" title="2. 然后告诉 Agent 你在做哪一步"></a>2. 然后告诉 Agent 你在做哪一步</h3><p>把下面「对 Agent 说」整段复制进对话即可。Agent 会按对应 skill 编排，并自行调用 CLI。</p>
-<table>
-<thead>
-<tr>
-<th>你是谁</th>
-<th>什么时候用</th>
-<th>对 Agent 说</th>
-<th>主要产物</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>任一侧</td>
-<td>装 warrant，或工具该升级了</td>
-<td><code>请使用 warrant-install skill 升级 warrant。</code>（首次安装见上一步）</td>
-<td>可用的 <code>warrant</code> + 宿主里的最新 skill</td>
-</tr>
-<tr>
-<td>原型侧</td>
-<td>第一次梳理已有项目</td>
-<td><code>请用 warrant-onboard skill onboard 当前项目。</code></td>
-<td><code>.warrant/</code>、取材与章节设计 brief、图解 HTML 站点</td>
-</tr>
-<tr>
-<td>原型侧 &#x2F; 评审</td>
-<td>已 onboard 后单独刷新方案网页</td>
-<td><code>请使用 warrant-tech-doc skill，基于当前 .warrant/ 重新生成图解文档。</code></td>
-<td>更新后的取材&#x2F;设计 brief 与图解 HTML 站点</td>
-</tr>
-<tr>
-<td>原型侧</td>
-<td>当前版本准备发给部署侧</td>
-<td><code>请使用 warrant-release skill，检查并导出本次发版 bundle。</code></td>
-<td>bundle、<code>content_hash</code>、变更记录</td>
-</tr>
-<tr>
-<td>部署侧</td>
-<td>第一次接手，或不知道生产和原型差多少</td>
-<td><code>请使用 warrant-audit skill，对照这个 bundle 审计生产实现。</code></td>
-<td><code>parity-report.json</code>、未对齐项</td>
-</tr>
-<tr>
-<td>部署侧</td>
-<td>已签收上一版，现在跟进新版</td>
-<td><code>请使用 warrant-sync skill，只同步新版 bundle 的变化并重跑用例。</code></td>
-<td>依赖闭合的增量改动、运行证据</td>
-</tr>
-</tbody></table>
-<p><strong>如果你只记住一件事：首次接入用 onboard，原型发新版用 release，生产首次对照用 audit，后续跟版用 sync。</strong></p>
-<hr>
-<h2 id="这到底是什么？"><a href="#这到底是什么？" class="headerlink" title="这到底是什么？"></a>这到底是什么？</h2><h3 id="Warrant-仓库-vs-宿主仓库"><a href="#Warrant-仓库-vs-宿主仓库" class="headerlink" title="Warrant 仓库 vs 宿主仓库"></a>Warrant 仓库 vs 宿主仓库</h3><ul>
-<li><strong>Warrant 仓库</strong>是工具自身，也就是你正在看的这个仓库。它提供 CLI 和 <code>warrant-*</code> skills。</li>
-<li><strong>宿主仓库</strong>是 Warrant 正在处理的业务项目。原型项目和生产项目分别是原型宿主、生产宿主；<br><code>.warrant/</code> 永远放在原型宿主根目录。</li>
-</ul>
-<p>两者的关系由<strong>运行时的当前目录或 <code>--root</code></strong> 决定，与工具装在哪无关：Warrant 不会因为被<br>克隆或作为 submodule 加进某个仓库，就把那个仓库当成宿主。因此<strong>一份 Warrant 安装可以同时<br>服务多个宿主项目</strong>——CLI 全局共享，每个宿主的 skills 各自从 技能市场安装（见 §1）。</p>
-<p>这份本机上下文无法跨仓库交接，所以每个导出的 bundle 都携带原型宿主的 Git 仓库地址、<br>分支和精确 commit，部署侧据此取得参考源码。其中只有 commit 是必需的——发版钉的是它。</p>
-<h3 id="流程长什么样"><a href="#流程长什么样" class="headerlink" title="流程长什么样"></a>流程长什么样</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">原型宿主仓库 + 原型侧 Agent</span><br><span class="line">        │  onboard / release</span><br><span class="line">        ▼</span><br><span class="line"> .warrant/ + bundle + 原型 Git 定位</span><br><span class="line">        │</span><br><span class="line">        │  audit / sync</span><br><span class="line">        ▼</span><br><span class="line">生产宿主仓库 + 部署侧 Agent</span><br><span class="line">        │</span><br><span class="line">        ▼</span><br><span class="line">运行证据 + parity-report + 可复核结论</span><br></pre></td></tr></table></figure>
-
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/warrant-handoff.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/warrant-handoff.svg" alt="原型交付、运行证据与验收流程"></a></p>
-<p><em>原型交付、运行证据与验收流程</em></p>
-<h3 id="核心规则：声明随对象指纹失效"><a href="#核心规则：声明随对象指纹失效" class="headerlink" title="核心规则：声明随对象指纹失效"></a>核心规则：声明随对象指纹失效</h3><p>Warrant 的核心规则只有一条：</p>
+<p>Vibe Coding 最爽的一刻，是你用几句话让一个想法真的跑了起来。</p>
+<p>最尴尬的一刻，是另一个人接过仓库，问：</p>
+<p><strong>“所以，这套东西到底是怎么跑的？”</strong></p>
+<p>我们在把「某 AI 音乐项目」从原型推向正式上线时，正面撞上了这个问题。</p>
+<p>musicPrototype 是它的开发项目：用户给出一段对话，系统理解其中没有直接说出口的情绪和关系，再生成歌词、演唱、编曲、封面和 MV。感兴趣的话，也欢迎联系我们体验。</p>
+<p>这是一个典型的小团队快跑项目。三个人包揽产品与开发，通过 Vibe Coding 快速试想法、改效果；原型跑通以后，再由专门的线上团队完成生产实现：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/19-prototype-production-responsibility-8886339434bf.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/19-prototype-production-responsibility-8886339434bf.svg" alt="原型到线上的开发责任链路"></a></p>
+<p>仓库当然可以直接交过去，但它没有标明哪条链路属于正式版本、哪些 prompt 和配置必须上线、哪些文件只是历史实验，也没有提供跨实现验收的方法。</p>
+<p>原型转向生产时，这些问题一起冒了出来，也暴露出真正的缺口：</p>
 <blockquote>
-<p>每一条重要声明，都由其所声明对象的指纹作为键。<br><br>对象一旦变化，旧声明就不再覆盖它；系统要求重新判断，而不是继续展示一句过期的话。</p>
+<p><strong>代码留下来了，产生这些代码的上下文却没有。</strong></p>
 </blockquote>
-<p>这条规则有三个主要落点：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/01-context-gap-bb3476b04bf4.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/01-context-gap-bb3476b04bf4.svg" alt="Vibe Coding 跑通之后，上下文消失了"></a></p>
+<p>这篇文章讲的，就是我后来怎样沿着代码，把那份消失的上下文一点点找回来。先剧透一下最后得到的东西：</p>
+<blockquote>
+<p><strong>一份与代码配套的规范。人可以用它理解和查证，AI 可以用它继续开发和迁移，程序可以用它验收。</strong></p>
+</blockquote>
+<p>它不是“让 AI 帮我补一篇文档”，更像是把代码重新编译成了另一种生产产物。</p>
+<p><strong>阅读地图</strong></p>
 <table>
 <thead>
 <tr>
-<th>声明</th>
-<th>存放位置</th>
-<th>失效依据</th>
+<th>Part</th>
+<th>这一部分回答什么</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>“我们因为这个原因选择了这个值”</td>
-<td><code>decisions[].rationale</code></td>
-<td><code>rationale_covers</code> 不再等于当前值对</td>
+<td>01 · 问题</td>
+<td>原型交给线上时，代码之外究竟缺了什么</td>
 </tr>
 <tr>
-<td>“这段方案已经由某人确认”</td>
-<td><code>confirmations.yaml</code></td>
-<td>方案文字的设计指纹发生变化</td>
+<td>02 · 实践</td>
+<td>我们怎样从代码恢复规约，并让它可以验收</td>
 </tr>
 <tr>
-<td>“这条必需边已经得到证明”</td>
-<td>corpus 覆盖索引</td>
-<td>用例自身声明的 <code>proves</code> 与登记义务不一致</td>
+<td>03 · 业界</td>
+<td>SDD、反向恢复、Conformance 与 Harness 分别在解决什么</td>
 </tr>
 <tr>
-<td>“生产持有的这份内容和我们一致”</td>
-<td><code>materials[]</code> + bundle 里的逐字副本</td>
-<td>内容 hash 变化（并因此推动 <code>content_hash</code>）</td>
+<td>04 · 实践</td>
+<td>我们正在用 Warrant 验证什么</td>
+</tr>
+<tr>
+<td>05 · 延伸</td>
+<td>如果未来“原型即线上”，交付物会变成什么</td>
 </tr>
 </tbody></table>
-<p>代码指针、连线、分支和 prompt 等结构变化本身就会触发门禁，因此不要求额外写一段容易过期的解释。只有那些接手方能够改变、而其他门禁又无法发现的选择，才必须留下理由。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/warrant-fingerprint.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/warrant-fingerprint.svg" alt="对象指纹变化与确认失效"></a></p>
-<p><em>对象指纹变化与确认失效</em></p>
-<h3 id="谁做什么"><a href="#谁做什么" class="headerlink" title="谁做什么"></a>谁做什么</h3><p>Warrant 刻意把判断与计算分开：</p>
+<p>如果只关心怎么试用 Warrant，可以直接从 Part 04 开始；如果更关心 AI Coding 带来的范式变化，重点看 Part 03 和 Part 05。</p>
+<hr>
+<h2 id="01｜问题：代码留下来了，上下文去哪了？"><a href="#01｜问题：代码留下来了，上下文去哪了？" class="headerlink" title="01｜问题：代码留下来了，上下文去哪了？"></a>01｜问题：代码留下来了，上下文去哪了？</h2><h3 id="一个自然的解法：让所有人只改同一份-spec"><a href="#一个自然的解法：让所有人只改同一份-spec" class="headerlink" title="一个自然的解法：让所有人只改同一份 spec"></a>一个自然的解法：让所有人只改同一份 spec</h3><p>这里说的 <strong>spec</strong>，是一份给人和 AI 共同使用的结构化说明：它写清软件应该怎样表现、必须遵守哪些约束，以及怎样才算做对。</p>
+<p>既然上下文会消失，一个自然的解法就是不再让它散落在对话里：给项目维护一份长期存在的需求文档或技术 spec。</p>
+<p>以后每冒出一个想法，都先修改这份文档；AI 每次开始工作，也先读取它，再按照最新描述实现需求。</p>
+<p>这就是 Spec-Driven Development（SDD）最直观的出发点：<strong>让 spec 接住原本会从对话中消失的上下文，并成为人与 AI 共同工作的稳定起点。</strong></p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/12-spec-vibe-loop-d99ec1f09af2.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/12-spec-vibe-loop-d99ec1f09af2.svg" alt="Spec 主流程与真实 Vibe Coding 闭环"></a></p>
+<h4 id="但两句话就能试出来，谁还会先改文档？"><a href="#但两句话就能试出来，谁还会先改文档？" class="headerlink" title="但两句话就能试出来，谁还会先改文档？"></a>但两句话就能试出来，谁还会先改文档？</h4><blockquote>
+<p><strong>一个想法明明用两句话就能让 AI 先做出来，你真的会停下来，对着那份漂亮的文档字斟句酌，把相关章节全部更新准确以后，再允许 AI 动手吗？</strong></p>
+</blockquote>
+<p>但在真实的原型开发里，大多数人仍然会选择<strong>想法先行、尝试先行</strong>：脑子里刚冒出一个想法，先告诉 AI；几分钟后页面能点、流程能跑、歌已经可以听了；看完效果，马上又开始下一轮。</p>
+<p>这条闭环里，代码和效果出现得太容易，文档却不参与下一次尝试，也不阻止下一次修改。它通常要到汇报、交接或评审时，才被“漂漂亮亮地生成一份”。</p>
+<p>只要后续迭代可以一直绕过它发生，它就不是“有可能”过期，而是必然会 rot。</p>
+<p>有一句话可以概括：</p>
+<blockquote>
+<p><strong>没有进入下一轮反馈的东西，就不会跟着下一轮一起演化。</strong></p>
+</blockquote>
+<p>这不是 SDD 对不对的问题，而是 Vibe Coding 的真实发生顺序已经改变：先围绕效果反复尝试，需要交付时才重新想起文档。</p>
+<p>等我意识到缺少 spec 时，实现早已长出来。此时更诚实的起点，不是从头描述一个“看起来应该如此”的理想系统。</p>
+<p>应该先沿现有代码恢复实际发生了什么，再通过规范化问答补回代码里没有的意图，最终形成可执行规约。</p>
+<p>对我们的原型项目来说，这个“需要交付”的时刻来得很具体：另一支团队要在自己的生产集群、模型服务和工程约束下，把已经跑通的原型正式上线。</p>
+<p>于是问题从“怎么补一份 spec”，变成了：</p>
+<blockquote>
+<p><strong>我到底应该把什么交给部署团队和他们的 AI？</strong></p>
+</blockquote>
+<h3 id="原型交给线上时，究竟要还原什么？"><a href="#原型交给线上时，究竟要还原什么？" class="headerlink" title="原型交给线上时，究竟要还原什么？"></a>原型交给线上时，究竟要还原什么？</h3><p>原型侧已经亲自跑过、听过，并确认“这一版效果对了”；线上侧要做的，是在自己的模型服务、工程框架和生产环境里让同样的效果重新成立。这一步表面上在交接代码，实际交接的是责任：</p>
+<blockquote>
+<p><strong>原型侧交付“这版效果已经成立”；线上侧接手“怎样让它在另一套生产实现里继续成立”。</strong></p>
+</blockquote>
+<p>如果双方使用完全相同的代码和环境，这件事可能只是一次部署。只要线上项目需要换语言、框架、模型服务，或者重新接入安全、监控和降级链路，“把仓库发过去”就不再等于完成交付。</p>
+<p>线上项目真正需要还原的是：</p>
 <table>
 <thead>
 <tr>
-<th>工作</th>
-<th>由谁完成</th>
-<th>原因</th>
+<th>要对齐的对象</th>
+<th>线上侧必须弄清楚</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>找到真正发版 slice、理解变化、追问设计理由</td>
-<td>AI skills + 人</td>
-<td>这是语义判断，不能由路径 glob 或 AST 代替</td>
+<td><strong>正式范围</strong></td>
+<td>本次交付的行为主线是什么</td>
 </tr>
 <tr>
-<td>字符串相等、集合覆盖、代码符号解析、Git 状态、证据求交</td>
-<td>Python gates</td>
-<td>门禁必须稳定、可复现，不能被“说服”放行</td>
+<td><strong>效果来源</strong></td>
+<td>哪些实现和配置共同产生了已验收效果</td>
+</tr>
+<tr>
+<td><strong>不变量</strong></td>
+<td>哪些约束必须保留，哪些实现细节可以替换</td>
+</tr>
+<tr>
+<td><strong>排除项</strong></td>
+<td>哪些文件只是历史、实验或临时排查</td>
+</tr>
+<tr>
+<td><strong>验收方法</strong></td>
+<td>新实现怎样独立证明效果已经还原</td>
 </tr>
 </tbody></table>
-<p>最关键的门禁包括：</p>
+<p>因此，一次能够被线上真正接住的交付，不能只有一份仓库，至少还要带上三样东西：</p>
 <ul>
-<li><strong>理由自失效</strong>：配置值变化后，旧理由不再算数。</li>
-<li><strong>证据签收</strong>：只接受真实 case 运行证据，不接受手填通过。</li>
-<li><strong>内容相等</strong>：<code>verbatim</code> 内容资产必须逐字进 bundle，生产侧的副本由 <code>verify-material</code> 做内容比对，不靠肉眼判断「看着差不多」。</li>
-<li><strong>双向证明覆盖</strong>：覆盖索引和用例的 <code>proves</code> 必须彼此一致。</li>
-<li><strong>代码指针解析</strong>：<code>file.py::symbol</code> 被重命名或删除时立即失败。</li>
-<li><strong>语义流完整性</strong>：路由必须有真实分叉，生成器必须声明输入输出，安全门必须画出放行和短路路径。</li>
-<li><strong>覆盖率棘轮</strong>：只阻断本次新增的孤儿文件，不让历史欠账导致门禁第一天就被关闭。</li>
+<li><strong>参考实现</strong>：已经验收的效果，具体由哪一版代码和配置产生；</li>
+<li><strong>生产规约</strong>：换一种技术实现以后，哪些行为与约束仍然必须成立；</li>
+<li><strong>验收证据</strong>：线上项目用什么输入、输出和判断标准，证明自己真的还原成功。</li>
 </ul>
-<p>Warning 永远不阻断。一个会因为既有欠账而天天红的门禁，最终只会被团队禁用。</p>
-<hr>
-<h2 id="§1-安装、升级与多宿主"><a href="#§1-安装、升级与多宿主" class="headerlink" title="§1 安装、升级与多宿主"></a>§1 安装、升级与多宿主</h2><h3 id="§1-1-首次安装"><a href="#§1-1-首次安装" class="headerlink" title="§1.1 首次安装"></a>§1.1 首次安装</h3><p>见 <a href="#1-%E5%AE%89%E8%A3%85-warrant">30 秒开始 &#x2F; 1. 安装 warrant</a>。</p>
-<p>安装完成后：</p>
+<p>三者还必须绑定在同一个版本上。代码来自今天、说明来自上个月、验收样例来自更早以前，拼在一起无法代表任何一版真实产品。</p>
+<p>其中最容易缺失的是生产规约。PRD 描述希望用户获得什么体验，原型代码展示当前实现怎样产生这个效果，而生产规约要回答：</p>
+<blockquote>
+<p><strong>无论最终使用什么语言和框架，哪些行为与约束都必须成立，以及怎样才算还原成功。</strong></p>
+</blockquote>
+<p>我把这层信息叫作<strong>生产技术规约</strong>。它不是在 PRD 和代码之外再堆一篇文档，而是原型实现与线上实现共同遵守的协议。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/02-missing-layer-8ee120638f92.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/02-missing-layer-8ee120638f92.svg" alt="产品、生产技术规约与代码的三层关系"></a></p>
+<blockquote>
+<p><strong>代码是一种参考实现；规约定义另一份实现必须保留什么；证据负责判断它是否真的保留了。</strong></p>
+</blockquote>
+<h3 id="代码装下了实现细节，却不是最高层上下文"><a href="#代码装下了实现细节，却不是最高层上下文" class="headerlink" title="代码装下了实现细节，却不是最高层上下文"></a>代码装下了实现细节，却不是最高层上下文</h3><p>真正棘手的是，生产技术规约不能直接等于一份“代码说明书”。</p>
+<p><strong>代码仓库是项目信息最多的地方，却不一定是项目上下文最完整的地方。</strong></p>
+<p>正式链路、临时补丁、被放弃的方案、实验入口和三个月前的默认值，都以同样的“代码文件”形态留在那里。</p>
+<p>仓库保存了它们，却没有自动标出它们在产品里的权威等级。</p>
+<p>如果把产品开发看成一条编译链，这个包含万象的代码仓库，很像一份已经展开到实现层的中间产物：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/13-context-and-rot-b3a534b3085e.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/13-context-and-rot-b3a534b3085e.svg" alt="代码压平上游上下文，规约绕过交付后逐渐腐化"></a></p>
+<p>走到代码这一层，大量实现细节被保留下来，最上游的结构却被压平了。</p>
+<p>AI 可以解释每个函数，但仅凭这些函数，它仍然要猜：</p>
 <ul>
-<li>工具源码（<code>$WARRANT_HOME</code>）必须放在<strong>宿主仓库之外</strong>；不要 <code>git clone</code> 到宿主根目录或子目录。</li>
-<li>CLI 从 <code>$WARRANT_HOME</code> 安装；skills 默认从 技能市场安装（搜索 <code>warrant</code> 安装全部 <code>warrant-*</code>），<br>访问不到 技能市场 的环境才从克隆里手动拷贝兜底。</li>
-<li>宿主仓库里只该出现 agent skills 目录下的 <code>warrant-*</code>，以及之后产出的 <code>.warrant/</code>、release<br>bundle 和业务改动。</li>
-<li>之后 Agent 始终在宿主根目录运行 <code>warrant</code>（或显式 <code>warrant --root &quot;$HOST&quot; ...</code>），不要在<br>Warrant 仓库里对另一个项目做 onboard。</li>
-<li>只有需要把工具版本钉在宿主里时才改用 submodule（<code>git submodule add &lt;上述地址&gt; tools/warrant</code>）<br>——那是显式例外，<code>tools/warrant</code> 同样不得进入发版 slice。</li>
+<li><strong>正式主线｜</strong> 哪些代码共同构成真正的产品行为；</li>
+<li><strong>必要约束｜</strong> 哪些选择必须被下一份实现保留；</li>
+<li><strong>偶然实现｜</strong> 哪些细节只与当前语言和框架有关；</li>
+<li><strong>历史遗迹｜</strong> 哪些代码虽然还在仓库里，却已不代表产品。</li>
 </ul>
-<h3 id="§1-2-一份安装，多个宿主"><a href="#§1-2-一份安装，多个宿主" class="headerlink" title="§1.2 一份安装，多个宿主"></a>§1.2 一份安装，多个宿主</h3><p><strong>Warrant 只需安装一次，即可服务任意多个宿主项目。</strong> 宿主身份由运行时的当前目录（或 <code>--root</code>）<br>决定，与工具装在哪无关，所以多个宿主共用同一份 CLI，不需要也不应该各自再克隆一份工具。</p>
-<p>每接入一个新宿主，在<strong>新宿主根目录</strong>打开 Agent，整段复制：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请把 warrant 接入当前项目（warrant 已装在本机，不要重新克隆）：</span><br><span class="line">先执行 &lt;SKILL_INSTALL_COMMAND&gt;</span><br><span class="line">装上 warrant-install skill，然后阅读 .agents/skills/warrant-install/SKILL.md 的</span><br><span class="line">Scenario C，照它完成剩下的接入步骤。</span><br></pre></td></tr></table></figure>
-
-<p>没有 技能安装工具（或访问不到 技能市场）时改用这段：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请把 warrant 接入当前项目（warrant 已装在本机，不要重新克隆；本机没有 技能安装工具，</span><br><span class="line">不要用 技能市场）：先跑 warrant --version 找到安装位置 $WARRANT_HOME，</span><br><span class="line">阅读 &quot;$WARRANT_HOME&quot;/skills/warrant-install/SKILL.md 的 Scenario C，照它完成接入。</span><br></pre></td></tr></table></figure>
-
-<p>由此而来的分工是：<strong>CLI 全局共享一份，skills 每个宿主各装一份，<code>.warrant/</code> 每个宿主各自独立</strong><br>（onboard 后在各自宿主根目录生成，互不影响）。注意 skills 装完不会自己更新：以后升级 warrant<br>（§1.3）时，<strong>每个</strong>宿主的 skills 都要更新一遍，漏掉的宿主会出现「Agent 拿旧说明书开新工具」。<br>建议记下绑定过哪些宿主，升级时逐个更新。</p>
-<h3 id="§1-3-升级到新版本"><a href="#§1-3-升级到新版本" class="headerlink" title="§1.3 升级到新版本"></a>§1.3 升级到新版本</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-install skill 升级 warrant：CLI 和本项目的 skills 都要升到最新，</span><br><span class="line">升级完告诉我行为有什么变化。</span><br></pre></td></tr></table></figure>
-
-<p><strong>升级是三样东西要对齐，不是一件事。</strong> CLI 源码（<code>git pull</code>）、已安装的包（<code>pip install -e</code>）、<br>以及宿主里的 <code>warrant-*</code> skills——最后这个装在宿主的 agent 环境里，不会跟着 <code>git pull</code> 动。<br>漏掉它的后果不是「没升级」而是「Agent 拿旧说明书开新工具」：旧版 <code>warrant-release</code> skill<br>会让 Agent 在 export 前先跑 <code>check --require-mainline</code>，于是你在 feature 分支上被拦下来，<br>而新版 CLI 早就不要求主干。</p>
-<p><code>warrant --version</code> 打印的是<strong>运行中的那份代码</strong>：版本号 + checkout 的 commit + 目录。<br><code>-e</code> 装法下 <code>git pull</code> 之后代码立刻生效但 pip 记的版本号不会动，两者对不上时它会直接<br>提示你要不要重装——所以 pull 完再跑一次，commit 变了就是升级到位了。</p>
-<p>已有的 <code>.warrant/</code> 与已导出的 bundle 不受升级影响：bundle 是自包含快照，<code>content_hash</code><br>按内容算而不按工具版本算，所以升级不会让旧版本对不上。但新版可能<strong>新增门禁</strong>，于是<br><code>warrant check</code> 在你没改任何东西的情况下开始报新的 ERROR——那是新检查在说话，不是升级<br>坏了，按提示补齐即可。</p>
-<hr>
-<h2 id="§2-原型侧：第一次-onboard"><a href="#§2-原型侧：第一次-onboard" class="headerlink" title="§2 原型侧：第一次 onboard"></a>§2 原型侧：第一次 onboard</h2><p>在原型项目根目录：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请用 warrant-onboard skill onboard 当前项目。</span><br></pre></td></tr></table></figure>
-
-<p>Agent 只冷问两件事：<strong>这次想看懂的核心链路是什么</strong>（明确说准备发版时才改问<br>“这次准备交付的核心链路是什么”）、<strong>它的输入和输出是什么</strong>。之后它必须先去读代码，<br>再拿分析结果回来动态追问：入口、编排方、不进版范围、<br>生产开关、动态参数、外部依赖身份、关键配置资产都由它自己算出候选，你只需要挑选或纠正。</p>
-<p>它会自动盘点固定资产：用户可见文案、prompt、配置&#x2F;静态表、资源图、模板和固定<br>API&#x2F;URL 默认作为 <code>replication: verbatim</code>，一次列出请你校正遗漏、误收或例外，<br>不会每份都问一遍「改一行会不会变」。只有 fixture、缓存、派生产物等真无法判断<br>是否需要完全等量迁移的项，才单独请你裁定。</p>
-<p>固定内容如果散落在 Kotlin&#x2F;Java&#x2F;Swift&#x2F;TypeScript 等大逻辑文件里，Agent 直接在<br><code>.warrant/materials/</code> 生成带来源指纹的资产快照。宿主工程保持原样；Python 符号抽取只是<br>一个便利适配器，不是 Warrant 能否记录资产的边界。</p>
-<p>所以它<strong>不该</strong>给你一份问卷，不该让你列举不进版目录，不该冷问「历史上有哪些坑」——<br>开放性问题只允许出现一次，在收口时问你还有什么要补充。它也不应该让你手写 schema，<br>更不应该凭代码猜「为什么这样设计」。</p>
-<p>onboard 会在 <code>.warrant/</code> 通过检查后自动进入图解技术方案生成和浏览器证据捕获，不需要你再补一句<br>“生成网页”。如果只想单独查看尚未闭合的问题，可以继续说：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请跑 warrant questions，用通俗话说明还有哪些未回答问题、哪些方案层未签核。</span><br></pre></td></tr></table></figure>
-
-<p>人裁的是<strong>分析过程中卡住的疑问</strong>（证据打架、逻辑说不通），不是把方案层摊开盖章。<br>一次只问一个疑问；答完由 Agent 写回 artifact &#x2F; <code>open_questions[]</code>。<code>confirm</code> 是可选的<br>事后签核，不是 onboard 访谈目标。</p>
-<p>文档里这两件事<strong>分开渲染，不要混读</strong>：</p>
+<p>所以 AI 需要的不是比仓库<strong>更多</strong>的信息，而是比仓库<strong>更高一层</strong>的权威上下文。</p>
+<p>这时，一个更大的问题自然出现了：</p>
+<blockquote>
+<p><strong>如果代码只是已经展开到实现层的产物，那么 AI 时代，一个项目真正的“源码”是什么？</strong></p>
+</blockquote>
+<p>它至少应该包含正式范围、行为模型、关键约束、决策理由，以及判断还原是否成功的证据。</p>
+<p>这里的“源码”不是要替代代码：代码仍然负责重现当前构建，这层上游上下文则负责让另一位人或 AI 重现项目真正想保持的行为。</p>
+<h3 id="但一份不参与交付的规约，也只是一篇漂亮文档"><a href="#但一份不参与交付的规约，也只是一篇漂亮文档" class="headerlink" title="但一份不参与交付的规约，也只是一篇漂亮文档"></a>但一份不参与交付的规约，也只是一篇漂亮文档</h3><p>答案看起来很简单：补一份完整、专业的技术规约。但它马上会遇到一个更现实的问题——<strong>谁会一直更新它？</strong></p>
+<p>只要代码可以在规约未更新时继续开发、验收和上线，无论它第一次写得多完整，最终都会过期。这不是责任心问题，而是更新规约并非下一步的硬依赖。</p>
+<p>一旦赶进度、切换会话或更换负责人，它就会从“共同协议”退化成参考材料。更危险的是，它仍然写得很专业，下一位人或 AI 很可能继续把它当成事实。</p>
+<p>因此，本文并不把一致性寄托在“大家记得维护文档”上，而是依靠两个强制动作：</p>
 <table>
 <thead>
 <tr>
-<th>标记</th>
-<th>含义</th>
-<th>出现位置</th>
+<th>一致性发生在什么时候</th>
+<th>使用什么机制</th>
+<th>它解决什么问题</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>待定夺</strong></td>
-<td>真的还没有人拍板（未回答的 <code>open_questions[]</code>）</td>
-<td>模块页 <code>[!WARNING]</code> + 总览「待定夺」</td>
+<td><strong>第一次形成规约</strong></td>
+<td>从正式代码入口反推阶段、数据流、配置和源码指针，再让人只补代码无法回答的意图</td>
+<td>让规约描述“当前实际上怎样”，而不是重新想象一个理想系统</td>
 </tr>
 <tr>
-<td><strong>方案层未签核</strong></td>
-<td>已经定了、由代码起草，只是还没人署名</td>
-<td>模块页 <code>[!NOTE]</code> + 总览「方案层签核状态」</td>
-</tr>
-<tr>
-<td><strong>草稿，未发版</strong></td>
-<td>这一页渲染自工作区，其 content_hash 不对应任何 bundle</td>
-<td>每页 <code>[!CAUTION]</code> + 页首「渲染自」</td>
+<td><strong>以后每次发版</strong></td>
+<td>强制重新同步规约、证据和版本身份，并由 gate 检查指纹、覆盖关系与内容哈希</td>
+<td>代码一旦变化，旧规约就不能继续冒充当前版本完成交付</td>
 </tr>
 </tbody></table>
-<p>前两个说的是<strong>内容</strong>里还有什么没定，第三个说的是<strong>这一页本身</strong>能不能交出去。</p>
-<p>细则：<code>skills/warrant-onboard/references/interview-design.md</code>、<br><code>skills/warrant-onboard/references/interview-decisions.md</code>。</p>
-<p>onboard 的主要结果位于：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.warrant/</span><br><span class="line">├── config.yaml            # 原型宿主的 Git remote / mainline；不含凭据</span><br><span class="line">├── artifact.yaml          # 发版链、节点、条件分支、依赖、开关、关键配置资产和已知限制</span><br><span class="line">├── corpus/</span><br><span class="line">│   ├── index.yaml         # 必需边 / 分支由哪些用例覆盖</span><br><span class="line">│   └── cases/*.json       # 可移交的行为用例</span><br><span class="line">├── glossary.yaml          # 项目术语的中文含义</span><br><span class="line">├── decisions.yaml         # 行为变化的追加式决策记录</span><br><span class="line">└── confirmations.yaml     # 人工签核；首次 onboard 时可以还不存在</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>ERROR</code> 会阻断：例如代码指针失效、图的端点不存在、必需分支没有用例。</li>
-<li><code>WARNING</code> 不阻断：例如方案尚未由人确认、历史欠账仍在、问题已有记录但未回答。</li>
-<li>不要为了清零 warning 让 AI 编造理由。</li>
-</ul>
-<p>其中 <code>RELEASE_TREE_DIRTY</code> 值得当场处理：它列出 <code>.warrant/</code> 之外还没提交的文件，提前<br>告诉你「照现在这样 <code>export</code> 会被拦下来」。发版钉的是一个 commit，没提交的代码就不在<br>这一版里——与其等到最后 <code>export</code> 报错，不如现在决定它该不该进这次发版。<code>.warrant/</code><br>自己不算在内，那是本轮产出，随流程一起提交。</p>
-<hr>
-<h2 id="§3-原型侧：发版"><a href="#§3-原型侧：发版" class="headerlink" title="§3 原型侧：发版"></a>§3 原型侧：发版</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-release skill，导出这次给部署侧的 bundle。</span><br></pre></td></tr></table></figure>
-
-<p><code>export</code> 会：</p>
-<ol>
-<li>再次执行门禁（含 import 闭包审计：已注册源码的 import 链路上的活文件必须<br>注册进 <code>nodes[].sources</code> 或带理由地豁免，否则 <code>SOURCE_CLOSURE_UNDECLARED</code> 阻断）；</li>
-<li>计算并写入 <code>content_hash</code>；</li>
-<li>生成 <code>release-manifest.yaml</code>，写入原型仓库地址、当前分支和精确 commit；</li>
-<li>导出部署侧可以独立读取的 bundle，并标配生成 <code>SYNC_CHEATSHEET.md</code>——<br>与上一版 bundle 的 diff 渲染成的部署行动清单（必须重拷 &#x2F; 必须读实现 &#x2F;<br>必须确认取值 &#x2F; 必须回答的开放问题，标注本版新增 vs 历史携带 &#x2F; 验收命令）；</li>
-<li>拒绝非 Git 宿主、无 commit 的仓库、脏工作树，以及接手方无法定位源码的版本。</li>
-</ol>
-<p><strong>发版对分支没有要求。</strong> 一次发版钉的是 commit，不是分支：feature 分支、自定义主干、<br>detached HEAD 都可以发，也不需要先合入 master。唯一的 Git 要求是<strong>宿主代码已提交</strong>——<br>工作树是脏的，manifest 里那个 hash 就描述不了真正发出去的代码。这条不该留到 <code>export</code><br>才发现：<code>warrant check</code> 一路上都会用 <code>RELEASE_TREE_DIRTY</code> 报出来，skill 也会在开工前先问一句。</p>
-<p>commit 尚未推到任何远端分支时 <code>export</code> 照常成功，但会警告 <code>RELEASE_COMMIT_UNPUBLISHED</code>：<br>bundle 本身完整，只是在推之前部署侧 fetch 不到 manifest 指的那个 commit。<code>export</code> 自己写进<br><code>.warrant/releases/</code> 的产物不算脏，所以连发两次不会被自己挡住。</p>
-<p>团队若确实要求「每个 bundle 都出自主干」，那道检查仍在，改为显式开启：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-release skill，导出 bundle，并确保先用 warrant check --require-mainline 检查主干。</span><br></pre></td></tr></table></figure>
-
-<p>不传 <code>--out</code> 时，bundle 默认写入宿主项目的：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.warrant/releases/&lt;content_hash&gt;/</span><br></pre></td></tr></table></figure>
-
-<p>这是宿主项目的一部分，应随本次宿主 Git 发版 commit 一起提交。部署侧 checkout 该宿主<br>commit 后即可直接读取 bundle，不需要再从 Warrant 工具仓库寻找产物。如果使用显式 <code>--out</code>，<br>请仍然选择宿主仓库内、未被 <code>.gitignore</code> 忽略的目录；Warrant 不会替你执行 <code>git add</code> 或 <code>git commit</code>。</p>
-<p>发版不是「把当前目录压缩一下」。它交付的是一版明确的行为声明，以及证明这些声明所需的用例。</p>
-<p>技术方案文档是这版声明的<strong>视图</strong>，不是另一份平行文档，所以它读 bundle：页首写明发版<br><code>content_hash</code> 和原型 commit，内容资产展开的是 bundle 里 <code>materials/</code> 的逐字副本，而不是<br>「渲染那一刻工作区里恰好是什么」。不加 <code>--bundle</code> 渲染出来的页面会自己标成草稿——那是自查<br>用的，别发出去。</p>
-<hr>
-<h2 id="§4-部署侧：第一次对照"><a href="#§4-部署侧：第一次对照" class="headerlink" title="§4 部署侧：第一次对照"></a>§4 部署侧：第一次对照</h2><p>在<strong>生产项目根目录</strong>打开 Agent，并给出原型侧 bundle 路径：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-audit skill，对照 /path/to/warrant-bundle 审计当前生产实现。</span><br></pre></td></tr></table></figure>
-
-<p>Warrant 不要求生产项目使用相同语言、函数名或目录结构。部署侧要复现的是行为契约，而不是复制原型源码。</p>
-<p>生产侧适配并跑完 corpus 后，把结果文件路径交给 Agent 收口即可：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用例结果在 results.json。请据此 verify，并 finalize parity-report.json。</span><br></pre></td></tr></table></figure>
-
-<p><code>results.json</code> 形如 <code>&#123; &quot;case_a&quot;: true, &quot;case_b&quot;: false &#125;</code>。<code>finalize</code> 会丢弃报告里自称通过的布尔值，重新根据证据计算签收结果。</p>
-<hr>
-<h2 id="§5-后续版本：增量同步"><a href="#§5-后续版本：增量同步" class="headerlink" title="§5 后续版本：增量同步"></a>§5 后续版本：增量同步</h2><h3 id="原型侧发新版"><a href="#原型侧发新版" class="headerlink" title="原型侧发新版"></a>原型侧发新版</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-release skill，对比上一版 bundle，导出新版和 change records。</span><br><span class="line">上一版在 .warrant/releases/&lt;old_content_hash&gt;。</span><br></pre></td></tr></table></figure>
-
-<h3 id="部署侧跟新版"><a href="#部署侧跟新版" class="headerlink" title="部署侧跟新版"></a>部署侧跟新版</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请使用 warrant-sync skill，读取 changes.json 和新版 bundle，只跟进我选的那部分。</span><br></pre></td></tr></table></figure>
-
-<p><code>changes.json</code> 说明哪些行为契约和源码指纹发生了变化，原型 Git 历史则解释这些变化在<br>代码中如何发生。两者都要读：不能只按 commit message 猜行为，也不能只看一个<br>「hash changed」就实施同步。</p>
-<p><code>attribute</code> 不会用路径规则猜变化属于谁；归属由能理解改动的人或 Agent 判断，CLI 只保证没有遗漏。<code>select</code> 负责检查所选单元是否依赖闭合。</p>
-<hr>
-<h2 id="§6-承认差异：只同步一个单元"><a href="#§6-承认差异：只同步一个单元" class="headerlink" title="§6 承认差异：只同步一个单元"></a>§6 承认差异：只同步一个单元</h2><p>现实里两侧往往已经存在历史差异，而你暂时不打算统一整条链路——只想把某一个具体逻辑（示例：<code>example_unit</code>）迁过去。这正是 sync unit 的用途：差异保持原样，迁移按单元发生。</p>
-<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/diagrams/warrant-scope.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/diagrams/warrant-scope.svg" alt="同步单元、依赖闭包与验收范围"></a></p>
-<p><em>同步单元、依赖闭包与验收范围</em></p>
-<h3 id="原型侧（一次性）：把这个逻辑声明为-sync-unit"><a href="#原型侧（一次性）：把这个逻辑声明为-sync-unit" class="headerlink" title="原型侧（一次性）：把这个逻辑声明为 sync unit"></a>原型侧（一次性）：把这个逻辑声明为 sync unit</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请把 example_unit（示例业务逻辑）相关的节点归到一个名为 example_unit 的 sync unit，标记 deferrable，然后用 warrant-release skill 发版，把 bundle 提交并推送到主干。</span><br></pre></td></tr></table></figure>
-
-<p>这是一次性动作。之后每次发版照常（§5），不需要再提 slice；bundle 照常随仓库提交在 <code>.warrant/releases/</code> 下。</p>
-<h3 id="部署侧（一次性，仅未装过-warrant-时）：安装"><a href="#部署侧（一次性，仅未装过-warrant-时）：安装" class="headerlink" title="部署侧（一次性，仅未装过 warrant 时）：安装"></a>部署侧（一次性，仅未装过 warrant 时）：安装</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请安装 warrant：把 &lt;WARRANT_REPOSITORY_URL&gt; 克隆到本仓库之外的目录，pip install -e 装上；然后把克隆目录里的 skills/warrant-sync 安装到你自己使用的 skills 目录下。装完确认 warrant --version 能跑，并告诉我 skill 装到了哪个目录。</span><br></pre></td></tr></table></figure>
-
-<p>「安装到你自己使用的 skills 目录」是有意这么写的：skill 目录因 Agent 而异（Kimi Code 是 <code>.agents/skills/</code>，别的 Agent 另有自己的约定），Agent 自己最清楚它从哪里加载 skill。能从 技能市场装的话，也可以改用 warrant-install skill 走市场渠道。</p>
-<h3 id="部署侧（每次跟随时）：只取这个单元"><a href="#部署侧（每次跟随时）：只取这个单元" class="headerlink" title="部署侧（每次跟随时）：只取这个单元"></a>部署侧（每次跟随时）：只取这个单元</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">demo 仓库发新版了。请拉取 demo 仓库最新主干，用 warrant-sync skill 只同步 example_unit 这个单元，其余差异保持现状，不要动。</span><br></pre></td></tr></table></figure>
-
-<p>部署侧不需要任何人递路径或 hash：Agent 会自己从原型仓库的 <code>.warrant/releases/</code> 定位最新 bundle，选择 <code>example_unit</code>（依赖自动闭包），用 <code>warrant slice</code> 切出只含该单元的迁移包，照着包实施，并对切片后的 corpus 跑 verify。它不会签完整 <code>content_hash</code>——那是整版的指纹，部分同步签了就是以偏概全。</p>
-<p>如果 Agent 报告 <code>example_unit</code> 依赖了另一个单元而要求一并带上，那不是它在加戏：依赖闭包保证你拿到的组合是原型侧真正测过、描述过的组合。如果你确认只要 <code>example_unit</code> 本身，那就回到原型侧，把耦合拆开再发版。</p>
-<hr>
-<h2 id="常用操作速查"><a href="#常用操作速查" class="headerlink" title="常用操作速查"></a>常用操作速查</h2><p><strong>优先复制左列给 Agent。</strong> 右列是 Agent 会代跑、或你要自行核对时的程序指令，详细用法见<br><a href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83">附录</a>。</p>
+<p>这里的“强一致性”并不是要求每次 Vibe Coding 都实时改一篇文档。日常探索仍然可以很快；但到了发版边界，<strong>参考实现、规约、验收证据和版本身份必须形成同一份一致快照</strong>。只改代码而没有同步其他部分，这一版就不能被声明为可交付。</p>
+<p>所以，“技术文档”和“生产规约”真正的区别，不在于谁写得更详细：</p>
 <table>
 <thead>
 <tr>
-<th>我想做什么</th>
-<th>对 Agent 说</th>
-<th>对应程序指令</th>
+<th>只靠自觉维护的文档</th>
+<th>真正进入交付流程的规约</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>检查 <code>.warrant/</code> 是否自洽</td>
-<td><code>请跑 warrant check，用通俗话解释 ERROR / WARNING。</code></td>
-<td><code>warrant check</code></td>
+<td>代码变了，文档可以不变</td>
+<td>规约、证据或版本不一致时，交付会失败</td>
 </tr>
 <tr>
-<td>看现在装的是哪个版本</td>
-<td><code>跑 warrant --version，告诉我工具装在哪、是哪个 commit。</code></td>
-<td><code>warrant --version</code></td>
+<td>读者只能相信作者写得对</td>
+<td>重要声明可以回到代码、决策或测试查证</td>
 </tr>
 <tr>
-<td>升级 warrant 工具</td>
-<td><code>请使用 warrant-install skill 升级 warrant，升级完告诉我行为有什么变化。</code></td>
-<td>见 §1.3</td>
+<td>过期以后安静地留在那里</td>
+<td>对象变化后，旧声明会主动失效</td>
 </tr>
 <tr>
-<td>配置原型宿主 Git</td>
-<td><code>请帮我 configure-host，登记原型 remote 与主干。</code></td>
-<td><code>warrant configure-host [--remote origin --mainline master]</code></td>
-</tr>
-<tr>
-<td>查看还没问到我的、未回答的、未签核的</td>
-<td><code>请跑 warrant questions，列出待办与影响。</code></td>
-<td><code>warrant questions</code></td>
-</tr>
-<tr>
-<td>由负责人签核方案层</td>
-<td><code>请在我确认后，用 warrant confirm 为这些模块署名：…，--by &lt;我的名字&gt;。</code>（须本人确认后才能签）</td>
-<td><code>warrant confirm node &lt;id&gt; [&lt;id&gt; …] --by &lt;人名&gt;</code></td>
-</tr>
-<tr>
-<td>首次梳理候选交付链并生成方案网页</td>
-<td><code>请用 warrant-onboard skill onboard 当前项目。</code></td>
-<td><code>.warrant/</code> 检查后自动进入 <code>warrant-tech-doc</code> 与 <code>check-site</code></td>
-</tr>
-<tr>
-<td>生成技术方案（交付用）</td>
-<td><code>请使用 warrant-tech-doc skill，基于 bundle 生成图解技术文档。</code></td>
-<td>Agent 取材、按决策切章、逐节设计并截图；<code>check-site</code> 验证一致性</td>
-</tr>
-<tr>
-<td>生成技术方案（自查用）</td>
-<td><code>请使用 warrant-tech-doc skill，按当前工作区生成图解技术文档。</code></td>
-<td>同上；页面会标草稿</td>
-</tr>
-<tr>
-<td>确认已发布页面</td>
-<td><code>我要把这个链接发出去，请检查章节链接、事实版本和页面哈希。</code></td>
-<td><code>warrant check-site --site &lt;目录&gt; --url &lt;入口 URL&gt; [--bundle &lt;bundle&gt;]</code></td>
-</tr>
-<tr>
-<td>导出发版 bundle</td>
-<td><code>请使用 warrant-release skill，导出本次 bundle。</code></td>
-<td><code>warrant export</code></td>
-</tr>
-<tr>
-<td>对比上一版</td>
-<td><code>请对比上一版与本版 bundle，写出 change records。</code></td>
-<td><code>warrant diff --previous &lt;旧&gt; --out changes.json</code></td>
-</tr>
-<tr>
-<td>校验原型参考源码</td>
-<td><code>请按 release-manifest 检出并 verify-source。</code></td>
-<td><code>warrant verify-source --bundle &lt;b&gt; --checkout &lt;dir&gt;</code></td>
-</tr>
-<tr>
-<td>核对内容资产是否逐字一致</td>
-<td><code>请对 bundle 里的内容资产做 verify-material，列出不一致的条目。</code></td>
-<td><code>warrant verify-material --bundle &lt;b&gt; --map materials-map.yaml</code></td>
-</tr>
-<tr>
-<td>查两份疑似拷贝的内容资产差在哪</td>
-<td><code>check 报了 MATERIAL_DUPLICATED，请把这两份内容的差异逐条列出来。</code></td>
-<td><code>warrant diff-material [&lt;id&gt; &lt;id&gt;]</code></td>
-</tr>
-<tr>
-<td>检查变化归属是否齐全</td>
-<td><code>请 attribute 这份 changes.json，指出还缺归属的项。</code></td>
-<td><code>warrant attribute --packet … --assignments …</code></td>
-</tr>
-<tr>
-<td>选择依赖闭合的同步单元</td>
-<td><code>请 select 这些 sync unit，并补齐依赖。</code></td>
-<td><code>warrant select --units &lt;id,id&gt;</code></td>
-</tr>
-<tr>
-<td>按用例结果验收</td>
-<td><code>请用 results.json verify，再 finalize 报告。</code></td>
-<td><code>warrant verify</code> &#x2F; <code>warrant finalize</code></td>
-</tr>
-<tr>
-<td>生产首次对照</td>
-<td><code>请使用 warrant-audit skill，…</code></td>
-<td>（由 skill 编排）</td>
-</tr>
-<tr>
-<td>生产跟新版</td>
-<td><code>请使用 warrant-sync skill，…</code></td>
-<td>（由 skill 编排）</td>
+<td>主要供人阅读</td>
+<td>同时是人、AI 和程序的输入</td>
 </tr>
 </tbody></table>
-<p>完整参数可随时让 Agent 查，或自行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">warrant &lt;<span class="built_in">command</span>&gt; --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="附录：终端指令参考"><a href="#附录：终端指令参考" class="headerlink" title="附录：终端指令参考"></a>附录：终端指令参考</h2><p>以下命令<strong>默认由 Agent 代跑</strong>。只有在你想手动核对、或 Agent 不在场时才需要看这里。</p>
-<h3 id="§A-1-安装"><a href="#§A-1-安装" class="headerlink" title="§A.1 安装"></a>§A.1 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">WARRANT_HOME=...   <span class="comment"># 工具目录，须在宿主仓库之外</span></span><br><span class="line">HOST=...           <span class="comment"># 业务宿主项目根</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> &lt;WARRANT_REPOSITORY_URL&gt; <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span></span><br><span class="line">python -m pip install -e <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># skills：技能安装命令</span></span><br><span class="line"><span class="comment"># 对应技能：warrant-install / warrant-onboard / warrant-release / warrant-sync</span></span><br><span class="line"><span class="comment"># warrant-audit / warrant-tech-doc / warrant-diagram</span></span><br><span class="line"><span class="comment"># 机器访问不到 技能市场 时才兜底手动拷贝：</span></span><br><span class="line"><span class="comment">#   mkdir -p &quot;$HOST/.agents/skills&quot;</span></span><br><span class="line"><span class="comment">#   cp -R &quot;$WARRANT_HOME&quot;/skills/warrant-* &quot;$HOST/.agents/skills/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> &amp;&amp; warrant --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 不想装包：PYTHONPATH=&quot;$WARRANT_HOME/src&quot; python -m warrant.cli --help</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="§A-2-升级"><a href="#§A-2-升级" class="headerlink" title="§A.2 升级"></a>§A.2 升级</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">warrant --version                    <span class="comment"># 先确认工具装在哪个 checkout</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span> &amp;&amp; git pull</span><br><span class="line">python -m pip install -e <span class="string">&quot;<span class="variable">$WARRANT_HOME</span>&quot;</span>     <span class="comment"># 仅依赖 / entry point 有变动时必须</span></span><br><span class="line"><span class="comment"># skills：通过技能市场重装到最新版（每个绑定的宿主都要，别漏）</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> &amp;&amp; warrant --version &amp;&amp; warrant check</span><br></pre></td></tr></table></figure>
-
-<h3 id="§A-3-onboard"><a href="#§A-3-onboard" class="headerlink" title="§A.3 onboard"></a>§A.3 onboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">warrant configure-host</span><br><span class="line"><span class="comment"># 主干只在 check --require-mainline 时才用得上，发版不需要；要登记时：</span></span><br><span class="line">warrant configure-host --remote origin --mainline master</span><br><span class="line"></span><br><span class="line">warrant check</span><br><span class="line">warrant questions</span><br><span class="line"></span><br><span class="line"><span class="comment"># Agent 先从代码写 presentation-brief v6 的取材笔记、决策章节与逐节设计卡，</span></span><br><span class="line"><span class="comment"># 再为每节选择内容契合的图示/演示并生成多页 HTML；没有 Markdown renderer 步骤。</span></span><br><span class="line">warrant check-site --site docs/architecture/tech/site</span><br></pre></td></tr></table></figure>
-
-<p>onboard 阶段还没有 bundle，所以这里渲染的是工作区，页面会自带「草稿，未发版」提示。<br>要交给别人看的那一版，等 <code>warrant export</code> 之后加 <code>--bundle</code> 重新渲染一遍（见 §A.4）。<br>完成提示应首先给出可访问的技术方案 URL，其次是 <code>.warrant/</code> 产物目录、候选版本<br><code>content_hash</code>、当前是否正式发版和下一步提交&#x2F;合入动作；Chromium、截图、临时服务等<br>执行日志不属于用户交付摘要。</p>
-<h3 id="§A-4-发版"><a href="#§A-4-发版" class="headerlink" title="§A.4 发版"></a>§A.4 发版</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git status --short     <span class="comment"># 先看还有什么没提交；warrant check 也会以 RELEASE_TREE_DIRTY 提醒</span></span><br><span class="line">git commit -am <span class="string">&quot;...&quot;</span>   <span class="comment"># 发版前唯一的 Git 要求：宿主代码已提交</span></span><br><span class="line">warrant <span class="built_in">export</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 技术方案文档随本次发版一起出：Agent 从 bundle 和对应 producer commit 重新取材，</span></span><br><span class="line"><span class="comment"># 刷新章节设计和页面，然后只复制 site/ 到真实静态目录：</span></span><br><span class="line">warrant check-site --bundle .warrant/releases/&lt;content_hash&gt; \</span><br><span class="line">  --site public/tech-docs --url &lt;published index.html URL&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="§A-5-audit"><a href="#§A-5-audit" class="headerlink" title="§A.5 audit"></a>§A.5 audit</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> &lt;release-manifest.yaml 中的 producer.repository&gt; /path/to/producer-reference</span><br><span class="line">git -C /path/to/producer-reference checkout --detach &lt;producer.commit&gt;</span><br><span class="line">warrant verify-source \</span><br><span class="line">  --bundle /path/to/warrant-bundle \</span><br><span class="line">  --checkout /path/to/producer-reference</span><br><span class="line"></span><br><span class="line">warrant verify \</span><br><span class="line">  --corpus /path/to/warrant-bundle/corpus \</span><br><span class="line">  --results results.json</span><br><span class="line"></span><br><span class="line">warrant finalize \</span><br><span class="line">  --report parity-report.json \</span><br><span class="line">  --evidence results.json \</span><br><span class="line">  --corpus /path/to/warrant-bundle/corpus</span><br></pre></td></tr></table></figure>
-
-<h3 id="§A-6-sync"><a href="#§A-6-sync" class="headerlink" title="§A.6 sync"></a>§A.6 sync</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原型侧</span></span><br><span class="line">warrant <span class="built_in">export</span></span><br><span class="line">warrant diff \</span><br><span class="line">  --previous .warrant/releases/&lt;old_content_hash&gt; \</span><br><span class="line">  --current .warrant/releases/&lt;new_content_hash&gt; \</span><br><span class="line">  --out changes.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署侧</span></span><br><span class="line">warrant attribute \</span><br><span class="line">  --packet changes.json \</span><br><span class="line">  --assignments assignments.yaml</span><br><span class="line">warrant <span class="keyword">select</span> --units routing,prompt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 阅读原型区间时的参考命令（通常由 Agent 代跑）</span></span><br><span class="line">git -C /path/to/producer-reference <span class="built_in">log</span> --oneline &lt;from_commit&gt;..&lt;to_commit&gt;</span><br><span class="line">git -C /path/to/producer-reference diff &lt;from_commit&gt;..&lt;to_commit&gt; -- &lt;本次涉及的 sources&gt;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="每种产物是什么意思？"><a href="#每种产物是什么意思？" class="headerlink" title="每种产物是什么意思？"></a>每种产物是什么意思？</h2><table>
+<p>换句话说：</p>
+<blockquote>
+<p><strong>一份文档不是因为名字叫“规约”就有约束力。只有当违背它会产生可见后果，它才真正成为交付物。</strong></p>
+</blockquote>
+<p>这也反过来规定了我要做的东西：</p>
+<table>
 <thead>
 <tr>
-<th>产物</th>
-<th>给谁</th>
+<th>设计要求</th>
+<th>必须做到</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>事实优先</strong></td>
+<td>从当前代码恢复事实，而不是从作者心里的理想系统开始</td>
+</tr>
+<tr>
+<td><strong>意图不猜</strong></td>
+<td>代码答不了的问题，必须通过规范化问答交还给人</td>
+</tr>
+<tr>
+<td><strong>结果可验</strong></td>
+<td>不只生成 Markdown，还要携带可执行的验收证据</td>
+</tr>
+<tr>
+<td><strong>过期可见</strong></td>
+<td>与代码、版本及发布流程绑定，失效时能够阻断或报警</td>
+</tr>
+</tbody></table>
+<p>后面会反复出现几个工程词，先把它们翻译成直白的话：</p>
+<table>
+<thead>
+<tr>
+<th>文中术语</th>
+<th>可以先理解成</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>slice</code></td>
+<td>这次真正要交付的一条正式功能路径</td>
+</tr>
+<tr>
+<td>source pointer</td>
+<td>一条声明具体来自哪个文件、函数或配置</td>
+</tr>
+<tr>
+<td>golden case</td>
+<td>一组固定输入，以及它必须触发的关键行为</td>
+</tr>
+<tr>
+<td>fingerprint &#x2F; content hash</td>
+<td>给局部声明或整份交付物按下的“内容指纹”</td>
+</tr>
+<tr>
+<td>gate</td>
+<td>不听 AI 解释、只按规则和证据放行的检查</td>
+</tr>
+<tr>
+<td>waiver</td>
+<td>已经知道、暂时接受，但不能假装不存在的缺口</td>
+</tr>
+</tbody></table>
+<p>这些看起来有些“重”的设计，其实都在回答同一个问题：</p>
+<blockquote>
+<p><strong>怎样让这份规约不只靠人的意志，也能留在真实交付路径里？</strong></p>
+</blockquote>
+<h3 id="规约怎样进入流程？把“发版”定义成交付"><a href="#规约怎样进入流程？把“发版”定义成交付" class="headerlink" title="规约怎样进入流程？把“发版”定义成交付"></a>规约怎样进入流程？把“发版”定义成交付</h3><p>这里不是要让开发者每和 AI 对话一次，就停下来维护一篇巨大的技术文档，那样只会拖慢 Vibe Coding 最有价值的反馈速度。真正适合建立硬边界的动作，是<strong>发版</strong>。</p>
+<p>在原型侧，日常迭代仍然可以很自由：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/14-release-artifact-b608a1be5417.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/14-release-artifact-b608a1be5417.svg" alt="把发版重新定义成一次完整交付"></a></p>
+<p>但当负责人说“这一版可以交给线上”时，含义就应当发生变化：它不再只是“把当前代码提交一下”，而是在声明：</p>
+<blockquote>
+<p><strong>这份实现、它对应的上下文，以及证明它成立的证据，共同构成一个可以交付的版本。</strong></p>
+</blockquote>
+<p>所以在原型 → 线上的模式里，需要重新定义 release：传统发版关注代码和构建产物；AI 原型的生产发版还必须带上规约、验收证据与精确版本身份。</p>
+<p>其中，“代表这一版实现的上下文”是最关键的部分。它不是原作者所有聊天记录的归档，也不是一篇与代码各自演化的说明文档，而是与这个版本绑定的最小上下文：</p>
+<table>
+<thead>
+<tr>
+<th>发版内容</th>
 <th>它回答什么</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>.warrant/artifact.yaml</code></td>
-<td>两侧 Agent、门禁、文档渲染器</td>
-<td>这次到底发什么，内部怎样分支和交接</td>
+<td>Reference implementation</td>
+<td>这一版真实跑通的代码和正式入口在哪里</td>
 </tr>
 <tr>
-<td><code>.warrant/config.yaml</code></td>
-<td>原型侧 CLI</td>
-<td>哪个 Git remote&#x2F;mainline 是原型宿主的发布来源</td>
+<td>Production spec &#x2F; context</td>
+<td>正式范围、技术行为、配置与关键决策是什么</td>
 </tr>
 <tr>
-<td><code>release-manifest.yaml</code></td>
-<td>部署侧 Agent</td>
-<td>原型仓库在哪里、必须参考哪个不可变 commit</td>
+<td>Acceptance evidence</td>
+<td>哪些 case 已经证明这些行为成立，哪些缺口仍被 waiver</td>
 </tr>
 <tr>
-<td><code>materials.yaml</code> + <code>materials/</code></td>
-<td>部署侧、评审、新同学</td>
-<td>哪些内容（prompt &#x2F; 风格池 &#x2F; 模版 &#x2F; 词表）必须逐字持有，以及那份内容本身</td>
+<td>Version identity</td>
+<td>它对应哪个 commit、内容哈希和环境基线</td>
 </tr>
 <tr>
-<td><code>.warrant/corpus/</code></td>
-<td>部署侧与验收 CI</td>
-<td>哪些行为必须在生产实现中重新成立</td>
+<td>Change set</td>
+<td>相比上一个可交付版本，究竟改变了什么</td>
+</tr>
+</tbody></table>
+<p>发版动作负责选择正式 slice、恢复规约、补充代码答不了的 why、运行 proof &#x2F; golden &#x2F; gate，最后导出带 <code>content_hash</code> 的不可变交付包。</p>
+<p>任何一项关键内容缺失，发版就应该失败，或者至少明确带着 waiver 发出。这样，规约才不再依赖开发者“记得更新”，而会成为发布版本时必须生成、检查和消费的东西。</p>
+<p>生产侧接收的也不再是一个仍在继续实验的仓库，而是一个已经定版、能够被解释和验证的 release。</p>
+<p>这也是我理解的 AI 时代 production artifact：</p>
+<blockquote>
+<p><strong>它不是代码旁边多放的一份文档，而是一次发版本身必须携带的、能够解释并验证这个版本的上下文。</strong></p>
+</blockquote>
+<p>把几个容易混在一起的词放在这里，它们其实是三层关系：</p>
+<table>
+<thead>
+<tr>
+<th>本文使用的概念</th>
+<th>它指什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>生产技术规约</strong></td>
+<td>这份上下文的核心：范围、行为、约束、决策与验收义务</td>
+</tr>
+<tr>
+<td><strong>Production artifact</strong></td>
+<td>规约与参考实现、证据、版本信息一起进入发版后的交付形态</td>
+</tr>
+<tr>
+<td><strong>AI 时代的“源码”</strong></td>
+<td>足以让下一位人或 AI 重建目标行为并判断成功的最小可重现闭包</td>
+</tr>
+</tbody></table>
+<p>下一次原型发版时，不必让生产侧重新阅读全部历史。新 release 只需携带版本身份、当前规约、对应证据，以及相对上一版的结构化 diff。</p>
+<p>到这里，问题终于从“缺一份文档”，收敛成了“怎样从现有仓库可靠地生产这套交付物”。</p>
+<hr>
+<h2 id="02｜实践：怎样从代码恢复一份可验收的规约？"><a href="#02｜实践：怎样从代码恢复一份可验收的规约？" class="headerlink" title="02｜实践：怎样从代码恢复一份可验收的规约？"></a>02｜实践：怎样从代码恢复一份可验收的规约？</h2><h3 id="直接把整个仓库交给-AI，不行吗？"><a href="#直接把整个仓库交给-AI，不行吗？" class="headerlink" title="直接把整个仓库交给 AI，不行吗？"></a>直接把整个仓库交给 AI，不行吗？</h3><p>我最早确实想过直接让 AI 读完整个仓库。它解释单个函数、整理一组文件的模块关系都很快，但“读得懂代码”和“知道该交付什么”是两件事。</p>
+<p>原型项目的仓库里同时存在：</p>
+<table>
+<thead>
+<tr>
+<th>仓库里能看到的东西</th>
+<th>部署时应该怎样理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正式链路</td>
+<td>必须实现</td>
+</tr>
+<tr>
+<td>旧版链路</td>
+<td>可能只是历史参考</td>
+</tr>
+<tr>
+<td>实验 prompt</td>
+<td>不能因为文件还在就带进生产</td>
+</tr>
+<tr>
+<td>测评入口</td>
+<td>用来验证，不一定属于线上调用链</td>
+</tr>
+<tr>
+<td>临时排查代码</td>
+<td>更不应该成为产品能力</td>
+</tr>
+<tr>
+<td>代码默认值</td>
+<td>不一定等于生产部署值</td>
+</tr>
+</tbody></table>
+<p>这时让 AI “总结一下仓库”，很容易得到一篇流畅、完整，却把实验代码也纳入正式范围的文档。</p>
+<p>AI 有一种危险的体贴：碰到空白时，它会努力给出一个听起来合理的解释。人面对不确定的代码往往会停下来问，AI 却更容易继续向前，把推断写成事实。</p>
+<p>所以我后来不再问：</p>
+<blockquote>
+<p>帮我总结这个项目。</p>
+</blockquote>
+<p>而是改问：</p>
+<blockquote>
+<p><strong>本次需要进入生产环境的，究竟是哪条从输入到输出的完整功能链路？</strong></p>
+</blockquote>
+<h3 id="第一次转折：从“总结仓库”变成“追踪入口”"><a href="#第一次转折：从“总结仓库”变成“追踪入口”" class="headerlink" title="第一次转折：从“总结仓库”变成“追踪入口”"></a>第一次转折：从“总结仓库”变成“追踪入口”</h3><p>问题一换，AI 的工作也变了：它不再漫游整个仓库，而是从正式 API 入口开始，沿真实调用关系向下追。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/03-code-to-spec-4c19273f2912.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/03-code-to-spec-4c19273f2912.svg" alt="从代码反推规范的路径"></a></p>
+<p>无法从正式入口抵达的旧文件和实验支线，不自动纳入交付范围；沿途经过的阶段、字段、路由、配置、prompt 和外部调用，则形成一张正式技术切片。</p>
+<p>在原型项目里，这张切片大致包括：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/05-prototype-handoff-ecea76e0caee.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/05-prototype-handoff-ecea76e0caee.svg" alt="原型项目到生产的可计算交接链路"></a></p>
+<p>我们先把这张切片整理成机器可读的 <code>manifest</code>，将正式阶段、数据 handoff、路由条件、环境配置和外部依赖放进同一个可比较对象。</p>
+<p>它比“项目架构介绍”更有用，因为每条重要声明都尽量带着可以回到源码的指针：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">backend/services/xxx.py::resolve_dialogue_refine_tag_route</span><br></pre></td></tr></table></figure>
+
+<p>部署同学不必相信文档作者的二手描述，可以顺着指针回到代码查证。</p>
+<h3 id="但代码只能回答-WHAT，不能回答-WHY"><a href="#但代码只能回答-WHAT，不能回答-WHY" class="headerlink" title="但代码只能回答 WHAT，不能回答 WHY"></a>但代码只能回答 WHAT，不能回答 WHY</h3><p>做完第一版，我很快又撞到第二个问题。</p>
+<p>代码可以告诉我：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">现在选了 true</span><br></pre></td></tr></table></figure>
+
+<p>但它通常不会告诉我：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">为什么必须是 true？</span><br><span class="line">这是有意选择，还是历史遗留？</span><br><span class="line">如果改成 false，会破坏哪条能力？</span><br></pre></td></tr></table></figure>
+
+<p>这些内容恰好藏在已经散失的 Vibe Coding 对话里。因此，“从代码反推规范”不能只有自动提取，还需要一轮很窄的规范化问答。</p>
+<p>它不是让人重写技术方案，只问那些<strong>代码确实回答不了、并且会影响生产实现</strong>的问题。</p>
+<table>
+<thead>
+<tr>
+<th>发现的情况</th>
+<th>要问人的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>部署值偏离代码默认值</td>
+<td>为什么偏离？这个理由覆盖的是哪一组值？</td>
+</tr>
+<tr>
+<td>某个集成允许延期</td>
+<td>为什么可以延期？缺失时必须怎样表现？</td>
+</tr>
+<tr>
+<td>两条行为都说得通</td>
+<td>哪一条是正式选择？另一条是禁用还是未实现？</td>
+</tr>
+<tr>
+<td>代码发生了有意行为变化</td>
+<td>为什么改？从哪一版开始生效？</td>
+</tr>
+</tbody></table>
+<p>这里有一个我后来越来越坚持的原则：</p>
+<blockquote>
+<p><strong>AI 可以帮我找到“需要回答的问题”，但不能替我编一个 why。</strong></p>
+</blockquote>
+<p>不知道就留空，需要 owner 决策就明确标出。一段看起来专业的虚构理由，比没有理由更危险。</p>
+<h3 id="第二次转折：这份规范不只是给人看的"><a href="#第二次转折：这份规范不只是给人看的" class="headerlink" title="第二次转折：这份规范不只是给人看的"></a>第二次转折：这份规范不只是给人看的</h3><p>一开始，我把 <code>manifest</code> 和配套说明理解成“部署文档”，后来才发现，它甚至更适合给 AI 看。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/04-one-spec-two-readers-821a114d7086.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/04-one-spec-two-readers-821a114d7086.svg" alt="一份规范服务人、AI 和程序"></a></p>
+<p>人的阅读习惯和 AI 不完全一样：</p>
+<table>
+<thead>
+<tr>
+<th>同一件事</th>
+<th>人更需要</th>
+<th>AI 更需要</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统范围</td>
+<td>一张图、简短说明</td>
+<td>稳定 ID、结构化 schema</td>
+</tr>
+<tr>
+<td>技术声明</td>
+<td>原因、背景、可读文字</td>
+<td>精确字段、枚举值、依赖关系</td>
+</tr>
+<tr>
+<td>查证</td>
+<td><code>file.py::symbol</code> 源码指针</td>
+<td>可解析 pointer、fingerprint</td>
+</tr>
+<tr>
+<td>版本变化</td>
+<td>“这次为什么改”</td>
+<td>前后 artifact 的结构化 diff</td>
+</tr>
+<tr>
+<td>验收</td>
+<td>能看懂的结果</td>
+<td>case、obligation、evidence</td>
+</tr>
+</tbody></table>
+<p>这不意味着要维护两份规范。更好的方式是维护同一组结构化事实，再生成不同视图：</p>
+<ul>
+<li>给人的版本：技术文档、流程图、决策说明；</li>
+<li>给 AI 的版本：manifest、变更包、源码指针、约束；</li>
+<li>给程序的版本：golden case、覆盖关系和 gate。</li>
+</ul>
+<p>这时，技术文档不再是独立维护的附属品，而成为 production artifact 面向人的视图：原型侧 AI 从代码与问答生产 artifact，人通过文档理解和查证，生产侧 AI 消费结构化版本完成实现，程序再依据同一组 case 验收。</p>
+<p>对我来说，这是整件事里最抓人的变化：</p>
+<blockquote>
+<p><strong>过去文档主要解决“人和人怎么对齐”；现在它还要解决“AI 和 AI 怎么对齐”。</strong></p>
+</blockquote>
+<h3 id="只有说明还不够：还要有一套验收-CI"><a href="#只有说明还不够：还要有一套验收-CI" class="headerlink" title="只有说明还不够：还要有一套验收 CI"></a>只有说明还不够：还要有一套验收 CI</h3><p>如果部署侧实现完成后，仍然只能由人上线点一遍功能，这件事就只做了一半。页面最终“能出一首歌”，不代表多阶段 AI 链路里的每个行为都正确：</p>
+<table>
+<thead>
+<tr>
+<th>验收层面</th>
+<th>需要检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>安全前置</strong></td>
+<td>对话是否脱敏，命中风险后是否及时阻断</td>
+</tr>
+<tr>
+<td><strong>路由行为</strong></td>
+<td>S3 是否选择了正确的歌词路径</td>
+</tr>
+<tr>
+<td><strong>数据交接</strong></td>
+<td>上一阶段字段是否完整传给下一阶段</td>
+</tr>
+<tr>
+<td><strong>生产配置</strong></td>
+<td>环境开关是否固定在正确取值</td>
+</tr>
+<tr>
+<td><strong>异常策略</strong></td>
+<td>fallback 是否真的实现，而非碰巧没有报错</td>
+</tr>
+</tbody></table>
+<p>所以 <code>manifest</code> 之后，我们又补了三样东西：</p>
+<table>
+<thead>
+<tr>
+<th>产物</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>manifest</code></td>
+<td>本版本完整要实现什么</td>
+</tr>
+<tr>
+<td><code>golden corpus</code></td>
+<td>哪些输入应该触发哪些关键行为</td>
+</tr>
+<tr>
+<td><code>deploy packet</code></td>
+<td>相对上次同步，这次究竟改了什么</td>
 </tr>
 <tr>
 <td><code>content_hash</code></td>
-<td>双方</td>
-<td>当前讨论和签收的是哪一版行为</td>
-</tr>
-<tr>
-<td><code>.warrant/releases/&lt;content_hash&gt;/</code></td>
-<td>宿主 Git、部署侧 Agent</td>
-<td>随宿主发版 commit 交付的完整原型交接包</td>
-</tr>
-<tr>
-<td>bundle</td>
-<td>部署侧</td>
-<td>不依赖原型聊天记录即可定位原型源码、理解契约并完成验收的交接包</td>
-</tr>
-<tr>
-<td><code>changes.json</code></td>
-<td>增量同步 Agent</td>
-<td>新旧两版发生了哪些契约变化，以及应查看哪个原型 commit 区间</td>
-</tr>
-<tr>
-<td><code>parity-report.json</code></td>
-<td>评审和签收人</td>
-<td>生产实现还差什么、证据是否足够</td>
-</tr>
-<tr>
-<td>技术方案站点</td>
-<td>新同学、评审、维护者</td>
-<td>Agent 从代码取材、按项目决策切章，并为每节选择内容契合的图示；<code>warrant-site.yaml</code> 只绑定 brief、事实来源、版本与截图检查，不指定配色或组件模板</td>
+<td>生产侧现在对齐的是不是同一版内容</td>
 </tr>
 </tbody></table>
-<hr>
-<h2 id="作为-Python-库接入"><a href="#作为-Python-库接入" class="headerlink" title="作为 Python 库接入"></a>作为 Python 库接入</h2><p>CLI 是 Agent 代跑的底层入口；已有平台也可以直接给门禁传标准记录：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">from</span> warrant <span class="keyword">import</span> Claim, Coverage, Obligation, ObligationSet, Proof, check_records</span><br><span class="line"></span><br><span class="line">issues = check_records(</span><br><span class="line">    Path(<span class="string">&quot;.&quot;</span>),</span><br><span class="line">    claims=[</span><br><span class="line">        Claim(</span><br><span class="line">            <span class="string">&quot;env_contract&quot;</span>,</span><br><span class="line">            <span class="string">&quot;FAST_MODE&quot;</span>,</span><br><span class="line">            <span class="string">&quot;false→true&quot;</span>,</span><br><span class="line">            <span class="string">&quot;因为生产延迟预算要求跳过第二遍处理&quot;</span>,</span><br><span class="line">            <span class="string">&quot;false→true&quot;</span>,</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">    obligation_sets=[</span><br><span class="line">        ObligationSet(</span><br><span class="line">            [Obligation(<span class="string">&quot;checkout_to_payment&quot;</span>, kind=<span class="string">&quot;handoff&quot;</span>)],</span><br><span class="line">            [Proof(<span class="string">&quot;case_a&quot;</span>, declares=<span class="built_in">frozenset</span>(&#123;<span class="string">&quot;checkout_to_payment&quot;</span>&#125;))],</span><br><span class="line">            Coverage(</span><br><span class="line">                registrations=((<span class="string">&quot;checkout_to_payment&quot;</span>, (<span class="string">&quot;case_a&quot;</span>,)),)</span><br><span class="line">            ),</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这里的“验收 CI”，不是泛指代码能不能编译、单元测试是否通过，而是原型实现与生产实现之间的<strong>独立裁判</strong>。它要回答的是：</p>
+<blockquote>
+<p><strong>生产侧换了一套实现以后，有没有把本版本规定的正式行为真正还原出来？</strong></p>
+</blockquote>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/21-acceptance-ci-ed153c48ec39.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/21-acceptance-ci-ed153c48ec39.svg" alt="验收 CI 如何判断生产实现是否还原成功"></a></p>
+<p>生产侧 AI 先读取 deploy packet 完成本次变化，再用生产实现运行同一组 golden case；验收 CI 根据实际 evidence 重新计算 PASS &#x2F; FAIL——登记一个 case 只代表“它应该证明什么”，不能代替生产实现真正跑出的证据，暂时无法证明的内容则明确标为 waiver。</p>
+<h3 id="规约真正进入交付：过期时必须主动失效"><a href="#规约真正进入交付：过期时必须主动失效" class="headerlink" title="规约真正进入交付：过期时必须主动失效"></a>规约真正进入交付：过期时必须主动失效</h3><p>能从代码恢复规约，只解决了第一次交付。代码继续迭代以后，前面说过的老问题马上又会回来：如果更新规约仍然只靠“大家记得”，它迟早还会变成下一份过期文档。</p>
+<p>于是我们不再追求一个不现实的目标——要求所有声明永远正确，而是换成：</p>
+<blockquote>
+<p><strong>不要求声明永远正确；要求它一旦不再正确，就不能继续冒充事实。</strong></p>
+</blockquote>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/06-self-invalidating-4e62d0b545a4.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/06-self-invalidating-4e62d0b545a4.svg" alt="让文档在过期时主动失效"></a></p>
+<p>做法是给重要声明绑定它所描述对象的 fingerprint。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">声明：部署值选择 false，因为……</span><br><span class="line">覆盖对象：baseline=true → chosen=false</span><br></pre></td></tr></table></figure>
 
-<p>门禁接收 records，不遍历宿主项目的业务目录，也不要求宿主采用 Warrant 的字段名。已有自定义 manifest 的老项目可以使用 <code>warrant.adapters.legacy.WarrantProfile</code> 做适配；新项目应直接使用 <code>.warrant/</code> schema。</p>
-<p>完整结构见 <a href="/pototaker_blog/downloads/warrant/SCHEMA.txt"><code>SCHEMA.md</code></a>。</p>
+<p>如果以后有人把 chosen 改成 <code>true</code>，旧理由的 fingerprint 就不再匹配。</p>
+<p>发布 gate 会直接报错：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个 why 已经过期，请重新确认</span><br></pre></td></tr></table></figure>
+
+<p>同样的思路也可以用于：</p>
+<table>
+<thead>
+<tr>
+<th>绑定对象</th>
+<th>变化以后怎样处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源码指针</td>
+<td>函数改名或消失，相关声明失效</td>
+</tr>
+<tr>
+<td>行为决策</td>
+<td>snapshot 变化，旧决策不再覆盖</td>
+</tr>
+<tr>
+<td>golden 证明</td>
+<td>case 未声明实际触发的边，覆盖失效</td>
+</tr>
+<tr>
+<td>发布版本</td>
+<td>artifact 内容变化，<code>content_hash</code> 随之改变</td>
+</tr>
+</tbody></table>
+<p>文档最危险的状态从来不是“没写”，而是已经错了，却仍然用确定的语气留在那里。</p>
 <hr>
-<h2 id="Warrant-不做什么"><a href="#Warrant-不做什么" class="headerlink" title="Warrant 不做什么"></a>Warrant 不做什么</h2><ul>
-<li><strong>不替人决定发什么。</strong> slice 必须由项目负责人确认。</li>
-<li><strong>不从代码推断设计动机。</strong> 找不到理由就提问或留空，不生成合理化解释。</li>
-<li><strong>不要求生产复制原型源码。</strong> 交付的是行为契约和证据，不是目录结构。唯一例外是<br><code>materials[]</code> 里声明 <code>replication: verbatim</code> 的内容资产——prompt、风格池、模版<br>这类东西没有「等价重写」，只能整份搬过去。</li>
-<li><strong>不把原型源码当成隐含上下文。</strong> audit&#x2F;sync 必须按 bundle 定位并验证原型 Git commit。</li>
-<li><strong>不自动编写领域结果提取器。</strong> 如何把运行输出映射成 case 结果属于宿主领域。</li>
-<li><strong>不把实现细节塞满技术文档。</strong> 代码和 schema 只有被 <code>evidence[]</code> 声明为关键证据时才折叠展示。<br>被 <code>materials[]</code> 声明的内容资产是另一回事：它是产品表现的来源，紧跟「方案」单列一节，<br>给摘要行 + 可扫索引表 + 折叠全文。</li>
-<li><strong>不替人签核。</strong> <code>confirm</code> 必须由真正读过方案的人确认后执行；Agent 不得自行署名。</li>
-<li><strong>没有接手方时价值有限。</strong> 它保护的是一次跨责任域交接。</li>
+<h2 id="03｜业界：Vibe-Coding-之后，软件开发在往哪里走？"><a href="#03｜业界：Vibe-Coding-之后，软件开发在往哪里走？" class="headerlink" title="03｜业界：Vibe Coding 之后，软件开发在往哪里走？"></a>03｜业界：Vibe Coding 之后，软件开发在往哪里走？</h2><p>做到这里，我才开始认真查找：<strong>这件事在业界到底叫什么，别人又在怎样解决？</strong></p>
+<p>“原型已经跑通，但不知道怎样变成可维护产品”还没有统一名字。</p>
+<p>prototype-to-production gap、vibe coding to production、codebase cognitive debt 等不同说法，都在汇向同一个问题：</p>
+<blockquote>
+<p><strong>当 AI 把实现变得非常便宜，过去用来保存意图、形成共识和定义正确性的那些工件，还剩下什么？</strong></p>
+</blockquote>
+<p>原型项目只是把这个变化放大了。对于普通项目，它可能表现得更日常：</p>
+<table>
+<thead>
+<tr>
+<th>你看到的现象</th>
+<th>背后的上下文缺口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>三个月后自己已经看不懂</td>
+<td>项目脉络只存在于当时的记忆</td>
+</tr>
+<tr>
+<td>新 AI 会话反复重读仓库</td>
+<td>没有稳定、可继承的上层上下文</td>
+</tr>
+<tr>
+<td>新功能悄悄破坏旧功能</td>
+<td>重要行为没有成为可执行约束</td>
+</tr>
+<tr>
+<td>文档很多，却不知道哪份是真的</td>
+<td>文档没有版本身份与失效机制</td>
+</tr>
+<tr>
+<td>agent 说“已完成”，人仍要亲自点一遍</td>
+<td>实现者的声明没有独立证据</td>
+</tr>
+</tbody></table>
+<p>问题的尺度不同，根因其实很接近。</p>
+<h3 id="Vibe-Coding-改变的，不只是写代码的方式"><a href="#Vibe-Coding-改变的，不只是写代码的方式" class="headerlink" title="Vibe Coding 改变的，不只是写代码的方式"></a>Vibe Coding 改变的，不只是写代码的方式</h3><p>“用自然语言生成代码”只是最表面的一层，更深的变化发生在产品开发的组织结构。传统开发不只是“产品写需求、开发写代码”，而是一条把产品意图逐层收敛成运行实现的链路：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/10-intent-to-implementation-29b1e748c59e.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/10-intent-to-implementation-29b1e748c59e.svg" alt="从传统意图链路，到 SDD 与原型—生产链路"></a></p>
+<p>这条链不能保证软件永远正确，却会在每一次开放判断之间，留下下一棒必须消费和检查的工件：</p>
+<table>
+<thead>
+<tr>
+<th>交接阶段</th>
+<th>必须消费和检查的工件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>产品 → 开发</td>
+<td>需求文档：确认“要做什么”</td>
+</tr>
+<tr>
+<td>开发 → 开发</td>
+<td>技术方案：确认“准备怎样做”</td>
+</tr>
+<tr>
+<td>开发 → 构建</td>
+<td>code review、测试和 CI：检查源代码</td>
+</tr>
+<tr>
+<td>源码 → 制品</td>
+<td>编译器与构建系统：完成确定性转换</td>
+</tr>
+<tr>
+<td>制品 → 运行</td>
+<td>发布与运行系统：验证目标环境中的行为</td>
+</tr>
+</tbody></table>
+<p>这些文档和代码都在充当 boundary object——跨角色边界的共识对象。</p>
+<ul>
+<li><strong>产品 → 开发｜</strong> “要做什么”必须通过需求文档交接；</li>
+<li><strong>开发 → 开发｜</strong> “准备怎样做”必须通过技术方案评审；</li>
+<li><strong>代码 → 运行｜</strong> 实现必须经过 review、构建、测试与发布。</li>
 </ul>
+<p>它们长期存在，不只是因为流程要求，而是因为<strong>没有这些工件，下一棒的人就无法开工</strong>。</p>
+<p>AI 出现以后，这条链并未失效。SDD 仍然保留“意图 → spec → 实现 → 构建 → 运行”的顺序，只是让 AI 承担更多技术翻译和 Coding。</p>
+<p>真实的 Vibe Coding 却常常走一条更短的路：产品、设计和开发角色开始重叠，人直接根据运行效果给 AI 下一轮反馈。</p>
+<p>同一个人提出想法、让 AI 修改、自己运行，再立刻决定下一步。产品、设计和开发没有消失，却不再总是由三个角色依次完成。更准确地说：</p>
+<blockquote>
+<p><strong>开发从“以角色交接为中心的串行流程”，变成了“以运行结果为中心的人—AI 高频反馈闭环”。</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>传统产品开发</th>
+<th>Vibe Coding 式原型开发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>产品提出需求，开发负责实现</td>
+<td>产品、设计、开发常常变成同一个人和 AI 的组合</td>
+</tr>
+<tr>
+<td>需求必须先被写下来，才能跨角色沟通</td>
+<td>直接把想法告诉 AI，马上就能看到能跑的东西</td>
+</tr>
+<tr>
+<td>PRD、技术方案是下一角色开工的硬依赖</td>
+<td>角色边界变模糊，文档变成旁路工作</td>
+</tr>
+<tr>
+<td>原型通常是一次性验证品</td>
+<td>原型经常直接长成真实产品</td>
+</tr>
+<tr>
+<td>代码是实现结果</td>
+<td>代码逐渐变成唯一留下来的行为记录</td>
+</tr>
+</tbody></table>
+<p>意图抵达实现的保证并没有消失，只是被推迟到了下一次责任边界。</p>
+<p>要理解为什么原型发版必须补回 production artifact，还要再看一件事：Vibe Coding 过程中，人究竟在验收什么？</p>
+<h3 id="新范式里，真正被验收的交付物是“效果”"><a href="#新范式里，真正被验收的交付物是“效果”" class="headerlink" title="新范式里，真正被验收的交付物是“效果”"></a>新范式里，真正被验收的交付物是“效果”</h3><p>角色边界被压缩以后，“什么东西会被认真检查”也随之改变。传统开发的下一棒真的在等待需求单和技术方案；Vibe Coding 里，同一个人直接和 AI 对话，最后检查的是：</p>
+<table>
+<thead>
+<tr>
+<th>看什么</th>
+<th>实际验收的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>页面</td>
+<td>是不是我想要的样子</td>
+</tr>
+<tr>
+<td>流程</td>
+<td>能不能真正跑通</td>
+</tr>
+<tr>
+<td>内容</td>
+<td>这首歌听起来对不对</td>
+</tr>
+<tr>
+<td>迭代</td>
+<td>这次修改有没有改善体验</td>
+</tr>
+</tbody></table>
+<p>换句话说：</p>
+<blockquote>
+<p><strong>Vibe Coding 的真实交付物不是需求单，不是技术方案，甚至不一定是人能解释清楚的代码；它首先是效果。</strong></p>
+</blockquote>
+<p>只要效果通过，人通常不会再逐项检查 AI 补了哪些假设、选择了哪种结构、遗漏了哪些边界。于是一个典型的 Vibe Coding 项目会留下这样的结果：</p>
+<blockquote>
+<p><strong>效果被验收，代码被保存，上下文被丢失。</strong></p>
+</blockquote>
+<p>这也解释了为什么预先写好的文档容易过期。它可能结构完整、措辞专业，但后续迭代已经只围绕效果进行。</p>
+<p>一旦不再被任何角色消费，它就会变成一份<strong>漂亮的幻觉</strong>：描述了一个逻辑自洽的系统，却不是眼前这个已经跑起来的系统。</p>
+<p>有一句规律很朴素：</p>
+<blockquote>
+<p><strong>组织真正检查什么，什么才会留下来。</strong></p>
+</blockquote>
+<p>当原型交给生产团队、另一个开发者或新的 agent 时，角色边界重新出现。此时不必强行恢复过去的文档流程，而要找到新范式真正缺少的交付物：</p>
+<blockquote>
+<p><strong>一份能把已经验收过的“效果”，连接到正式范围、技术行为和可执行证据的生产交接物。</strong></p>
+</blockquote>
+<p>这不是开发者突然不爱写文档，而是成本曲线变了：过去，“把需求讲清楚”和“把功能做出来”之间隔着一个团队；现在，对着 AI 把功能先做出来，可能比把它描述清楚还快。</p>
+<p>需求和技术决策并未消失，只是换了一种不稳定的存在方式：</p>
+<table>
+<thead>
+<tr>
+<th>原来显式存在于</th>
+<th>现在隐含存在于</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PRD 与需求单</td>
+<td>对 AI 说过的功能指令</td>
+</tr>
+<tr>
+<td>技术方案与评审记录</td>
+<td>一连串局部代码修改</td>
+</tr>
+<tr>
+<td>设计决策</td>
+<td>“这版效果对了”的即时判断</td>
+</tr>
+<tr>
+<td>验收标准</td>
+<td>作者亲自点击、试听和比较的记忆</td>
+</tr>
+</tbody></table>
+<p>但对话会结束，人的记忆会淡，下一位 agent 也拿不到上一轮完整上下文；最终稳定留下来的，通常只有代码。</p>
+<p>业界关于 prototype-to-product 的讨论里，有一个很有用的区分：原型是一组“曾经成功运行过的行为”，产品则是一组在持续修改、用户增长、作者睡觉时仍然要保持成立的行为。</p>
+<p>两者之间差的不是一次“把代码写专业点”的重构，而是一套让重要行为长期成立的结构。</p>
+<p>如果把这两年的发展压缩成一张表，大致可以这样看：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>人主要在做什么</th>
+<th>随之暴露的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vibe Coding</td>
+<td>用自然语言快速得到可运行结果</td>
+<td>代码增长很快，意图和推理留在会话里</td>
+</tr>
+<tr>
+<td>AI-assisted &#x2F; Agentic Engineering</td>
+<td>拆任务、调度 agent、让它执行更长流程</td>
+<td>agent 缺少稳定上下文、工具和反馈</td>
+</tr>
+<tr>
+<td>Spec-Driven Development</td>
+<td>把意图提前写成 agent 可消费的 spec</td>
+<td>spec 的成本、生命周期和已有项目接入成为问题</td>
+</tr>
+<tr>
+<td>Reverse Spec + Harness</td>
+<td>从已有代码恢复契约，并把验证嵌回 repo</td>
+<td>怎样保证声明可信、过期时会失效</td>
+</tr>
+</tbody></table>
+<p>这不是四个互相取代的流派，而是同一个过程：每当 AI 接管一层工作，工程问题就向上一层移动；代码生成变便宜以后，新的瓶颈变成了意图、上下文、验证和治理。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/11-industry-response-map-d646cd0f388e.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/11-industry-response-map-d646cd0f388e.svg" alt="Vibe Coding 上下文缺口的四类业界回答"></a></p>
+<h3 id="回到前面的-SDD：业界把-spec-推到了多远？"><a href="#回到前面的-SDD：业界把-spec-推到了多远？" class="headerlink" title="回到前面的 SDD：业界把 spec 推到了多远？"></a>回到前面的 SDD：业界把 spec 推到了多远？</h3><p>Part 01 里，SDD 刚出现就被我追问了一句：一个想法两句话就能先做出来，谁还会停下来维护文档？</p>
+<p>现在回头看，这个质疑击中的其实是最朴素的 <code>spec-first</code>：先写一份更完整的任务说明，再让 AI 实现。如果 spec 只是在开发前多出的一篇 Markdown，后续修改又可以绕过它继续发生，它当然会退化成漂亮文档。</p>
+<p>但业界对 SDD 的设想比这走得更远。GitHub Spec Kit、Kiro 和 Tessl 都试图把 spec 从一次性任务输入，提升为人和 AI 共同消费的主工件：它不只描述产品目标，还向下延伸到行为、技术设计、任务拆分和验收条件。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/github/spec-kit/blob/main/spec-driven.md">GitHub Spec Kit</a>把它描述成一次“权力反转”：过去代码是真相、文档只是建议；SDD 希望 spec 成为主要工件，代码变成它在特定语言和框架下的表达。</p>
+<p>目前常见工具的路线很接近：</p>
+<table>
+<thead>
+<tr>
+<th>工具或路线</th>
+<th>典型流程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://github.github.com/spec-kit/">GitHub Spec Kit</a></td>
+<td>Specify → Plan → Tasks → Implement</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://kiro.dev/docs/specs/">Kiro Specs</a></td>
+<td>Requirements → Design → Tasks → Implementation</td>
+</tr>
+<tr>
+<td>Tessl</td>
+<td>把 spec 推到更接近 source 的位置，由 AI 生成实现</td>
+</tr>
+</tbody></table>
+<p>不过，SDD 并不是一种强度固定的做法。</p>
+<p>Thoughtworks 的 Birgitta Böckeler 在<a target="_blank" rel="noopener" href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html">对 Kiro、Spec Kit 和 Tessl 的比较</a>里，把它分成了三个台阶：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/20-sdd-levels-martin-fowler-a7db78ee3c8a.png" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/20-sdd-levels-martin-fowler-a7db78ee3c8a.png" alt="Spec-Driven Development 的三个层级"></a></p>
+<p><em>图源：<a target="_blank" rel="noopener" href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html">Birgitta Böckeler，Understanding Spec-Driven Development</a>。</em></p>
+<p>最上层的 <code>spec-first</code> 只是先写 spec，再生成代码；<code>spec-anchored</code> 开始要求后续修改仍围绕同一份 spec 进行；到了最激进的 <code>spec-as-source</code>，含义已经完全不同：</p>
+<blockquote>
+<p><strong>spec 不再是代码旁边的说明文档，而是人真正维护的“源码”；生成代码只是它在某种技术栈下的派生产物，原则上可以丢弃并重新生成。</strong></p>
+</blockquote>
+<p>这条路线解释了为什么 AI 编码工具越来越喜欢生成 <code>requirements.md</code>、<code>design.md</code> 和 <code>tasks.md</code>：大家在重新把“意图”提到代码上游。</p>
+<p>所以，前面对 SDD 的质疑需要说得更准确：<strong>SDD 不是无效；只有当 spec 真正成为后续变化的硬入口时，它才不会退化成漂亮文档。</strong></p>
+<p>这也正是 SDD 与本文场景分叉的地方。SDD 从“先有 spec”出发，我们却是在代码和效果已经长出来后，才发现上游上下文已经消失。把它直接搬进已有原型，仍会遇到几道问题：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>为什么会发生</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时间线相反</td>
+<td>SDD 最顺手的路径是 spec 在前；原型场景是代码和行为已经在前</td>
+</tr>
+<tr>
+<td>谁是真相源</td>
+<td>新写的 spec 可能描述“理想上应该怎样”，代码则保存“现在实际上怎样”</td>
+</tr>
+<tr>
+<td>主链路约束不足</td>
+<td>如果改代码可以绕过 spec，它仍然会退化成下一份过期文档</td>
+</tr>
+<tr>
+<td>流程可能过重</td>
+<td>每个小改动都生成大量 Markdown，会重新拉长刚被 AI 压缩的反馈循环</td>
+</tr>
+<tr>
+<td>正确性仍未解决</td>
+<td>spec 描述了目标，不等于另一份实现已经提供了满足目标的证据</td>
+</tr>
+</tbody></table>
+<p>这些问题并不否定 SDD；它们说明 SDD 更擅长治理“从现在开始的变化”，却不能自动恢复“过去已经丢失的上下文”。只有成为 AI 的输入、CI 的检查对象或发布的必要条件，spec 才真正回到开发主链路。</p>
+<p>所以 SDD 回答了一个重要问题：</p>
+<blockquote>
+<p>从现在开始，怎样不再丢失意图？</p>
+</blockquote>
+<p>但对于已经存在的原型，还要先回答另一个问题：</p>
+<blockquote>
+<p>过去已经丢失的意图和行为边界，怎样尽可能诚实地找回来？</p>
+</blockquote>
+<h3 id="SDD-解决正向路径，已有原型需要反向路径"><a href="#SDD-解决正向路径，已有原型需要反向路径" class="headerlink" title="SDD 解决正向路径，已有原型需要反向路径"></a>SDD 解决正向路径，已有原型需要反向路径</h3><p>SDD 与已经跑起来的 Vibe Coding 项目，从时间线的两端出发：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/15-forward-reverse-spec-ecbd9a84c42d.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/15-forward-reverse-spec-ecbd9a84c42d.svg" alt="正向 SDD 与反向规范恢复"></a></p>
+<p>这时需要的是反方向。这条路线有时被叫作 reverse SDD、spec recovery、spec extraction，也有人使用 DDS（Development-Driven Spec）。</p>
+<p>这些名字目前都还不是稳定的行业术语。</p>
+<p>需要反推，不是因为“从头补写一份技术方案”做不到，而是因为此时最可靠的证人已经换了：</p>
+<ul>
+<li>人的记忆只能证明当时想过什么；</li>
+<li>旧 PRD 只能证明最初计划过什么；</li>
+<li><strong>代码、测试和运行结果才证明系统现在真的做什么。</strong></li>
+</ul>
+<p>直接凭记忆重新写一份正向 spec，很容易把“今天已经存在的行为”写成“我现在觉得它应该有的行为”。</p>
+<p>反推则先承认原型是一份 reference implementation，从正式入口沿真实路径恢复当前契约，再把无法从代码得出的意图交还给人回答。</p>
+<p><a target="_blank" rel="noopener" href="https://paelladoc.com/blog/repo-to-product-artifacts/">PAELLADOC 的 repo-to-product-artifacts 方法</a>是我看到目前最接近这个问题的尝试之一。</p>
+<p>它把从代码恢复信息分成了三个深度：</p>
+<table>
+<thead>
+<tr>
+<th>反推对象</th>
+<th>最主要的证人</th>
+<th>可信程度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stories：系统向用户提供什么行为</td>
+<td>route、handler、UI state</td>
+<td>较容易恢复</td>
+</tr>
+<tr>
+<td>Acceptance criteria：什么条件必须成立</td>
+<td>test、validation、error branch</td>
+<td>有测试时相对可靠</td>
+</tr>
+<tr>
+<td>Decisions：为什么选择这种结构</td>
+<td>Git 历史、提交记录、owner 访谈</td>
+<td>丢失最多，也最容易被 AI 编造</td>
+</tr>
+</tbody></table>
+<p>这也解释了“让 AI 自动生成技术文档”为什么经常看起来很好、实际上不敢用：越靠近 WHAT，代码证据越充分；越靠近 WHY，信息缺失越严重。</p>
+<p>如果工具为了文档完整而顺手补齐 WHY，它不是在恢复规范，而是在把猜测洗成事实。</p>
+<p>所以反向 SDD 的第一条专业纪律不是“生成得更全”，而是像图中那样保留来源依据（provenance），明确区分 <code>PROVEN</code>、<code>SOURCED</code>、<code>INFERRED</code> 和 <code>UNKNOWN</code>。</p>
+<p>空白也是一种有价值的产物，因为它明确告诉下一位人或 AI：<strong>这里不能继续猜，需要找谁回答。</strong></p>
+<h3 id="反推出来的，不能只是一篇技术文档"><a href="#反推出来的，不能只是一篇技术文档" class="headerlink" title="反推出来的，不能只是一篇技术文档"></a>反推出来的，不能只是一篇技术文档</h3><p>这里很容易产生一个误解：</p>
+<blockquote>
+<p>既然要从代码整理技术事实，那最后让 AI 写一篇架构文档不就行了？</p>
+</blockquote>
+<p>架构文档当然有用，但它不是反推流程的核心产物。</p>
+<p>真正需要恢复的是一组<strong>代码配套规约</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>规约里的内容</th>
+<th>它回答什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scope &#x2F; slice</td>
+<td>这次正式交付哪条路径，明确排除什么</td>
+</tr>
+<tr>
+<td>Graph &#x2F; wiring</td>
+<td>有哪些阶段，数据怎样跨阶段流动</td>
+</tr>
+<tr>
+<td>Contracts &#x2F; decisions</td>
+<td>哪些配置必须固定，基线值和生产选择是什么，为什么</td>
+</tr>
+<tr>
+<td>Source pointers &#x2F; provenance</td>
+<td>每条技术声明从哪里得出，可信等级是什么</td>
+</tr>
+<tr>
+<td>Obligations &#x2F; golden cases</td>
+<td>哪些边和行为必须被另一份实现证明</td>
+</tr>
+<tr>
+<td>Unknowns &#x2F; waivers</td>
+<td>哪些事实还不知道，哪些缺口暂时接受以及怎样验证</td>
+</tr>
+<tr>
+<td>Version &#x2F; diff</td>
+<td>这份规约对应哪一版代码，相比上一版变了什么</td>
+</tr>
+</tbody></table>
+<p>它和一般技术文档的区别，可以这样看：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>一般技术文档</th>
+<th>反推得到的代码配套规约</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主要目标</td>
+<td>解释系统，帮助人阅读</td>
+<td>约束后续实现，并定义怎样算正确</td>
+</tr>
+<tr>
+<td>主要形态</td>
+<td>Markdown、图和叙述</td>
+<td>结构化 artifact + 面向人的渲染视图</td>
+</tr>
+<tr>
+<td>与代码关系</td>
+<td>文档作者根据理解进行描述</td>
+<td>重要声明带源码指针、版本和 provenance</td>
+</tr>
+<tr>
+<td>面向未知</td>
+<td>往往倾向写成完整叙述</td>
+<td>允许 <code>INFERRED</code>、<code>UNKNOWN</code> 和 waiver 显式存在</td>
+</tr>
+<tr>
+<td>更新机制</td>
+<td>依赖维护者记得同步</td>
+<td>对象变化后 fingerprint、pointer 或 gate 让旧声明失效</td>
+</tr>
+<tr>
+<td>AI 怎样使用</td>
+<td>作为参考上下文阅读</td>
+<td>可以解析、diff、选择同步单元并执行验收</td>
+</tr>
+<tr>
+<td>能否签收</td>
+<td>通常不能，仅提供说明</td>
+<td>proof 与 evidence 足够时可以计算 verdict</td>
+</tr>
+</tbody></table>
+<p>所以“反推技术文档”这个说法只说对了一半。</p>
+<p>更准确的关系是：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/16-canonical-artifact-views-contrast-1.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/16-canonical-artifact-views-contrast-1.svg" alt="Canonical artifact 生成三种消费视图"></a></p>
+<p>技术文档仍然重要，但它应该是同一事实源面向人的 view，而不是另一份需要手工保持同步的真相。</p>
+<h3 id="Coding-变便宜以后，什么才是项目真正的“源码”？"><a href="#Coding-变便宜以后，什么才是项目真正的“源码”？" class="headerlink" title="Coding 变便宜以后，什么才是项目真正的“源码”？"></a>Coding 变便宜以后，什么才是项目真正的“源码”？</h3><p>前面在原型交接里，我已经抛出了这个问题。走完 SDD 与反向恢复这两条路径后，现在可以更认真地回答它：</p>
+<p>过去，Coding 是开发过程中最昂贵的部分之一。需求、设计和技术方案最终都要由人翻译成代码，代码自然成为最值得长期维护的核心资产。</p>
+<p>如果 AI 可以低成本地反复生成实现，真正不能丢的就变成了项目上游的四类上下文：</p>
+<table>
+<thead>
+<tr>
+<th>上层上下文</th>
+<th>它回答什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Intent</strong></td>
+<td>我们究竟想把它做成什么</td>
+</tr>
+<tr>
+<td><strong>Boundary</strong></td>
+<td>哪些范围、约束和决策不能重新猜测</td>
+</tr>
+<tr>
+<td><strong>Accepted behavior</strong></td>
+<td>当前哪些行为已经被接受</td>
+</tr>
+<tr>
+<td><strong>Oracle</strong></td>
+<td>下一份实现怎样证明自己仍然正确</td>
+</tr>
+</tbody></table>
+<p>这里的“最顶层”并非最抽象、最宏大的文档，而是：</p>
+<blockquote>
+<p><strong>一旦丢失，下一位人或 AI 就不得不重新猜测项目意图、实现边界和验收标准的那组最小上下文。</strong></p>
+</blockquote>
+<p>Sean Grove 在《<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=8rABwKRsec4">The New Code</a>》里有一个很有冲击力的比喻：</p>
+<blockquote>
+<p>我们写 prompt 让 AI 生成代码，最后只保留代码、丢掉 prompt，就像把源码碎掉，只把编译后的二进制放进版本库。</p>
+</blockquote>
+<p>这个比喻<strong>说对了一半，也说错了一半</strong>：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>说对了</strong></td>
+<td>我们丢掉了生成实现时的上游意图，只保留最下游结果</td>
+</tr>
+<tr>
+<td><strong>说错了</strong></td>
+<td>它容易让人误以为 prompt 是新源码、模型是新编译器、生成代码是新二进制</td>
+</tr>
+</tbody></table>
+<p>再往前追一步，<strong>prompt 本身并不是那份新的源码</strong>。</p>
+<p>因为从 prompt 到代码，AI 替我们补了大量没有说出口的东西：</p>
+<ul>
+<li><strong>工程选择｜</strong> 具体库、目录、抽象、数据结构和异常处理；</li>
+<li><strong>仓库惯例｜</strong> 当前项目已经形成的模式与依赖；</li>
+<li><strong>运行条件｜</strong> 当时的模型版本、上下文和工具；</li>
+<li><strong>迭代历史｜</strong> 前后几十轮对话里的修正。</li>
+</ul>
+<p>同一句 prompt 换一个模型、换一次会话，甚至只换一个已有仓库，都可能得到不同代码。因此，它不是一份充分输入，更像是对一个非确定性开发者下达的任务指令。</p>
+<p>回看前面那张传统链路图，其中真正接近确定性转换的是后半段。</p>
+<p>需求单和技术方案从来不能精确重现同一份代码，因为人类开发者也会在实现时补足大量细节。</p>
+<p>源代码之所以成为那个稳定的 source，是因为它位于<strong>最后一次大规模开放判断之后、确定性构建之前</strong>。</p>
+<p>传统编译链里，“源码”之所以叫源码，是因为在给定依赖、构建配置和工具链以后，它足以重现下游产物。</p>
+<p>严格来说，即使在传统时代，只保存 <code>.cpp</code> 或 <code>.ts</code> 也不一定足够；reproducible build 还需要依赖、编译参数和环境。</p>
+<p>AI 把“开放判断”这一段也自动化了：</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/08-reproducible-source-59e413f3ff87.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/08-reproducible-source-59e413f3ff87.svg" alt="“源码”不是一种文件，而是一条可重现边界"></a></p>
+<p>所以今天真正棘手的，不是代码能不能继续编译，而是第一段生成过程能不能被另一位 agent 重放。</p>
+<p>我们现在不只想重现一个二进制，还想让另一个团队或 agent 重现一组被接受过的产品行为。</p>
+<p>这时，“谁是新的源代码”必须先问清楚：<strong>你到底想重现什么？</strong></p>
+<table>
+<thead>
+<tr>
+<th>想重现的目标</th>
+<th>对应的 source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同一份构建产物</td>
+<td>源代码 + 依赖 + 构建工具链</td>
+</tr>
+<tr>
+<td>同一次 AI 生成过程</td>
+<td>prompt + 对话上下文 + 仓库状态 + 模型与工具；但结果仍可能不确定</td>
+</tr>
+<tr>
+<td>同一组已验收的产品行为</td>
+<td>生产规约 + 参考实现 + 验收 oracle（裁判规则）+ 环境与版本身份</td>
+</tr>
+</tbody></table>
+<p>所以，如果一定要在旧链路里找一个占据“源代码”位置的新东西：</p>
+<blockquote>
+<p><strong>它不是一句 prompt，也不只是单独一份 spec，而是发版时冻结下来的最小可重现闭包。</strong></p>
+</blockquote>
+<p>这时，“source”不应该按文件类型定义，而应该按<strong>可重现性</strong>定义：</p>
+<blockquote>
+<p><strong>在不知道原始对话、也不能依赖原作者记忆的情况下，能够让独立实现者重建目标行为，并判断是否重建成功的最小充分输入。</strong></p>
+</blockquote>
+<p>我暂时把它叫作一个项目的<strong>最小可重现闭包</strong>。这不是已经统一的业界术语，而是我对这个问题的工作定义。</p>
+<p>它至少要闭合五件事：</p>
+<table>
+<thead>
+<tr>
+<th>组成</th>
+<th>缺少以后会发生什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Intent &#x2F; scope</td>
+<td>不知道要重现什么，也不知道明确不做什么</td>
+</tr>
+<tr>
+<td>Constraints &#x2F; decisions</td>
+<td>AI 会重新选择默认值、边界和技术取舍</td>
+</tr>
+<tr>
+<td>Reference implementation &#x2F; snapshots</td>
+<td>失去当前真实行为这个可观察样本</td>
+</tr>
+<tr>
+<td>Executable oracle &#x2F; acceptance evidence</td>
+<td>做完以后无法判断是否一致</td>
+</tr>
+<tr>
+<td>Environment &#x2F; version identity</td>
+<td>同样输入在不同模型、依赖和配置下产生不同结果</td>
+</tr>
+</tbody></table>
+<p>因此，最小可重现单位既不是一句 prompt、一篇漂亮文档、完整聊天记录，也不只是代码仓库本身。它必须同时闭合可执行规约、参考实现、验收 oracle、环境与版本。</p>
+<p>这并不是说代码不再是源码：</p>
+<table>
+<thead>
+<tr>
+<th>工件</th>
+<th>仍然可以重现</th>
+<th>无法单独重现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>代码</td>
+<td>当前实现与构建产物</td>
+<td>产品意图、跨实现行为、验收标准</td>
+</tr>
+<tr>
+<td>spec</td>
+<td>目标行为与约束</td>
+<td>非确定性模型最终生成的具体实现</td>
+</tr>
+</tbody></table>
+<p>因此，代码和 spec 都不是充分 source，还需要参考实现与可执行验收共同收口。</p>
+<p>这也是“从代码反推规约”真正要补的东西：</p>
+<blockquote>
+<p>它不是把代码降级成生成物，而是把代码上游丢失的意图与约束、以及代码下游缺失的证明，重新接回同一条可重现链路。</p>
+</blockquote>
+<h3 id="业界对已有原型的共同建议：不要急着重写"><a href="#业界对已有原型的共同建议：不要急着重写" class="headerlink" title="业界对已有原型的共同建议：不要急着重写"></a>业界对已有原型的共同建议：不要急着重写</h3><p>很多团队发现原型不够“生产级”以后，第一反应是重写。</p>
+<p>但已有系统改造（brownfield modernization）、characterization testing，以及近期的 vibe-to-production 实践，正在收敛到相反的方向：<strong>先理解并固定现有行为，再逐步加固。</strong></p>
+<p>综合这些方法，可以把原地加固压成四步：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>要做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Map</code></td>
+<td>先看清现有系统真正有哪些部件和调用路径</td>
+</tr>
+<tr>
+<td><code>Spec</code></td>
+<td>把当前行为恢复成可以检查的约定</td>
+</tr>
+<tr>
+<td><code>Characterization tests</code></td>
+<td>固定当前重要行为，变化时立即发出信号</td>
+</tr>
+<tr>
+<td><code>Foundations</code></td>
+<td>最后再逐步补边界、契约和工程结构</td>
+</tr>
+</tbody></table>
+<p>这个顺序不能颠倒：</p>
+<ul>
+<li><strong>没有 Map｜</strong> spec 很容易描述一个想象中的系统；</li>
+<li><strong>没有 Spec｜</strong> 测试可能把偶然行为和 bug 一起冻住；</li>
+<li><strong>没有 Tests｜</strong> 重构等于关掉唯一能跑的版本后盲目重建。</li>
+</ul>
+<p>原型不是一堆应该被丢掉的脏代码，而是当前唯一通过真实试验的行为样本。</p>
+<h3 id="再往生产走，旧工程世界其实早就准备了一部分答案"><a href="#再往生产走，旧工程世界其实早就准备了一部分答案" class="headerlink" title="再往生产走，旧工程世界其实早就准备了一部分答案"></a>再往生产走，旧工程世界其实早就准备了一部分答案</h3><p>“另一套实现是否和参考实现一致”并不是 AI 时代才出现的问题。</p>
+<p>旧工程世界已经积累了很多成熟手段：</p>
+<table>
+<thead>
+<tr>
+<th>旧方法</th>
+<th>它解决什么</th>
+<th>对 Vibe Coding 的启发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Characterization &#x2F; Golden Master</td>
+<td>固定旧系统当前实际行为</td>
+<td>先记录原型做了什么，再谈重构</td>
+</tr>
+<tr>
+<td>Contract Testing</td>
+<td>检查模块或上下游之间的约定</td>
+<td>prompt、schema、handoff 都可以成为契约</td>
+</tr>
+<tr>
+<td>TCK &#x2F; Conformance Test</td>
+<td>同一规范允许多套实现</td>
+<td>原型与生产不必同语言，只需满足同一行为集</td>
+</tr>
+<tr>
+<td>Shadow &#x2F; Parity Testing</td>
+<td>新旧实现并行，对比真实输出</td>
+<td>手写 case 之外，还要寻找未知差异</td>
+</tr>
+<tr>
+<td>Content-addressed artifact</td>
+<td>用内容哈希识别具体版本</td>
+<td>不能只说“已同步”，要说同步到哪一版</td>
+</tr>
+</tbody></table>
+<p>这些方法擅长回答：</p>
+<blockquote>
+<p><strong>两份实现是否一致？</strong></p>
+</blockquote>
+<p>但它们默认另一个问题已有答案：</p>
+<blockquote>
+<p><strong>一致于什么？</strong></p>
+</blockquote>
+<p>当 Vibe Coding 让技术规约从未出现时，光有 parity 工具仍然不够，必须先重建被验证的标的物。</p>
+<h3 id="Harness-Engineering：production-artifact-怎样真正被-AI-使用"><a href="#Harness-Engineering：production-artifact-怎样真正被-AI-使用" class="headerlink" title="Harness Engineering：production artifact 怎样真正被 AI 使用"></a>Harness Engineering：production artifact 怎样真正被 AI 使用</h3><p>到这里还有一个缺口：即使规约和验收证据已经整理出来，如果部署侧 AI 只是“有空参考一下”，它们仍然可能变成一组无人消费的产物。</p>
+<p><strong>Harness Engineering</strong> 回答的不是“应该交付什么上下文”，而是“怎样让 agent 必须读取上下文、使用工具，并根据反馈完成工作”。它关注的不是让模型更聪明，而是给 agent 准备一套完整的工作回路：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>Harness 要提供什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>开工前</td>
+<td>正确、可导航的上下文</td>
+</tr>
+<tr>
+<td>工作中</td>
+<td>可以调用的真实工具</td>
+</tr>
+<tr>
+<td>完成后</td>
+<td>可计算的反馈与验证</td>
+</tr>
+<tr>
+<td>出错时</td>
+<td>能够阻断的 gate</td>
+</tr>
+<tr>
+<td>遇到取舍</td>
+<td>明确升级给人的判断边界</td>
+</tr>
+</tbody></table>
+<p>OpenAI 在<a target="_blank" rel="noopener" href="https://openai.com/index/harness-engineering/">关于 agent-first 工程的实践总结</a>里提到，他们曾经尝试把所有说明塞进一个巨大的 <code>AGENTS.md</code>，结果很快遇到上下文拥挤、规则腐烂和无法机械验证的问题。</p>
+<p>后来做法变成一套分层结构：</p>
+<ul>
+<li><strong>入口要短｜</strong> <code>AGENTS.md</code> 只负责导航；</li>
+<li><strong>事实入库｜</strong> repo 内结构化文档成为 system of record；</li>
+<li><strong>按需读取｜</strong> agent 根据任务渐进加载局部上下文；</li>
+<li><strong>自动防腐｜</strong> linter、CI 和 doc-gardening 检查 freshness；</li>
+<li><strong>反馈入环｜</strong> 测试、验证、review 和 recovery 编码进环境。</li>
+</ul>
+<p>它与 production artifact 不是同一种东西：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Production artifact</th>
+<th>Harness</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>回答的问题</td>
+<td>这个版本必须还原什么</td>
+<td>AI 怎样被引导和约束着完成还原</td>
+</tr>
+<tr>
+<td>主要内容</td>
+<td>规约、源码指针、case、证据、版本身份</td>
+<td>导航、工具、测试、反馈、gate、人工升级路径</td>
+</tr>
+<tr>
+<td>在流程中的位置</td>
+<td>一次发版携带的版本化输入</td>
+<td>持续消费输入并检查结果的工作环境</td>
+</tr>
+</tbody></table>
+<p>两者接起来，交付才真正进入 AI 的工作回路：</p>
+<blockquote>
+<p><strong>production artifact 提供目标与证据 → agent 完成实现 → CI 计算验收结果 → release gate 决定能否上线</strong></p>
+</blockquote>
+<p>所以 Harness Engineering 对本文的落点，不是“业界也在从代码生成同一种 production artifact”，而是说明：<strong>Warrant 生成的产物不能停在一组文档里，它还必须接入部署侧的 agent、CI 和发版门禁。</strong></p>
+<p>给另一支团队交付，和给一个没有历史上下文的新 agent 交付，最终都需要明确边界、可导航证据、稳定接口，以及做错时马上响起的反馈。</p>
+<h3 id="社区现在争论的，也正是这些地方"><a href="#社区现在争论的，也正是这些地方" class="headerlink" title="社区现在争论的，也正是这些地方"></a>社区现在争论的，也正是这些地方</h3><p>这些路线并没有自动解决问题。社区争论仍然集中在四件事：</p>
+<table>
+<thead>
+<tr>
+<th>争议</th>
+<th>核心问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>流程成本</td>
+<td>会不会重新走回瀑布</td>
+</tr>
+<tr>
+<td>Brownfield</td>
+<td>已有代码怎样接入</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>spec 怎样跟随实现演化</td>
+</tr>
+<tr>
+<td>正确性</td>
+<td>AI 如何证明自己真的做对</td>
+</tr>
+</tbody></table>
+<p><a target="_blank" rel="noopener" href="https://marmelab.com/blog/2025/11/12/spec-driven-development-waterfall-strikes-back.html">“The Waterfall Strikes Back”</a>及其 <a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=45935763">Hacker News 讨论</a>，集中体现了对流程官僚化和迭代成本的担忧。</p>
+<p>Spec Kit 社区提出的 <a target="_blank" rel="noopener" href="https://github.com/github/spec-kit/issues/1191">brownfield &#x2F; spec refinement 问题</a>，以及<a target="_blank" rel="noopener" href="https://github.com/github/spec-kit/issues/442">实现后调试如何重新回到 spec</a>，则说明“第一次生成 spec”只是开始。</p>
+<p>真正的分歧并不是“要不要写 spec”，而是它能否进入开发闭环：既不拖慢每一次探索，又能在关键边界被消费、被验证，并在过期时失效。</p>
+<h3 id="所以，业界趋势不是“重新开始写更多文档”"><a href="#所以，业界趋势不是“重新开始写更多文档”" class="headerlink" title="所以，业界趋势不是“重新开始写更多文档”"></a>所以，业界趋势不是“重新开始写更多文档”</h3><p>把这些路线放在一起，我看到的趋势更像这样：</p>
+<table>
+<thead>
+<tr>
+<th>正在发生的变化</th>
+<th>对开发模式的影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>实现越来越便宜</td>
+<td>人的价值上移到定义意图、边界和验收</td>
+</tr>
+<tr>
+<td>产品人员可以直接操作 agent</td>
+<td>产品与开发开始融合，但共识工作并没有消失</td>
+</tr>
+<tr>
+<td>原型越来越容易直接成为产品</td>
+<td>“先原型、后加固”会比“原型写完全部推倒”更常见</td>
+</tr>
+<tr>
+<td>新 agent 随时可能接手</td>
+<td>repo 必须同时具备 human legibility 与 agent legibility</td>
+</tr>
+<tr>
+<td>文档成为机器输入</td>
+<td>文档不能只好读，还要结构化、可定位、可 diff</td>
+</tr>
+<tr>
+<td>AI 可以执行越来越长的任务</td>
+<td>确定性的 gate、测试和 evidence 变得更重要</td>
+</tr>
+</tbody></table>
+<p>换句话说，软件开发的主流程正在重新分工：</p>
+<table>
+<thead>
+<tr>
+<th>过去更常见的主流程</th>
+<th>AI 开发正在形成的主流程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人写需求</td>
+<td>人定义意图、边界与验收标准</td>
+</tr>
+<tr>
+<td>人写代码</td>
+<td>AI 生成实现及配套资料</td>
+</tr>
+<tr>
+<td>人检查最终结果</td>
+<td>程序先验证确定性事实</td>
+</tr>
+<tr>
+<td>各角色逐级移交</td>
+<td>人集中处理取舍、例外与主观判断</td>
+</tr>
+</tbody></table>
+<p>产品不会因为产品人员开始写代码就消失，开发也不会因为 AI 开始写代码就消失。两者正在围绕 spec、reference implementation、tests、evidence 和 gates 重新分工。</p>
+<p>“原型先行”很可能会留下来，因为做出可运行功能已经比准确描述它更快；但“两支团队长期人工维护两份实现”未必会一直存在。</p>
+<p>如果条件允许，三种生产路径的优先级应该是：</p>
+<table>
+<thead>
+<tr>
+<th align="right">优先级</th>
+<th>生产路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td>原型与生产共享同一份制品，通过门禁获得生产资格</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>根据可验证的 spec 重新生成另一份实现</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>人工逐项对照并迁移原型实现</td>
+</tr>
+</tbody></table>
+<p>即便第二份实现最终消失，反推规约、证据签收和声明防腐仍然有价值，因为三个月后的自己，以及没有上一轮上下文的新 agent，本质上就是下一位消费者。</p>
 <hr>
-<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><p>当前版本：<code>0.2.0</code>。</p>
-<p>Warrant 提取自一条实际运行的原型到生产交接流程，现已拆成通用 schema、AI skills、确定性门禁、技术文档渲染和证据验收工具。规范入口是 <code>.warrant/</code>；<code>adapters/legacy/</code> 只用于不能迁移旧数据结构的项目。</p>
+<h2 id="04｜实践：我们正在用-Warrant-验证什么？"><a href="#04｜实践：我们正在用-Warrant-验证什么？" class="headerlink" title="04｜实践：我们正在用 Warrant 验证什么？"></a>04｜实践：我们正在用 Warrant 验证什么？</h2><p>先说明它现在所处的位置：<strong>Warrant 还不是一套经过大量项目验证的标准答案，而是从 musicPrototype 这次真实交付中长出来的可运行雏形。</strong>它把前文的思考做成了 artifact、skills 和 gates，已经能在这个原型项目里跑通；但这些机制能否适应更多技术栈、团队边界和发布方式，仍然需要更多实战回答。</p>
+<p>所以这一章更像一次公开的阶段记录：我们先把目前认为重要的结构做出来，也希望借此和更多 AI 开发者一起讨论——这种工具究竟应该以什么形态进入开发流程，哪些判断适合交给 Agent，哪些事实必须由程序复算，哪些责任仍然只能留给人。</p>
+<h3 id="什么项目值得做这套"><a href="#什么项目值得做这套" class="headerlink" title="什么项目值得做这套"></a>什么项目值得做这套</h3><p>你可能没有两个团队，也没有生产集群，但“下一位接手者”并不一定是部署团队：</p>
+<table>
+<thead>
+<tr>
+<th>下一位消费者</th>
+<th>为什么需要这份上下文</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>三个月后的自己</td>
+<td>已经忘记当时的取舍</td>
+</tr>
+<tr>
+<td>新开的 AI 会话</td>
+<td>拿不到上一轮完整对话</td>
+</tr>
+<tr>
+<td>从 Cursor 换到 Codex 后的新 agent</td>
+<td>工具和会话上下文已经变化</td>
+</tr>
+<tr>
+<td>来修 bug 的同事</td>
+<td>需要先区分正式行为与历史实现</td>
+</tr>
+<tr>
+<td>把 demo 重做成 App 或服务的人</td>
+<td>需要跨技术栈还原效果</td>
+</tr>
+</tbody></table>
+<p>只要下一次 AI 已经拿不到之前的完整对话，这个问题就已经发生了。当然，不是每个周末 demo 都值得上完整治理，可以按项目阶段逐步增加约束：</p>
+<table>
+<thead>
+<tr>
+<th>项目阶段</th>
+<th>最小动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一次性试验</td>
+<td>什么都不做，保留速度</td>
+</tr>
+<tr>
+<td>开始有人依赖</td>
+<td>标出唯一正式入口和明确排除项</td>
+</tr>
+<tr>
+<td>需要 AI 接手</td>
+<td>生成阶段、数据流、配置和源码指针</td>
+</tr>
+<tr>
+<td>需要另一套实现</td>
+<td>加行为 golden 和验收证据</td>
+</tr>
+<tr>
+<td>需要长期同步</td>
+<td>加版本 hash、增量 diff 和失效 gate</td>
+</tr>
+</tbody></table>
+<p>最重要的不是一上来写二十份文档，而是在代码从“我刚跑通的东西”变成“别人要依赖的系统”那一刻，补上一份可以传递的技术理解。</p>
+<h3 id="也要先承认它的边界"><a href="#也要先承认它的边界" class="headerlink" title="也要先承认它的边界"></a>也要先承认它的边界</h3><table>
+<thead>
+<tr>
+<th>边界</th>
+<th>具体意味着什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>代码无法恢复真正的意图</td>
+<td>它能说明系统现在做什么，却不能证明作者当初为何这样选择；工具可以准确提问，答案仍要由人给出</td>
+</tr>
+<tr>
+<td>golden 只能证明已写入的义务</td>
+<td>未真实触发的分支和未想到的边界仍可能遗漏，仍需更强的 characterization &#x2F; dual-run</td>
+</tr>
+<tr>
+<td>主观效果无法全部压成确定性 gate</td>
+<td>路由、字段、配置和数据流容易验证；“这首歌是否真的动人”仍需模型评审、人工听感和线上反馈</td>
+</tr>
+<tr>
+<td>这套东西必须有消费者</td>
+<td>如果没有另一个人、AI 或实现会使用规约，重型治理只会成为新的负担</td>
+</tr>
+</tbody></table>
+<h3 id="到这里，才轮到-Warrant-出场"><a href="#到这里，才轮到-Warrant-出场" class="headerlink" title="到这里，才轮到 Warrant 出场"></a>到这里，才轮到 Warrant 出场</h3><p>Warrant 就是这样从原型项目里长出来的。最开始，这些能力都集中在 <code>pipeline-deploy-sync</code> 里：</p>
+<p>随着问题越补越多，我开始觉得，这不应该只是一套 AI 音乐项目的部署脚本。真正具有通用性的，不是 manifest、golden 或 deploy packet 这些具体形式，而是它们背后的同一个问题：</p>
+<blockquote>
+<p><strong>一份今天正确的规约，怎样在它不再正确的那一刻自动暴露出来？</strong></p>
+</blockquote>
+<p>于是我把其中可能具有通用性的部分抽成了 Warrant，中文名叫「立据」。在新版 README 里，我把这次尝试压缩成了一句话：</p>
+<blockquote>
+<p><strong>把快速迭代的原型，交付成一份能检查、能同步、能验收、会随代码变化而失效的生产契约。</strong></p>
+</blockquote>
+<p>它目前尝试验证的核心，不是“从代码生成一套交接文档”，而是一条更窄、也更坚硬的规则：</p>
+<blockquote>
+<p><strong>每个重要声明，都要绑定它所描述对象的指纹；对象一变，旧声明就不再覆盖它。</strong></p>
+</blockquote>
+<p>它保护的不是某种文档格式，而是声明与现实之间的关系：</p>
+<table>
+<thead>
+<tr>
+<th>声明</th>
+<th>它绑定什么</th>
+<th>对象变化以后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“生产选择这个值，是因为……”</td>
+<td><code>baseline → chosen</code> 取值对</td>
+<td>旧理由自动过期，不能只改指纹糊弄过去</td>
+</tr>
+<tr>
+<td>“这段设计已经由某人确认”</td>
+<td>当前方案层的内容指纹</td>
+<td>方案措辞变化，原确认自动失效</td>
+</tr>
+<tr>
+<td>“这条行为已经被 case 证明”</td>
+<td>obligation、case 自声明和运行证据</td>
+<td>少跑、错绑或只登记 case 都不能签收</td>
+</tr>
+<tr>
+<td>“这里就是正式实现入口”</td>
+<td><code>file.py::symbol</code> 源码指针</td>
+<td>符号被移动或删除，gate 直接报错</td>
+</tr>
+<tr>
+<td>“这次行为变化已经解释过”</td>
+<td>当前行为快照 hash</td>
+<td>新快照必须追加新的变更理由</td>
+</tr>
+</tbody></table>
+<p>这里还有另一类更隐蔽的问题：<strong>如果一项声明从来没有被写出来，就无从谈起“过期”。</strong></p>
+<p>所以当前 Warrant 又增加了 completeness 与 semantic-flow gates：多文件模块没有内部步骤，会被标为黑盒；router 没有真实分支、generator 没有输入输出契约、variant 没接到实际出口，也会被明确暴露。它试图避免一张漂亮的流程图用“看起来完整”掩盖声明本身过薄；这套检查是否足够、是否会造成新的流程负担，同样需要在更多项目里继续验证。</p>
+<h3 id="AI-负责起草和提问，人负责定夺，代码负责裁判"><a href="#AI-负责起草和提问，人负责定夺，代码负责裁判" class="headerlink" title="AI 负责起草和提问，人负责定夺，代码负责裁判"></a>AI 负责起草和提问，人负责定夺，代码负责裁判</h3><p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/07-warrant-system-350c28596286.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/07-warrant-system-350c28596286.svg" alt="Warrant 的生产、确认与裁判"></a></p>
+<p>Warrant 仍然是不对称的两半，但中间那条人的边界现在更明确了：</p>
+<table>
+<thead>
+<tr>
+<th>工作</th>
+<th>谁负责</th>
+<th>为什么不能换人</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>确认交付 slice、沿正式入口追踪代码、起草结构与设计</td>
+<td>AI skill 与人协作</td>
+<td>范围和方案需要上下文，固定脚本只能猜</td>
+</tr>
+<tr>
+<td>解释 why、处理代码中的矛盾、确认设计文字</td>
+<td>人</td>
+<td>代码能证明“现在怎样”，不能证明“为什么这样”</td>
+</tr>
+<tr>
+<td>校验指针、指纹、集合覆盖、hash 和运行证据</td>
+<td>确定性程序</td>
+<td>这些结论必须可重复，不能被 AI 的解释说服</td>
+</tr>
+</tbody></table>
+<p>这也改变了 AI 遇到“不知道”时的处理方式。</p>
+<p>代码与配置相互矛盾时，AI 不再挑一个更像的答案写进文档，而是生成 <code>open_questions[]</code>，把问题、影响和证据一起留在 artifact 里。设计层由 AI 起草后默认是<strong>未确认</strong>状态，只有人可以签字；设计内容一变，签字也随之过期。</p>
+<p>换句话说，Warrant 允许三种诚实状态同时存在：</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>它意味着什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>已证明</td>
+<td>有可以机械复算的来源、指纹或运行证据</td>
+</tr>
+<tr>
+<td>待确认</td>
+<td>AI 已经起草，但还没有人对这段设计背书</td>
+</tr>
+<tr>
+<td>待定夺</td>
+<td>现有证据互相矛盾，必须把问题交还给人</td>
+</tr>
+</tbody></table>
+<p>这比让 AI 生成一份语气确定的“完整文档”更重要：空白和疑问不会消失在聊天记录里，也不会被排版洗成事实。</p>
+<h3 id="warrant-现在记录的是一份可失效的设计"><a href="#warrant-现在记录的是一份可失效的设计" class="headerlink" title=".warrant/ 现在记录的是一份可失效的设计"></a><code>.warrant/</code> 现在记录的是一份可失效的设计</h3><p>Warrant 的 canonical artifact 放在项目的 <code>.warrant/</code> 目录中。它不是代码索引，也不是一份把所有细节都抄进来的技术手册，而是围绕一次正式交付，集中记录四件事：这条链路实际怎样运行、采用了什么方案、哪些问题仍待人决定，以及用什么 case 和 evidence 验收。</p>
+<p>它还会把这份 artifact 与宿主仓库的 release 绑定起来：<code>content_hash</code> 标识交付的行为契约，原型 Git commit 定位产生这份契约的参考源码。这样，接手方拿到的不是一份脱离版本的说明，而是一个可以回到具体代码、继续检查并在变化后失效的版本。</p>
+<p>技术文档也不再是 AI 重新读一遍代码后另写的一套材料。它只是这份 artifact 的一个可再生视图：</p>
+<blockquote>
+<p><strong>先从 artifact 渲染方案与结构 → 只按 <code>evidence[]</code> 补充被明确选中的代码证据 → 再生成给人阅读的 Markdown &#x2F; HTML。</strong></p>
+</blockquote>
+<p>文档先讲方案、模型选型和语义流，代码细节只作为被明确引用的证据出现。artifact 没有记录方案，页面就显示“方案未记录”；分支没有被声明，renderer 也不会擅自根据函数顺序画出一条看起来合理的路线。</p>
+<p>这时，技术文档、AI 使用的 bundle 和程序运行的 gate，不再是三套各自维护的材料，而是同一份 artifact 的不同消费方式。</p>
+<h3 id="Warrant-在这个坐标系里的位置"><a href="#Warrant-在这个坐标系里的位置" class="headerlink" title="Warrant 在这个坐标系里的位置"></a>Warrant 在这个坐标系里的位置</h3><p>我不太想再给它发明一个新的流派名字。更准确地说，它把几条已经存在的路线接在了一起：</p>
+<table>
+<thead>
+<tr>
+<th>业界路线</th>
+<th>Warrant 借用了什么</th>
+<th>额外补了什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SDD</td>
+<td>spec 是人和 AI 的共同工件</td>
+<td>从已有代码反向起步，并让关键声明可以自动失效</td>
+</tr>
+<tr>
+<td>Reverse SDD &#x2F; intake</td>
+<td>从代码恢复行为、约束与缺口</td>
+<td>把无法恢复的 why 变成人机访谈和 <code>open_questions</code></td>
+</tr>
+<tr>
+<td>技术文档工程</td>
+<td>为人呈现方案、结构与选型</td>
+<td>文档只从 artifact 再生，未确认设计和空白也会被展示</td>
+</tr>
+<tr>
+<td>Characterization &#x2F; TCK</td>
+<td>通过用例证明跨实现行为</td>
+<td>case、obligation 与运行 evidence 双向校验</td>
+</tr>
+<tr>
+<td>Harness Engineering</td>
+<td>给 agent 稳定上下文、工具和反馈</td>
+<td>skills 负责开放判断，确定性 gates 负责不可协商的裁判</td>
+</tr>
+<tr>
+<td>Content-addressed artifacts &#x2F; source provenance</td>
+<td>用 hash 标识契约，用 Git commit 定位参考源码</td>
+<td>支持增量 diff、同步握手和可验证的跨仓库源码定位</td>
+</tr>
+</tbody></table>
+<h3 id="现在怎样试用-Warrant：先分清工具仓库和宿主仓库"><a href="#现在怎样试用-Warrant：先分清工具仓库和宿主仓库" class="headerlink" title="现在怎样试用 Warrant：先分清工具仓库和宿主仓库"></a>现在怎样试用 Warrant：先分清工具仓库和宿主仓库</h3><p>Warrant 当前版本是 <code>0.2.0</code>，代码在 Warrant 工具仓库（地址略）。新版首先明确了两个容易混淆的对象：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>它是什么</th>
+<th>存放什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Warrant 仓库</td>
+<td>独立工具仓库</td>
+<td>CLI 与 <code>warrant-*</code> skills</td>
+</tr>
+<tr>
+<td>原型宿主仓库</td>
+<td>正在被梳理和发版的业务项目</td>
+<td><code>.warrant/</code>、release bundle 与参考实现</td>
+</tr>
+<tr>
+<td>生产宿主仓库</td>
+<td>接住原型交付的业务项目</td>
+<td>生产实现、运行 evidence 与 parity report</td>
+</tr>
+</tbody></table>
+<p>这三个对象的关系可以先用一张图记住：Warrant 工具本身不承载业务 artifact；artifact 和 release 属于原型宿主，生产侧通过 bundle 和 manifest 找到可复核的参考源码，再在自己的宿主仓库里完成 audit 与 sync。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/17-warrant-release-lifecycle-932f25cd0574.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/17-warrant-release-lifecycle-932f25cd0574.svg" alt="Warrant 工具仓库与原型、生产宿主仓库的关系"></a></p>
+<p>推荐把 Warrant 当作独立工具安装，并不要求它成为业务仓库的 submodule；即使为了锁版本使用 submodule，Agent 的工作目录或 <code>--root</code> 也必须指向外层宿主，工具代码不能进入发版 slice。</p>
+<p>具体安装方式和宿主配置见 Warrant README（地址略）。安装完成后，只需要让 Agent 在真正的原型或生产宿主根目录里工作。</p>
+<h3 id="用法不是记命令，而是先认清自己在哪一侧"><a href="#用法不是记命令，而是先认清自己在哪一侧" class="headerlink" title="用法不是记命令，而是先认清自己在哪一侧"></a>用法不是记命令，而是先认清自己在哪一侧</h3><p>新版 README 把入口按责任角色分成了五种：</p>
+<table>
+<thead>
+<tr>
+<th>当前场景</th>
+<th>在哪里打开 Agent</th>
+<th>告诉 Agent</th>
+<th>主要产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原型第一次交付</td>
+<td>原型项目</td>
+<td>使用 <code>warrant-onboard</code>，梳理真正要发版的链路</td>
+<td><code>.warrant/</code></td>
+</tr>
+<tr>
+<td>先让人看懂方案</td>
+<td>原型项目</td>
+<td>使用 <code>warrant-tech-doc</code>，生成技术方案和网页</td>
+<td>总览、模块文档、HTML</td>
+</tr>
+<tr>
+<td>原型准备发版</td>
+<td>原型项目</td>
+<td>使用 <code>warrant-release</code>，检查并导出本次 bundle</td>
+<td><code>releases/&lt;content_hash&gt;/</code>、源码定位、变更记录</td>
+</tr>
+<tr>
+<td>生产第一次接手</td>
+<td>生产项目，同时提供 bundle</td>
+<td>使用 <code>warrant-audit</code>，先验证原型 commit，再审计生产实现</td>
+<td><code>parity-report.json</code>、未对齐项</td>
+</tr>
+<tr>
+<td>生产跟进后续版本</td>
+<td>生产项目，同时提供新版 bundle</td>
+<td>使用 <code>warrant-sync</code>，读取契约 diff 与原型 commit 区间</td>
+<td>依赖闭合的改动、运行证据</td>
+</tr>
+</tbody></table>
+<p>这张表就是 Warrant 的最小用法：先告诉 Agent 自己处在哪一侧、当前要完成哪种交付，再让它调用对应的 skill。具体命令、配置和门禁由 skill 与 CLI 共同完成，文章不再展开。</p>
+<hr>
+<h2 id="05｜延伸思考：原型与线上，可能只是一个暂时的边界"><a href="#05｜延伸思考：原型与线上，可能只是一个暂时的边界" class="headerlink" title="05｜延伸思考：原型与线上，可能只是一个暂时的边界"></a>05｜延伸思考：原型与线上，可能只是一个暂时的边界</h2><p>写到最后，也必须反过来怀疑一下这篇文章的前提。我们之所以需要一份 production artifact，是因为当前原型—线上模式里存在一条从原型责任域到线上责任域的生产交接。</p>
+<p>但这条边界会一直存在吗？</p>
+<p>如果未来原型可以直接上线，或者从头到尾都是同一个人和同一组 agent 在开发，我们还需要这份东西吗？重新梳理近两年的研究和工程实践后，我得到一个更谨慎的判断：</p>
+<blockquote>
+<p><strong>组织交接可以减少，但一项变化获得生产信任的过程不会自动消失。</strong></p>
+</blockquote>
+<h3 id="先把已经发生的变化，与我们的想象分开"><a href="#先把已经发生的变化，与我们的想象分开" class="headerlink" title="先把已经发生的变化，与我们的想象分开"></a>先把已经发生的变化，与我们的想象分开</h3><p>目前比较可靠的研究，至少说明了三件事：</p>
+<table>
+<thead>
+<tr>
+<th>已经观察到的变化</th>
+<th>调研依据</th>
+<th>它真正说明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 能提高局部代码产出，但不会自动提高整个组织的交付表现</td>
+<td><a target="_blank" rel="noopener" href="https://dora.dev/research/2025/dora-report/">DORA 2025</a>把 AI 定义为组织能力的“放大器”；下游测试、评审和部署能力弱时，代码生成越快，失序也可能越快</td>
+<td>不能只看代码生成速度，必须看完整反馈系统</td>
+</tr>
+<tr>
+<td>人的工作开始从直接编写，移动到设计、审查和判断</td>
+<td><a target="_blank" rel="noopener" href="https://research.google/blog/ai-in-software-engineering-at-google-progress-and-the-path-ahead/">Google 的工业实践</a>观察到代码作者越来越像 reviewer；<a target="_blank" rel="noopener" href="https://openai.com/index/harness-engineering/">OpenAI 的 agent-first 实验</a>则直接遇到了 human QA capacity 的瓶颈</td>
+<td>“实现变便宜”有迹象，但判断与验收还没有被自动解决</td>
+</tr>
+<tr>
+<td>Agent 自主运行越久，越依赖持久化工件和外部反馈</td>
+<td><a target="_blank" rel="noopener" href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic 的长任务实验</a>需要用进度文件、任务列表和 Git 状态跨越上下文；OpenAI 则把测试、日志、指标和架构约束编码进 repo</td>
+<td>prompt 更长、模型更强，并不能替代可恢复的上下文和可执行反馈</td>
+</tr>
+</tbody></table>
+<p>这些实践规模不同，远不足以证明软件工程已经进入统一的新范式，却共同否定了一个过于简单的叙事：</p>
+<table>
+<thead>
+<tr>
+<th>过度简化的想象</th>
+<th>实际发生的变化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 会写代码，开发者就不再重要</td>
+<td>人的工作上移到意图、设计、审查和判断</td>
+</tr>
+<tr>
+<td>原型可以自然变成生产</td>
+<td><code>review / test / deploy / observe</code> 开始承受更多变化</td>
+</tr>
+<tr>
+<td>代码生成更快，交付就会更快</td>
+<td>原本隐藏在组织里的下游能力成为新的系统瓶颈</td>
+</tr>
+</tbody></table>
+<p>DORA 把这称为“放大器”很准确：AI 没有替团队决定开发范式，它只是把现有系统的优点和缺口同时放大。</p>
+<h3 id="到底什么在决定一种开发范式？"><a href="#到底什么在决定一种开发范式？" class="headerlink" title="到底什么在决定一种开发范式？"></a>到底什么在决定一种开发范式？</h3><p>如果只用“瓶颈在哪里”解释开发范式，还会漏掉责任和验收。更完整地说，一种开发范式至少由三件事共同决定：</p>
+<table>
+<thead>
+<tr>
+<th>决定因素</th>
+<th>要回答的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>稀缺资源</strong></td>
+<td>当前最贵的是沟通、实现、判断，还是验证？</td>
+</tr>
+<tr>
+<td><strong>责任单元</strong></td>
+<td>谁对从想法到线上结果的整个链路负责？</td>
+</tr>
+<tr>
+<td><strong>验收机制</strong></td>
+<td>一次变化最终靠人的感觉、文档评审、自动化门禁，还是线上反馈获得信任？</td>
+</tr>
+</tbody></table>
+<p>把这三个维度放回不同的开发方式里，会比“人写还是 AI 写”更清楚：</p>
+<table>
+<thead>
+<tr>
+<th>开发方式</th>
+<th>主要责任单元</th>
+<th>主要事实源</th>
+<th>变化怎样被接受</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>传统角色串行开发</td>
+<td>产品、开发、测试等不同角色</td>
+<td>需求单、技术方案、代码</td>
+<td>跨角色评审与测试</td>
+</tr>
+<tr>
+<td>Vibe Coding 原型</td>
+<td>一个人与一次 AI 会话</td>
+<td>可运行代码与作者记忆</td>
+<td>作者直接体验效果</td>
+</tr>
+<tr>
+<td>本文的原型 → 生产</td>
+<td>原型侧与线上侧两个责任域</td>
+<td>规约、参考实现、验收语料</td>
+<td>parity gate 与生产签收</td>
+</tr>
+<tr>
+<td>Agent-first 工程</td>
+<td>对完整价值流负责的人—Agent 系统</td>
+<td>repo 内的代码、知识、策略和状态</td>
+<td>自动检查、人工判断与运行反馈共同闭环</td>
+</tr>
+</tbody></table>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/09-future-boundaries-contrast-2.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/09-future-boundaries-contrast-2.svg" alt="交付物跟着责任与验证边界移动"></a></p>
+<p>所以，本文所说的“原型侧”和“线上侧”首先是<strong>责任域</strong>，不是组织架构。两边可以是同一个人、同一个仓库，也可以都由 AI 执行；只要判断成功的标准不同，边界就仍然存在：</p>
+<table>
+<thead>
+<tr>
+<th>原型责任域首先关心</th>
+<th>线上责任域还必须关心</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>这个想法能不能跑通</td>
+<td>它能否持续、稳定地跑</td>
+</tr>
+<tr>
+<td>这一版效果对不对</td>
+<td>所有正式路径是否仍然成立</td>
+</tr>
+<tr>
+<td>作者能不能亲自验收</td>
+<td>作者不在时，系统能否发现错误</td>
+</tr>
+<tr>
+<td>修改是否让体验变好</td>
+<td>修改能否审计、观测、回滚并解释影响</td>
+</tr>
+</tbody></table>
+<p>同一个人从“我觉得这一版对了”，切换到“我愿意让它持续服务真实用户”，也已经跨过一条责任边界。</p>
+<p>两边都是 AI 也一样：负责生成变化的 agent 不能同时充当生产证据。证据必须来自生成叙事之外，例如测试、独立 gate、运行 trace、评测结果或人工判断。</p>
+<h3 id="“原型即线上”，其实有两种完全不同的意思"><a href="#“原型即线上”，其实有两种完全不同的意思" class="headerlink" title="“原型即线上”，其实有两种完全不同的意思"></a>“原型即线上”，其实有两种完全不同的意思</h3><p>DevOps 和 Continuous Delivery 早就在尝试消除开发与运维之间的组织交接。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/oa.std.6-provide-teams-ownership-of-the-entire-value-stream-for-their-product.html">AWS 的 <code>you build it, you run it</code></a>让同一团队负责构建与运行；</li>
+<li><a target="_blank" rel="noopener" href="https://dora.dev/capabilities/continuous-delivery/">DORA 对 Continuous Delivery 的定义</a>要求软件在整个生命周期保持可部署，并让每次变化尽快得到质量和可部署性反馈。</li>
+</ul>
+<p>这段历史给了“原型即线上”一个很重要的提醒：</p>
+<blockquote>
+<p><strong>减少 handoff 的成熟做法，从来不是取消验收，而是把验收从人工交接搬进自动化流水线。</strong></p>
+</blockquote>
+<p>所以，“原型即线上”需要拆成两层理解：</p>
+<table>
+<thead>
+<tr>
+<th>所谓“原型即线上”</th>
+<th>是否正在发生</th>
+<th>仍然缺不了什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原型和生产使用同一份实现，不再由另一团队重写</td>
+<td>已经是 Continuous Delivery 的常见方向</td>
+<td>自动化测试、环境配置、发布门禁、可观测性</td>
+</tr>
+<tr>
+<td>一次探索性修改只要效果不错，就可以直接被生产信任</td>
+<td>目前没有可靠依据支持</td>
+<td>风险边界、正式行为、失败恢复与线上证据</td>
+</tr>
+</tbody></table>
+<p>第一种完全可能，也比维护两套实现更理想；第二种则把“同一份代码”误当成“同一种责任”。代码可以不经过移交，责任不能不经过转换。更准确的未来形态，也许不是“原型直接等于生产”，而是同一份实现先在探索反馈里成为可用原型，再通过机器门禁与运行证据获得生产资格。</p>
+<p>production artifact 在这里不会消失，只会改变形态。</p>
+<p>它不再是一份交给另一个团队的 bundle，而会逐渐嵌入 CI、策略、observability 和 release state。</p>
+<h3 id="下一代交付物，可能是一项“带证据的变化”"><a href="#下一代交付物，可能是一项“带证据的变化”" class="headerlink" title="下一代交付物，可能是一项“带证据的变化”"></a>下一代交付物，可能是一项“带证据的变化”</h3><p>这并非凭空出现的想象：</p>
+<table>
+<thead>
+<tr>
+<th>已有实践</th>
+<th>交付时额外携带什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://doi.org/10.1145/263699.263712">Proof-Carrying Code</a></td>
+<td>满足安全策略、可由接收方独立验证的证明</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://slsa.dev/spec/v1.2/provenance">SLSA provenance</a></td>
+<td>制品在何时、何地、通过什么过程产生的来源信息</td>
+</tr>
+</tbody></table>
+<p>它们解决的问题并不等同于产品行为验收：</p>
+<ul>
+<li>Proof-Carrying Code 关注的是形式化安全策略；</li>
+<li>SLSA provenance 关注的是软件供应链来源；</li>
+<li>Warrant 关注的是意图、技术行为和跨实现一致性。</li>
+</ul>
+<p>但三者共享一个很有价值的结构：生产者不只交付结果，还要同时交付接收方可以独立检查的依据。</p>
+<p>沿着这个结构往前推，我更愿意把未来的软件交付单位称作 <strong>evidence-carrying change</strong>，即“带证据的变化”。</p>
+<p>大多数产品行为无法被数学证明，因此“证据”比 <code>proof-carrying change</code> 中的“证明”更诚实。</p>
+<p class="article-figure"><a class="image-original" href="/pototaker_blog/images/warrant-article/18-evidence-carrying-change-contrast-2.svg" target="_blank" rel="noopener noreferrer" aria-label="查看图片原图（新窗口）"><img src="/pototaker_blog/images/warrant-article/18-evidence-carrying-change-contrast-2.svg" alt="一项带证据的变化"></a></p>
+<p>它在不同开发模式里，会呈现为不同形态：</p>
+<table>
+<thead>
+<tr>
+<th>开发模式</th>
+<th>“带证据的变化”怎样存在</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>跨团队、跨实现</td>
+<td>production bundle</td>
+</tr>
+<tr>
+<td>同团队、同实现</td>
+<td>release candidate + 机器可读验收状态</td>
+</tr>
+<tr>
+<td>更自主的 Agent 系统</td>
+<td>agent 产生变化，gate 验证约束，线上信号决定阻断或回退</td>
+</tr>
+</tbody></table>
+<p>最后一种目前仍是推演，并非已经被研究证明的行业结论。</p>
+<p>但调研至少让我更确定了一件事：</p>
+<blockquote>
+<p><strong>如果 Coding 最终成为项目里最廉价的环节，那么真正需要长期维护的“源码”，也许不再只是某一次代码实现，而是那套能够持续生成实现、约束变化并验证结果的上层上下文。</strong></p>
+</blockquote>
+<p>AI Coding 带来的深层变化，不只是把“写代码”交给 AI；它也在迫使软件开发把过去依赖角色、记忆和人工交接的判断，逐步编码成 Agent 可以读取、系统可以验证、运行环境可以反馈的控制回路。</p>
+<p>Warrant 只是我们对这个变化的一次早期作答，而不是终点。如果未来原型侧与线上侧真的合并，今天的 bundle 形态可能会过时；即使边界仍然存在，artifact 的结构、Agent 与 CLI 的分工也很可能在更多实战中继续改变。</p>
+<p>我更希望把这个雏形当作一个可以共同讨论的起点：<strong>一项变化怎样离开产生它的会话，带着足够的上下文和证据，进入真实用户所在的世界？</strong>如果这个问题成立，工具最终应该长成什么样，仍值得我们一起回答。</p>
+<hr>
+<h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=8rABwKRsec4">The New Code — Sean Grove</a></li>
+<li><a target="_blank" rel="noopener" href="https://paelladoc.com/blog/repo-to-product-artifacts/">Reading a repo into product artifacts</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/github/spec-kit/blob/main/spec-driven.md">GitHub Spec Kit：Spec-Driven Development</a></li>
+<li><a target="_blank" rel="noopener" href="https://kiro.dev/docs/specs/">Kiro Specs</a></li>
+<li><a target="_blank" rel="noopener" href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html">Understanding Spec-Driven Development</a></li>
+<li><a target="_blank" rel="noopener" href="https://marmelab.com/blog/2025/11/12/spec-driven-development-waterfall-strikes-back.html">Spec-Driven Development: The Waterfall Strikes Back</a></li>
+<li><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=45935763">Hacker News 对 SDD 的社区讨论</a></li>
+<li><a target="_blank" rel="noopener" href="https://dora.dev/research/2025/dora-report/">DORA · State of AI-assisted Software Development 2025</a></li>
+<li><a target="_blank" rel="noopener" href="https://research.google/blog/ai-in-software-engineering-at-google-progress-and-the-path-ahead/">AI in software engineering at Google: Progress and the path ahead</a></li>
+<li><a target="_blank" rel="noopener" href="https://openai.com/index/harness-engineering/">Harness engineering: leveraging Codex in an agent-first world</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a></li>
+<li><a target="_blank" rel="noopener" href="https://dora.dev/capabilities/continuous-delivery/">DORA · Continuous delivery</a></li>
+<li><a target="_blank" rel="noopener" href="https://slsa.dev/spec/v1.2/provenance">SLSA Provenance</a></li>
+<li><a target="_blank" rel="noopener" href="https://doi.org/10.1145/263699.263712">Proof-Carrying Code</a></li>
+<li><a target="_blank" rel="noopener" href="https://modelcontextprotocol.io/seps/2484-conformance-tests-required-for-final-seps">MCP SEP-2484: Conformance tests for standards-track changes</a></li>
+<li>Warrant · 立据（仓库地址略）</li>
+</ul>
 </div>
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>

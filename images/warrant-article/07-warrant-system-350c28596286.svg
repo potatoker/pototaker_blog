@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">Warrant 的生产、确认与裁判</title>
+  <desc id="desc">AI skills 与人协作起草 artifact，人处理代码不能回答的意图并确认方案层，确定性 gates 校验结构、语义流、指针、指纹、覆盖与运行证据；同一 artifact 派生技术文档、发布 bundle 和审计结论。</desc>
+  <defs>
+    <linearGradient id="bg07" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#F7F5FF"/>
+    </linearGradient>
+    <linearGradient id="artifact07" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#EEF4FF"/>
+      <stop offset="1" stop-color="#F4F0FF"/>
+    </linearGradient>
+    <filter id="shadow07" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="9" stdDeviation="13" flood-color="#344054" flood-opacity=".10"/>
+    </filter>
+    <marker id="arrow07" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M1 1L10 6L1 11" fill="none" stroke="#667085" stroke-width="2"/>
+    </marker>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:40px;font-weight:700;fill:#101828}
+      .sub{font-size:20px;fill:#667085}
+      .tag{font-size:14px;font-weight:700;letter-spacing:1px}
+      .head{font-size:22px;font-weight:700;fill:#101828}
+      .body{font-size:16px;fill:#475467}
+      .small{font-size:14px;fill:#667085}
+    </style>
+  </defs>
+  <rect width="1400" height="820" rx="32" fill="url(#bg07)"/>
+  <text class="cn title" x="70" y="75">同一份 artifact，三条责任边界，三种消费方式</text>
+  <text class="cn sub" x="70" y="113">AI 可以起草，人必须定夺；确定性事实由不能被“说服”的 gate 裁判</text>
+
+  <g filter="url(#shadow07)">
+    <rect x="60" y="170" width="292" height="442" rx="28" fill="#FFFFFF"/>
+    <rect x="404" y="150" width="592" height="482" rx="30" fill="url(#artifact07)" stroke="#9E77ED" stroke-width="2"/>
+    <rect x="1048" y="170" width="292" height="442" rx="28" fill="#FFFFFF"/>
+  </g>
+
+  <rect x="88" y="198" width="106" height="30" rx="15" fill="#EEF4FF"/>
+  <text class="cn tag" x="141" y="218" text-anchor="middle" fill="#175CD3">AI + HUMAN</text>
+  <text class="cn head" x="88" y="267">起草与提问</text>
+  <rect x="88" y="294" width="236" height="58" rx="16" fill="#F8FAFC"/>
+  <text class="cn body" x="110" y="329">确认 slice 与正式入口</text>
+  <rect x="88" y="368" width="236" height="58" rx="16" fill="#F8FAFC"/>
+  <text class="cn body" x="110" y="403">沿运行路径恢复语义流</text>
+  <rect x="88" y="442" width="236" height="58" rx="16" fill="#F8FAFC"/>
+  <text class="cn body" x="110" y="477">起草方案并访谈 why</text>
+  <rect x="88" y="516" width="236" height="66" rx="16" fill="#FFF7ED"/>
+  <text class="cn body" x="110" y="545">矛盾写入问题</text>
+  <text class="cn small" x="110" y="568">不知道，不等于可以猜</text>
+
+  <rect x="432" y="178" width="104" height="30" rx="15" fill="#FFFFFF" fill-opacity=".78"/>
+  <text class="cn tag" x="484" y="198" text-anchor="middle" fill="#6941C6">CANONICAL</text>
+  <text class="cn head" x="432" y="247">.warrant/：可失效的设计</text>
+
+  <rect x="432" y="276" width="255" height="92" rx="18" fill="#FFFFFF" fill-opacity=".82"/>
+  <text class="cn head" x="454" y="307" font-size="18">行为与结构</text>
+  <text class="cn small" x="454" y="335">nodes · wiring · semantic flow</text>
+  <text class="cn small" x="454" y="356">输入、输出、分支与汇合</text>
+
+  <rect x="713" y="276" width="255" height="92" rx="18" fill="#FFFFFF" fill-opacity=".82"/>
+  <text class="cn head" x="735" y="307" font-size="18">方案与选择</text>
+  <text class="cn small" x="735" y="335">approach · technique · identity</text>
+  <text class="cn small" x="735" y="356">baseline → chosen · rationale</text>
+
+  <rect x="432" y="390" width="255" height="92" rx="18" fill="#FFFFFF" fill-opacity=".82"/>
+  <text class="cn head" x="454" y="421" font-size="18">疑问与确认</text>
+  <text class="cn small" x="454" y="449">open questions · confirmations</text>
+  <text class="cn small" x="454" y="470">未确认文字不会伪装成事实</text>
+
+  <rect x="713" y="390" width="255" height="92" rx="18" fill="#FFFFFF" fill-opacity=".82"/>
+  <text class="cn head" x="735" y="421" font-size="18">义务与证据</text>
+  <text class="cn small" x="735" y="449">corpus · coverage · evidence</text>
+  <text class="cn small" x="735" y="470">case 必须声明自己证明什么</text>
+
+  <rect x="432" y="514" width="536" height="82" rx="20" fill="#FFFFFF" fill-opacity=".82"/>
+  <text class="cn head" x="454" y="548" font-size="18">Self-invalidating claims</text>
+  <text class="cn body" x="454" y="576">对象变化 → 指纹失配 → 旧声明不再覆盖当前版本</text>
+
+  <rect x="1076" y="198" width="82" height="30" rx="15" fill="#ECFDF3"/>
+  <text class="cn tag" x="1117" y="218" text-anchor="middle" fill="#027A48">GATES</text>
+  <text class="cn head" x="1076" y="267">确定性裁判</text>
+  <text class="cn body" x="1076" y="314">结构与语义流自洽</text>
+  <text class="cn body" x="1076" y="358">源码指针仍能解引用</text>
+  <text class="cn body" x="1076" y="402">理由与确认仍覆盖当前内容</text>
+  <text class="cn body" x="1076" y="446">case 与 obligation 双向一致</text>
+  <text class="cn body" x="1076" y="490">运行 evidence 足以签收</text>
+  <text class="cn body" x="1076" y="534">本次新增源码已被登记</text>
+  <rect x="1076" y="558" width="236" height="34" rx="17" fill="#ECFDF3"/>
+  <text class="cn tag" x="1194" y="580" text-anchor="middle" fill="#027A48">REPEATABLE BY CODE</text>
+
+  <g fill="none" stroke="#667085" stroke-width="3" marker-end="url(#arrow07)">
+    <path d="M352 390H392"/>
+    <path d="M996 390H1036"/>
+  </g>
+
+  <text class="cn small" x="700" y="672" text-anchor="middle">同一事实源，不同视图；视图可以重建，事实不能各写一份</text>
+  <g filter="url(#shadow07)">
+    <rect x="170" y="704" width="300" height="66" rx="24" fill="#FFFFFF"/>
+    <rect x="550" y="704" width="300" height="66" rx="24" fill="#FFFFFF"/>
+    <rect x="930" y="704" width="300" height="66" rx="24" fill="#FFFFFF"/>
+  </g>
+  <text class="cn head" x="320" y="745" text-anchor="middle" font-size="18">给人：技术文档</text>
+  <text class="cn head" x="700" y="745" text-anchor="middle" font-size="18">给 AI：release bundle</text>
+  <text class="cn head" x="1080" y="745" text-anchor="middle" font-size="18">给程序：audit verdict</text>
+</svg>

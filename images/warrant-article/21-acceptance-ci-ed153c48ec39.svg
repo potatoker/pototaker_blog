@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="740" viewBox="0 0 1400 740" role="img" aria-labelledby="title desc">
+  <title id="title">验收 CI 如何判断生产实现是否还原成功</title>
+  <desc id="desc">原型侧的 production artifact 定义本版本必须证明的行为与 golden case；生产实现运行这些 case 产生实际证据；独立的验收 CI 检查版本、覆盖关系与预期结果，重新计算 PASS 或 FAIL，而不接受生产侧 AI 的自我声明。</desc>
+  <defs>
+    <linearGradient id="bg21" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#F9F5FF"/>
+    </linearGradient>
+    <linearGradient id="judge21" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#EEF4FF"/>
+      <stop offset="1" stop-color="#F4F0FF"/>
+    </linearGradient>
+    <filter id="shadow21" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="9" stdDeviation="13" flood-color="#344054" flood-opacity=".10"/>
+    </filter>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:42px;font-weight:700;fill:#101828}
+      .sub{font-size:21px;fill:#667085}
+      .tag{font-size:15px;font-weight:700}
+      .head{font-size:25px;font-weight:700;fill:#101828}
+      .body{font-size:18px;fill:#475467}
+      .small{font-size:16px;fill:#667085}
+    </style>
+  </defs>
+
+  <rect width="1400" height="740" rx="32" fill="url(#bg21)"/>
+  <text class="cn title" x="72" y="78">验收 CI：生产实现不能给自己判 PASS</text>
+  <text class="cn sub" x="72" y="116">规约定义要证明什么，运行产生证据，独立程序只根据证据重新计算结论</text>
+
+  <g filter="url(#shadow21)">
+    <rect x="56" y="178" width="310" height="408" rx="28" fill="#FFFFFF"/>
+    <rect x="408" y="178" width="250" height="408" rx="28" fill="#FFFFFF"/>
+    <rect x="700" y="178" width="264" height="408" rx="28" fill="#FFFFFF"/>
+    <rect x="1006" y="158" width="338" height="448" rx="30" fill="url(#judge21)" stroke="#B9A7F8" stroke-width="2"/>
+  </g>
+
+  <rect x="84" y="208" width="126" height="34" rx="17" fill="#FFF7ED"/>
+  <text class="cn tag" x="147" y="231" text-anchor="middle" fill="#B54708">WHAT TO PROVE</text>
+  <text class="cn head" x="84" y="286">验收基准</text>
+  <text class="cn body" x="84" y="334">• 本版本 content_hash</text>
+  <text class="cn body" x="84" y="378">• 必须成立的行为义务</text>
+  <text class="cn body" x="84" y="422">• golden 输入与预期</text>
+  <text class="cn body" x="84" y="466">• 明确接受的 waiver</text>
+  <rect x="84" y="510" width="254" height="46" rx="18" fill="#FFF7ED"/>
+  <text class="cn small" x="211" y="539" text-anchor="middle">来自 production artifact</text>
+
+  <rect x="436" y="208" width="132" height="34" rx="17" fill="#EEF4FF"/>
+  <text class="cn tag" x="502" y="231" text-anchor="middle" fill="#175CD3">IMPLEMENT</text>
+  <text class="cn head" x="436" y="286">生产实现</text>
+  <text class="cn body" x="436" y="336">生产侧的人与 AI</text>
+  <text class="cn body" x="436" y="380">按规约完成另一套实现</text>
+  <rect x="436" y="424" width="194" height="92" rx="20" fill="#EEF4FF"/>
+  <text class="cn small" x="533" y="458" text-anchor="middle">可以换语言、框架</text>
+  <text class="cn small" x="533" y="488" text-anchor="middle">不能自行宣布一致</text>
+
+  <rect x="728" y="208" width="112" height="34" rx="17" fill="#ECFDF3"/>
+  <text class="cn tag" x="784" y="231" text-anchor="middle" fill="#027A48">EXECUTE</text>
+  <text class="cn head" x="728" y="286">运行并取证</text>
+  <text class="cn body" x="728" y="334">逐个执行 golden case</text>
+  <text class="cn body" x="728" y="378">记录实际 route</text>
+  <text class="cn body" x="728" y="422">记录字段与数据交接</text>
+  <text class="cn body" x="728" y="466">记录配置与断言结果</text>
+  <rect x="728" y="510" width="208" height="46" rx="18" fill="#ECFDF3"/>
+  <text class="cn small" x="832" y="539" text-anchor="middle">输出 evidence</text>
+
+  <rect x="1036" y="190" width="126" height="34" rx="17" fill="#FFFFFF"/>
+  <text class="cn tag" x="1099" y="213" text-anchor="middle" fill="#6941C6">JUDGE BY CODE</text>
+  <text class="cn head" x="1036" y="270">验收 CI</text>
+  <text class="cn body" x="1036" y="318">✓ 双方是否对齐同一版本</text>
+  <text class="cn body" x="1036" y="362">✓ 必需行为是否都有 case</text>
+  <text class="cn body" x="1036" y="406">✓ case 是否真的触发该行为</text>
+  <text class="cn body" x="1036" y="450">✓ 实际结果是否符合预期</text>
+  <text class="cn body" x="1036" y="494">✓ 缺口是否显式 waiver</text>
+  <rect x="1036" y="530" width="130" height="48" rx="19" fill="#ECFDF3"/>
+  <text class="cn" x="1101" y="561" text-anchor="middle" font-size="19" font-weight="700" fill="#027A48">PASS · 放行</text>
+  <rect x="1180" y="530" width="136" height="48" rx="19" fill="#FEF3F2"/>
+  <text class="cn" x="1248" y="561" text-anchor="middle" font-size="19" font-weight="700" fill="#B42318">FAIL · 阻断</text>
+
+  <g fill="none" stroke="#98A2B3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M380 382H394"/><path d="M386 370L398 382L386 394"/>
+    <path d="M672 382H686"/><path d="M678 370L690 382L678 394"/>
+    <path d="M978 382H992"/><path d="M984 370L996 382L984 394"/>
+  </g>
+
+  <rect x="250" y="646" width="900" height="54" rx="27" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="2"/>
+  <text class="cn" x="700" y="680" text-anchor="middle" font-size="19" font-weight="700" fill="#475467">AI 可以生成实现和报告，但最终状态只能由实际运行证据推导</text>
+</svg>

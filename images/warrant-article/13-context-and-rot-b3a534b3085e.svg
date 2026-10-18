@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">代码压平上游上下文，规约绕过交付后逐渐腐化</title>
+  <desc id="desc">左侧展示产品意图逐层展开为行为约束、代码细节与运行效果；右侧展示代码修改到交付的链路不依赖规约，因此规约即使没有更新也不会阻断任何步骤。</desc>
+  <defs>
+    <linearGradient id="bg13" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#EFF8FF"/></linearGradient>
+    <filter id="shadow13" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#344054" flood-opacity=".09"/></filter>
+    <style>.cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}.title{font-size:42px;font-weight:700;fill:#101828}.sub{font-size:21px;fill:#667085}.head{font-size:22px;font-weight:700;fill:#101828}.body{font-size:17px;fill:#667085}.tag{font-size:16px;font-weight:700}</style>
+  </defs>
+  <rect width="1400" height="760" rx="32" fill="url(#bg13)"/>
+  <text class="cn title" x="72" y="78">代码保留了实现，却压平了上游上下文</text>
+  <text class="cn sub" x="72" y="116">而一份不参与交付的规约，可以在完全不更新的情况下被流程绕过</text>
+  <rect x="64" y="164" width="590" height="520" rx="30" fill="#FFFFFF" filter="url(#shadow13)"/>
+  <text class="cn tag" x="104" y="208" fill="#175CD3">从意图展开到实现</text>
+  <g>
+    <rect x="130" y="244" width="458" height="72" rx="20" fill="#F4F0FF"/><text class="cn head" x="359" y="288" text-anchor="middle">产品意图与取舍</text>
+    <rect x="154" y="352" width="410" height="72" rx="20" fill="#EEF4FF"/><text class="cn head" x="359" y="396" text-anchor="middle">行为主线与技术约束</text>
+    <rect x="178" y="460" width="362" height="72" rx="20" fill="#F2F4F7"/><text class="cn head" x="359" y="504" text-anchor="middle">函数、配置、分支与依赖</text>
+    <rect x="202" y="568" width="314" height="72" rx="20" fill="#ECFDF3" stroke="#6CE9A6" stroke-width="2"/><text class="cn head" x="359" y="612" text-anchor="middle" fill="#027A48">可运行效果</text>
+  </g>
+  <g stroke="#98A2B3" stroke-width="4" fill="none" stroke-linecap="round"><path d="M359 320V340"/><path d="M350 330L359 341L368 330"/><path d="M359 428V448"/><path d="M350 438L359 449L368 438"/><path d="M359 536V556"/><path d="M350 546L359 557L368 546"/></g>
+  <text class="cn body" x="359" y="664" text-anchor="middle">越往下，细节越多；权威结构越难看见</text>
+
+  <rect x="714" y="164" width="622" height="520" rx="30" fill="#FFFFFF" filter="url(#shadow13)"/>
+  <text class="cn tag" x="754" y="208" fill="#B54708">规约为什么必然过期</text>
+  <rect x="760" y="270" width="150" height="72" rx="20" fill="#EEF4FF"/><text class="cn head" x="835" y="314" text-anchor="middle">代码修改</text>
+  <rect x="950" y="270" width="150" height="72" rx="20" fill="#ECFDF3"/><text class="cn head" x="1025" y="314" text-anchor="middle">效果跑通</text>
+  <rect x="1140" y="270" width="150" height="72" rx="20" fill="#101828"/><text class="cn head" x="1215" y="314" text-anchor="middle" fill="#FFFFFF">交付完成</text>
+  <g fill="none" stroke="#12B76A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M920 306H938"/><path d="M928 296L939 306L928 316"/><path d="M1110 306H1128"/><path d="M1118 296L1129 306L1118 316"/></g>
+  <rect x="880" y="440" width="290" height="112" rx="22" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2" stroke-dasharray="9 8"/>
+  <text class="cn head" x="1025" y="482" text-anchor="middle" fill="#B54708">规约没有更新</text><text class="cn body" x="1025" y="516" text-anchor="middle">但任何一步都不会失败</text>
+  <path d="M1025 430V366" stroke="#F79009" stroke-width="3" stroke-dasharray="8 8"/>
+  <rect x="800" y="598" width="450" height="54" rx="27" fill="#FEF3F2"/>
+  <text class="cn body" x="1025" y="632" text-anchor="middle" fill="#B42318">只靠人的意志维护，就无法成为真正的交付约束</text>
+</svg>

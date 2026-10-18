@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">把发版重新定义成一次完整交付</title>
+  <desc id="desc">日常原型仍可自由迭代；到发版边界时，从正式 slice 恢复规约、补充意图、运行验证，并导出包含参考实现、生产规约、验收证据和版本身份的不可变 release。</desc>
+  <defs>
+    <linearGradient id="bg14" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#F9F5FF"/></linearGradient>
+    <linearGradient id="pkg14" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5B8FF9"/><stop offset="1" stop-color="#7A5AF8"/></linearGradient>
+    <filter id="shadow14" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#344054" flood-opacity=".11"/></filter>
+    <style>.cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}.title{font-size:42px;font-weight:700;fill:#101828}.sub{font-size:21px;fill:#667085}.head{font-size:22px;font-weight:700;fill:#101828}.body{font-size:17px;fill:#667085}.tag{font-size:16px;font-weight:700}</style>
+  </defs>
+  <rect width="1400" height="820" rx="32" fill="url(#bg14)"/>
+  <text class="cn title" x="72" y="78">把“发版”重新定义成一次完整交付</text>
+  <text class="cn sub" x="72" y="116">日常探索不必变慢；只有跨过生产边界时，代码、上下文与证据必须一起冻结</text>
+  <rect x="60" y="168" width="330" height="418" rx="28" fill="#FFFFFF" filter="url(#shadow14)"/>
+  <rect x="90" y="198" width="126" height="34" rx="17" fill="#FFF7ED"/><text class="cn tag" x="153" y="221" text-anchor="middle" fill="#B54708">DAILY LOOP</text>
+  <text class="cn head" x="90" y="278">原型自由迭代</text>
+  <rect x="90" y="318" width="270" height="64" rx="18" fill="#FFF7ED"/><text class="cn body" x="225" y="356" text-anchor="middle">描述效果 → AI 改代码</text>
+  <rect x="90" y="414" width="270" height="64" rx="18" fill="#ECFDF3"/><text class="cn body" x="225" y="452" text-anchor="middle">运行体验 → 继续调整</text>
+  <path d="M225 390V402M215 394L225 404L235 394" stroke="#F79009" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M78 446C54 446 54 350 78 350" stroke="#F79009" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <text class="cn body" x="225" y="530" text-anchor="middle">这里仍以反馈速度为先</text>
+
+  <rect x="450" y="168" width="300" height="418" rx="28" fill="#FFFFFF" filter="url(#shadow14)"/>
+  <rect x="480" y="198" width="122" height="34" rx="17" fill="#F4F0FF"/><text class="cn tag" x="541" y="221" text-anchor="middle" fill="#6941C6">RELEASE</text>
+  <text class="cn head" x="480" y="278">跨过交付边界</text>
+  <g class="cn body">
+    <text x="490" y="333">① 选择正式 slice</text><text x="490" y="383">② 沿代码恢复规约</text><text x="490" y="433">③ 追问代码答不了的 why</text><text x="490" y="483">④ 运行 proof / golden / gate</text><text x="490" y="533">⑤ 导出 content_hash</text>
+  </g>
+  <path d="M405 377H435" stroke="#7A5AF8" stroke-width="6" stroke-linecap="round"/><path d="M423 363L438 377L423 391" fill="none" stroke="#7A5AF8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="810" y="150" width="530" height="454" rx="32" fill="url(#pkg14)" filter="url(#shadow14)"/>
+  <text class="cn tag" x="850" y="198" fill="#E9D7FE">IMMUTABLE PRODUCTION RELEASE</text>
+  <text class="cn" x="850" y="244" font-size="29" font-weight="700" fill="#FFFFFF">这一版真正交付的四样东西</text>
+  <rect x="850" y="286" width="210" height="112" rx="20" fill="#FFFFFF" fill-opacity=".16"/><text class="cn head" x="875" y="328" fill="#FFFFFF">参考实现</text><text class="cn body" x="875" y="361" fill="#E9D7FE">实际怎样实现</text>
+  <rect x="1090" y="286" width="210" height="112" rx="20" fill="#FFFFFF" fill-opacity=".16"/><text class="cn head" x="1115" y="328" fill="#FFFFFF">生产规约</text><text class="cn body" x="1115" y="361" fill="#E9D7FE">必须保留什么</text>
+  <rect x="850" y="430" width="210" height="112" rx="20" fill="#FFFFFF" fill-opacity=".16"/><text class="cn head" x="875" y="472" fill="#FFFFFF">验收证据</text><text class="cn body" x="875" y="505" fill="#E9D7FE">怎样独立判断</text>
+  <rect x="1090" y="430" width="210" height="112" rx="20" fill="#FFFFFF" fill-opacity=".16"/><text class="cn head" x="1115" y="472" fill="#FFFFFF">版本身份</text><text class="cn body" x="1115" y="505" fill="#E9D7FE">是不是同一版</text>
+  <path d="M765 377H795" stroke="#7A5AF8" stroke-width="6" stroke-linecap="round"/><path d="M783 363L798 377L783 391" fill="none" stroke="#7A5AF8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="196" y="664" width="1008" height="82" rx="30" fill="#101828"/>
+  <text class="cn" x="700" y="697" text-anchor="middle" font-size="17" fill="#D0D5DD">发版成功的含义</text>
+  <text class="cn" x="700" y="727" text-anchor="middle" font-size="21" font-weight="700" fill="#FFFFFF">实现、上下文和证明它成立的证据，共同代表同一个版本</text>
+</svg>

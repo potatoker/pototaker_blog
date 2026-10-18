@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="788" viewBox="0 0 1400 788" role="img" aria-labelledby="title desc">
+  <title id="title">让文档在过期时主动失效</title>
+  <desc id="desc">每条声明绑定它所描述对象的指纹。对象变化后指纹不匹配，发布门禁阻止旧结论继续冒充事实，直到重新查证或回答。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8FAFC"/><stop offset="1" stop-color="#FFF7ED"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#344054" flood-opacity=".1"/></filter>
+    <style>
+      .cn{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+      .title{font-size:43px;font-weight:700;fill:#101828}.sub{font-size:22px;fill:#667085}
+      .step{font-size:24px;font-weight:700;fill:#101828}.body{font-size:19px;fill:#667085}.num{font-size:18px;font-weight:700;fill:#FFFFFF}
+    </style>
+  </defs>
+  <rect width="1400" height="788" rx="32" fill="url(#bg)"/>
+  <text class="cn title" x="72" y="81">我后来不再要求文档“永远最新”</text>
+  <text class="cn sub" x="72" y="122">我只要求：当它不再可信时，系统必须知道</text>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="228" width="260" height="270" rx="28" fill="#FFFFFF"/>
+    <rect x="398" y="228" width="260" height="270" rx="28" fill="#FFFFFF"/>
+    <rect x="738" y="228" width="260" height="270" rx="28" fill="#FFF1F3" stroke="#FDA4AF" stroke-width="3"/>
+    <rect x="1078" y="228" width="260" height="270" rx="28" fill="#FFFFFF"/>
+  </g>
+
+  <circle cx="104" cy="273" r="24" fill="#12B76A"/><text class="cn num" x="104" y="280" text-anchor="middle">1</text>
+  <text class="cn step" x="94" y="334">声明成立</text>
+  <text class="cn body" x="94" y="379">“部署值选择 false”</text>
+  <text class="cn body" x="94" y="419">绑定当前值的指纹</text>
+  <rect x="94" y="447" width="188" height="28" rx="14" fill="#ECFDF3"/><text x="188" y="467" text-anchor="middle" font-family="monospace" font-size="15" fill="#027A48">hash(false)</text>
+
+  <circle cx="444" cy="273" r="24" fill="#F79009"/><text class="cn num" x="444" y="280" text-anchor="middle">2</text>
+  <text class="cn step" x="434" y="334">对象变化</text>
+  <text class="cn body" x="434" y="379">代码或配置改成 true</text>
+  <text class="cn body" x="434" y="419">旧理由没有同步改变</text>
+  <rect x="434" y="447" width="188" height="28" rx="14" fill="#FFF7ED"/><text x="528" y="467" text-anchor="middle" font-family="monospace" font-size="15" fill="#B54708">hash(true)</text>
+
+  <circle cx="784" cy="273" r="24" fill="#E11D48"/><text class="cn num" x="784" y="280" text-anchor="middle">3</text>
+  <text class="cn step" x="774" y="334">声明过期</text>
+  <text class="cn body" x="774" y="379">fingerprint mismatch</text>
+  <text class="cn body" x="774" y="419">旧文档不能继续发布</text>
+  <rect x="774" y="447" width="188" height="28" rx="14" fill="#FFE4E8"/><text class="cn" x="868" y="467" text-anchor="middle" font-size="15" font-weight="700" fill="#C01048">RELEASE BLOCKED</text>
+
+  <circle cx="1124" cy="273" r="24" fill="#7A5AF8"/><text class="cn num" x="1124" y="280" text-anchor="middle">4</text>
+  <text class="cn step" x="1114" y="334">重新查证</text>
+  <text class="cn body" x="1114" y="379">AI 重跑可证明事实</text>
+  <text class="cn body" x="1114" y="419">人重答必须判断的 why</text>
+  <rect x="1114" y="447" width="188" height="28" rx="14" fill="#F4F0FF"/><text class="cn" x="1208" y="467" text-anchor="middle" font-size="15" font-weight="700" fill="#6941C6">CLAIM RENEWED</text>
+
+  <g fill="none" stroke="#98A2B3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M334 363H375"/><path d="M361 349L376 363L361 377"/>
+    <path d="M674 363H715"/><path d="M701 349L716 363L701 377"/>
+    <path d="M1014 363H1055"/><path d="M1041 349L1056 363L1041 377"/>
+  </g>
+
+  <rect x="268" y="592" width="864" height="99" rx="28" fill="#101828"/>
+  <text class="cn" x="700" y="632" text-anchor="middle" font-size="23" font-weight="700" fill="#FFFFFF">文档最危险的状态，不是“没有写”</text>
+  <text class="cn" x="700" y="668" text-anchor="middle" font-size="21" fill="#D0D5DD">而是已经过期，却仍然以事实的口吻留在那里</text>
+</svg>
