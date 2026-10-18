@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-10.webp">
 <meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-11.webp">
 <meta property="og:image" content="https://potatoker.github.io/pototaker_blog/images/oldblogs/audio-fundamentals/image-12.webp">
-<meta property="article:published_time" content="2026-10-18T04:04:00.000Z">
+<meta property="article:published_time" content="2019-04-29T16:00:00.000Z">
 <meta property="article:modified_time" content="2026-10-18T13:53:26.000Z">
 <meta property="article:author" content="Raymond">
 <meta property="article:tag" content="Android">
@@ -47,12 +47,12 @@
         <a class="github-link" href="https://github.com/potatoker" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
-    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2026.10.18 / 11 MIN READ</span></div>
+    <main id="main"><div class="reading-top"><a href="/pototaker_blog/">← 全部文章</a><span class="mono">2019.04.30 / 11 MIN READ</span></div>
 <article class="article-paper">
   <header class="article-header">
     <div class="article-meta"><span class="kicker">一篇记录</span><div class="article-tags"><a href="/pototaker_blog/tags/Android/">Android</a><a href="/pototaker_blog/tags/%E9%9F%B3%E9%A2%91/">音频</a></div></div>
     <h1>音频基础知识总结</h1>
-    <p class="article-byline">Raymond<span> / </span><time datetime="2026-10-18T04:04:00.000Z">2026.10.18</time></p>
+    <p class="article-byline">Raymond<span> / </span><time datetime="2019-04-29T16:00:00.000Z">2019.04.30</time></p>
   </header>
   
   <details class="article-toc"><summary>文章目录<span aria-hidden="true">＋</span></summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%9F%B3%E9%A2%91%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0"><span class="toc-text">1. 音频基本参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%87%87%E6%A0%B7%E7%8E%87"><span class="toc-text">1. 采样率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%8D%E5%AE%BD%EF%BC%88%E4%BD%8D%E6%B7%B1%E5%BA%A6%EF%BC%89"><span class="toc-text">2. 位宽（位深度）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%A3%B0%E9%81%93%E6%95%B0"><span class="toc-text">3. 声道数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%AF%94%E7%89%B9%E7%8E%87"><span class="toc-text">4. 比特率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E9%9F%B3%E9%A2%91%E5%B8%A7"><span class="toc-text">5. 音频帧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%9F%B3%E9%A2%91%E5%BC%80%E5%8F%91%E7%9A%84%E5%85%B7%E4%BD%93%E5%86%85%E5%AE%B9"><span class="toc-text">2.音频开发的具体内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%9F%B3%E9%A2%91%E6%95%B0%E6%8D%AE%E7%9A%84%E9%87%87%E9%9B%86"><span class="toc-text">3. 音频数据的采集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%9F%B3%E9%A2%91%E6%95%B0%E6%8D%AE%E7%9A%84%E6%92%AD%E6%94%BE"><span class="toc-text">4. 音频数据的播放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="toc-text">音频的数据处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%9F%B3%E9%87%8F%E8%B0%83%E6%8E%A7"><span class="toc-text">1. 音量调控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%B7%B7%E9%9F%B3"><span class="toc-text">2. 混音</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%9F%B3%E8%89%B2%E7%9A%84%E5%88%86%E6%9E%90"><span class="toc-text">3. 音色的分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E9%99%8D%E5%99%AA"><span class="toc-text">4. 降噪</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></nav></details>
@@ -163,8 +163,8 @@
   <footer class="article-end"><span class="type-label">END OF NOTE</span><a href="#top">↑</a></footer>
 </article>
 <nav class="post-navigation" aria-label="相邻文章">
-  <a href="/pototaker_blog/2026/10/18/prototype-delivery-contract/"><span class="kicker">← 较新的记录</span><span>Vibe Coding 之后，我把代码“反编译”成了一份规范</span></a>
-  <a href="/pototaker_blog/2026/10/18/markov-power-method-convergence/"><span class="kicker">更早的记录 →</span><span>如何得到幂法收敛的马尔可夫矩阵</span></a>
+  <a href="/pototaker_blog/2026/10/18/flutter-external-textures/"><span class="kicker">← 较新的记录</span><span>Flutter 外接纹理</span></a>
+  <a href="/pototaker_blog/2019/01/06/Flag/"><span class="kicker">更早的记录 →</span><span>2019 Flag</span></a>
 </nav>
 </main>
     <footer class="site-footer">
